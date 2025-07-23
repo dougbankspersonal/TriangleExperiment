@@ -1,3 +1,6 @@
 [submodule "Html.Mecharena/SharedWebBoardgame"]
 	path = Html.Mecharena/SharedWebBoardgame
 	url = https://github.com/dougbankspersonal/SharedWebBoardgame.git
+[submodule "Html.Life/SharedWebBoardgame"]
+	path = Html.Life/SharedWebBoardgame
+	url = https://github.com/dougbankspersonal/SharedWebBoardgame.git
