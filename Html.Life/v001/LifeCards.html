@@ -1,7 +1,7 @@
 <html>
   <head>
-    <link rel="stylesheet" href="../css/mech_arena_images.css" />
-    <link rel="stylesheet" href="../css/mech_arena_cards.css" />
+    <link rel="stylesheet" href="../css/life_images.css" />
+    <link rel="stylesheet" href="../css/life_cards.css" />
     <link rel="stylesheet" href="../SharedWebBoardGame/css/card.css" />
     <link rel="stylesheet" href="../SharedWebBoardGame/css/main.css" />
     <link rel="stylesheet" href="../SharedWebBoardGame/css/image.css" />
@@ -47,21 +47,19 @@
         "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "javascript/gameInfo",
-        "javascript/mechArenaCards",
-        "javascript/mechArenaCardData",
+        "javascript/lifeCardsData",
+        "javascript/lifeCards",
       ], function (
         cards,
         debugLog,
         genericUtils,
         htmlUtils,
         systemConfigs,
-        gameInfo,
-        mechArenaCards,
-        mechArenaCardData
+        lifeCardsData,
+        lifeCards
       ) {
         var sc = systemConfigs.getCardSystemConfigs();
-        systemConfigs.setSystemConfigs(sc);
+        sc.systemConfigs.setSystemConfigs(sc);
 
         sc.cardBackFontSize = 36;
         systemConfigs.setSystemConfigs(sc);
