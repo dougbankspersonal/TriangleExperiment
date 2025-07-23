@@ -1,2 +1,2 @@
-# MechArena
-Lawrence's Mech Arena Cards
+# Life
+A card game about life.
