@@ -1,0 +1,85 @@
+.card_array > .page_of_items_contents > .card.well-played-card {
+  box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.5);
+}
+
+.dark_shadowed {
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+.card.well-played-card {
+  font-family: "Quintessential", serif;
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+  font-weight: bold;
+}
+
+.card.front.well-played-card {
+  padding-top: 27px;
+  padding-bottom: 27px;
+  padding-left: 14px;
+  padding-right: 14px;
+  position: relative;
+  border: 4px solid rgb(157, 108, 4);
+}
+.card.front.well-played-card .front-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  background-image: url("../images/WellPlayedCards/card-face.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.card.front.well-played-card .front-wrapper .quads-row-0 {
+  align-items: end;
+}
+.card.front.well-played-card .front-wrapper .quads-row-1 {
+  align-items: start;
+}
+.card.front.well-played-card .front-wrapper .quads-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  height: 50%;
+}
+.card.front.well-played-card .front-wrapper .quads-row .quad.quad-type-add {
+  background-color: rgba(220, 250, 220, 0.2);
+}
+.card.front.well-played-card .front-wrapper .quads-row .quad.quad-type-lose {
+  background-color: rgba(250, 220, 220, 0.2);
+}
+.card.front.well-played-card .front-wrapper .quads-row .quad.quad-index-2,
+.card.front.well-played-card .front-wrapper .quads-row .quad.quad-index-3 {
+  transform: rotate(180deg);
+}
+.card.front.well-played-card .front-wrapper .quads-row .quad {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: 3px solid rgba(157, 108, 4, 0.4);
+  height: 100%;
+  width: 50%;
+  overflow: hidden;
+}
+.card.front.well-played-card .front-wrapper .quads-row .quad .pseudo_image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.card.back.well-played-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.card.back.well-played-card .lagom-title-shadow {
+  width: 90%;
+  height: 90%;
+}
+
+/*# sourceMappingURL=well_played_cards.css.map */
