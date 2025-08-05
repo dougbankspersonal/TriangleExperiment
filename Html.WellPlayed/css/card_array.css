@@ -1,0 +1,7 @@
+.page_of_items.card_array .page_of_items_contents {
+  width: fit-content;
+  height: fit-content;
+  transform-origin: top left;
+}
+
+/*# sourceMappingURL=card_array.css.map */

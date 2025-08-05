@@ -34,6 +34,8 @@ define([
 
   const imageRotationByQuadIndex = [-45, 45, 45, -45];
 
+  var discardIconSize = 20;
+
   //-----------------------------------
   //
   // Functions
@@ -164,6 +166,55 @@ define([
     return quadNode;
   }
 
+  function maybeAddDiscardReward(parent, opt_discardReward) {
+    var discardReward = opt_discardReward ? opt_discardReward : 0;
+
+    if (discardReward == 0) {
+      return null;
+    }
+
+    var rewardWrapperNode = htmlUtils.addDiv(
+      parent,
+      ["discard-reward-wrapper"],
+      "discard-reward-wrapper"
+    );
+
+    var discardImageNode = htmlUtils.addImage(
+      rewardWrapperNode,
+      ["discard"],
+      "discard"
+    );
+
+    domStyle.set(discardImageNode, {
+      width: discardIconSize + "px",
+      height: discardIconSize + "px",
+    });
+
+    var colonNode = htmlUtils.addDiv(
+      rewardWrapperNode,
+      ["colon"],
+      "colon",
+      ":"
+    );
+    domStyle.set(colonNode, {
+      "font-size": discardIconSize + "px",
+    });
+
+    // Add the coins.
+    for (var j = 0; j < discardReward; j++) {
+      var coinNode = htmlUtils.addImage(
+        rewardWrapperNode,
+        ["coin"],
+        "coin-" + j.toString()
+      );
+      domStyle.set(coinNode, {
+        width: discardIconSize + "px",
+        height: discardIconSize + "px",
+      });
+    }
+    return rewardWrapperNode;
+  }
+
   function addCardFront(parentNode, index) {
     var cardConfig = cardData.getCardConfigAtIndex(index);
     debugLog.debugLog(
@@ -209,13 +260,14 @@ define([
         addNthQuad(rowNode, quadIndex, quadDesc);
       }
     }
-    return frontWrapperNode;
+
+    maybeAddDiscardReward(cardFrontNode, cardConfig.discardReward);
+    return cardFrontNode;
   }
 
   function addCardBack(parent, index) {
     var cardBackNode = cards.addCardBack(parent, index, {
       classes: ["well-played-card"],
-      image: "../images/WellPlayedCards/card-back.png",
     });
     var titleImageNode = htmlUtils.addImage(
       cardBackNode,
