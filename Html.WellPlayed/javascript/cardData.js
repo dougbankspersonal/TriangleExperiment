@@ -333,15 +333,29 @@ define([
   }
 
   function addDoublePlusOneConfig(r1, r2) {
+    debugLog.debugLog(
+      "CardConfigs",
+      "Doug: addDoublePlusOneConfig r1 = " + r1 + ", r2 = " + r2
+    );
     var add1 = genericUtils.getRandomArrayElementNotMatching(
       resourceTypesAdd,
-      [r1],
+      [r1, r2],
       seededZeroToOneRandomFunction
     );
+    console.assert(add1 != r1, "add1 should not be equal to r1");
+    console.assert(add1 != r2, "add1 should not be equal to r2");
+
     var add2 = genericUtils.getRandomArrayElementNotMatching(
       resourceTypesAdd,
-      [r2],
+      [r1, r2],
       seededZeroToOneRandomFunction
+    );
+    console.assert(add2 != r1, "add2 should not be equal to r1");
+    console.assert(add2 != r2, "add2 should not be equal to r2");
+
+    debugLog.debugLog(
+      "CardConfigs",
+      "Doug: addDoublePlusOneConfig add1 = " + add1 + ", add2 = " + add2
     );
 
     var [doubleLossType, l1, l2] = generateDoubleLosses();
