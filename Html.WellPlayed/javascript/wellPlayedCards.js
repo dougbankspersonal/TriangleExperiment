@@ -35,6 +35,7 @@ define([
   const imageRotationByQuadIndex = [-45, 45, 45, -45];
 
   var discardIconSize = 20;
+  var _discardRewardSupported = false;
 
   //-----------------------------------
   //
@@ -110,10 +111,14 @@ define([
       "Cards",
       "Doug addNthQuad: opt_quadDesc = " + JSON.stringify(opt_quadDesc)
     );
+
+    /*
     var quadType =
       quadIndex == 0 || quadIndex == 3
         ? cardData.quadTypes.Add
         : cardData.quadTypes.Lose;
+    */
+    var quadType = cardData.quadTypes.Add;
 
     var resourceTypeToResourceCountMap = opt_quadDesc
       ? opt_quadDesc.resourceTypeToResourceCountMap
@@ -161,12 +166,26 @@ define([
           currentResourceCount
         );
         currentResourceCount++;
+
+        if (resourceType == cardData.resourceTypes.AddPurpose) {
+          var purposeNumber = quadDesc.purposeNumbers.shift();
+          var purposeNumberNode = htmlUtils.addDiv(
+            imageNode,
+            ["purpose-number"],
+            "purpose-number",
+            purposeNumber
+          );
+        }
       }
     }
     return quadNode;
   }
 
   function maybeAddDiscardReward(parent, opt_discardReward) {
+    if (_discardRewardSupported == false) {
+      return null;
+    }
+
     var discardReward = opt_discardReward ? opt_discardReward : 0;
 
     if (discardReward == 0) {

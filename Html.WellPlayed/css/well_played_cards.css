@@ -89,10 +89,17 @@
   width: 50%;
   overflow: hidden;
 }
-.card.front.well-played-card .front-wrapper .quads-row .quad .pseudo_image {
+.card.front.well-played-card .front-wrapper .quads-row .quad .resource-image.pseudo_image {
   position: absolute;
   top: 50%;
   left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card.front.well-played-card .front-wrapper .quads-row .quad .resource-image.pseudo_image .purpose-number {
+  font-size: 32px;
+  font-weight: bold;
 }
 
 .card.back.well-played-card {
