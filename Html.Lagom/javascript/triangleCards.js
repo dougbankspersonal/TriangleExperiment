@@ -6,7 +6,7 @@ define([
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
-  "javascript/rectangleCardData",
+  "javascript/triangleCardData",
   "dojo/domReady!",
 ], function (
   domStyle,
@@ -14,7 +14,7 @@ define([
   debugLog,
   genericUtils,
   htmlUtils,
-  rectangleCardData
+  triangleCardData
 ) {
   //-----------------------------------
   //
@@ -119,14 +119,6 @@ define([
       "Doug addNthQuad: opt_quadDesc = " + JSON.stringify(opt_quadDesc)
     );
 
-    /*
-    var quadType =
-      quadIndex == 0 || quadIndex == 3
-        ? rectangleCardData.quadTypes.Add
-        : rectangleCardData.quadTypes.Lose;
-    */
-    var quadType = rectangleCardData.quadTypes.Add;
-
     var resourceTypeToResourceCountMap = opt_quadDesc
       ? opt_quadDesc.resourceTypeToResourceCountMap
       : {};
@@ -141,7 +133,6 @@ define([
         "quad",
         "resource-count-" + totalResourceCount,
         "quad-index-" + quadIndex,
-        "quad-type-" + quadType,
       ],
       "quad"
     );
@@ -174,7 +165,7 @@ define([
         );
         currentResourceCount++;
 
-        if (resourceType == rectangleCardData.resourceTypes.AddPurpose) {
+        if (resourceType == triangleCardData.symboleTypes.Purpose) {
           var purposeNumber = quadDesc.purposeNumbers.shift();
           var purposeNumberNode = htmlUtils.addDiv(
             imageNode,
@@ -243,7 +234,7 @@ define([
 
   function addCardFront(parentNode, index) {
     console.log("DougTmp: addCardFront: index = ", index);
-    var cardConfig = rectangleCardData.getCardConfigAtIndex(index);
+    var cardConfig = triangleCardData.getCardConfigAtIndex(index);
     console.log(
       "DougTmp: addCardFront: cardConfig = ",
       JSON.stringify(cardConfig)

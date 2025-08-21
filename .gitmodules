@@ -4,6 +4,6 @@
 [submodule "Html.Life/SharedWebBoardgame"]
 	path = Html.Life/SharedWebBoardgame
 	url = https://github.com/dougbankspersonal/SharedWebBoardgame.git
-[submodule "Html.WellPlayed/SharedWebBoardgame"]
-	path = Html.WellPlayed/SharedWebBoardgame
+[submodule "Html.Lagom/SharedWebBoardgame"]
+	path = Html.Lagom/SharedWebBoardgame
 	url = https://github.com/dougbankspersonal/SharedWebBoardgame.git

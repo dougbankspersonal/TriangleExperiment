@@ -9,52 +9,29 @@ define([
   // Constants
   //
   //-----------------------------------
-  const QuadType_Add = "add";
-  const QuadType_Lose = "lose";
+  const SymbolType_Relationships = "wc-relationships";
+  const SymbolType_Wealth = "wc-wealth";
+  const SymbolType_Purpose = "wc-purpose";
+  const SymbolType_Accomplishment = "wc-accomplishment";
 
-  const quadTypes = {
-    Add: QuadType_Add,
-    Lose: QuadType_Lose,
-  };
-
-  const ResourceType_AddRelationships = "wc-relationships";
-  const ResourceType_AddWealth = "wc-wealth";
-  const ResourceType_AddPurpose = "wc-purpose";
-  const ResourceType_AddLeisure = "wc-leisure";
-  const ResourceType_AddAccomplishment = "wc-accomplishment";
-
-  const ResourceType_LoseHealth = "wc-lose-health";
-  const ResourceType_LoseWealth = "wc-lose-wealth";
-  const ResourceType_LoseRelationships = "wc-lose-relationships";
-
-  const resourceTypes = {
-    AddRelationships: ResourceType_AddRelationships,
-    AddWealth: ResourceType_AddWealth,
-    AddPurpose: ResourceType_AddPurpose,
-    AddLeisure: ResourceType_AddLeisure,
-    AddAccomplishment: ResourceType_AddAccomplishment,
-
-    LoseHealth: ResourceType_LoseHealth,
-    LoseWealth: ResourceType_LoseWealth,
-    LoseRelationships: ResourceType_LoseRelationships,
-  };
-
-  var loseToAddAnalogueMap = {
-    [resourceTypes.LoseWealth]: resourceTypes.AddWealth,
-    [resourceTypes.LoseRelationships]: resourceTypes.AddRelationships,
+  const symbolTypes = {
+    Relationships: SymbolType_Relationships,
+    Wealth: SymbolType_Wealth,
+    Purpose: SymbolType_Purpose,
+    Accomplishment: SymbolType_Accomplishment,
   };
 
   const resourceTypesAdd = [
-    resourceTypes.AddWealth,
-    resourceTypes.AddPurpose,
-    resourceTypes.AddRelationships,
-    resourceTypes.AddAccomplishment,
+    symbolTypes.AddWealth,
+    symbolTypes.Purpose,
+    symbolTypes.AddRelationships,
+    symbolTypes.AddAccomplishment,
   ];
 
   const resourceTypesLose = [
-    resourceTypes.LoseWealth,
-    resourceTypes.LoseHealth,
-    resourceTypes.LoseRelationships,
+    symbolTypes.LoseWealth,
+    symbolTypes.LoseHealth,
+    symbolTypes.LoseRelationships,
   ];
 
   const seededZeroToOneRandomFunction =
@@ -216,7 +193,7 @@ define([
 
           // Did this quad have purpose?
           var numPurpose =
-            quadDesc.resourceTypeToResourceCountMap[resourceTypes.AddPurpose];
+            quadDesc.resourceTypeToResourceCountMap[symbolTypes.Purpose];
           numPurpose = numPurpose ? numPurpose : 0;
           if (numPurpose > 0) {
             var purposeNumbers = [];
@@ -265,8 +242,7 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
-    resourceTypes: resourceTypes,
-    quadTypes: quadTypes,
+    symboleTypes: symbolTypes,
     resourceTypesAdd: resourceTypesAdd,
     resourceTypesLose: resourceTypesLose,
 

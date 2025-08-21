@@ -10,27 +10,27 @@ define([
   //
   //-----------------------------------
 
-  const SymbolType_AddRelationships = "wc-relationships";
-  const SymbolType_AddWealth = "wc-wealth";
-  const SymbolType_AddPurpose = "wc-purpose";
-  const SymbolType_AddAccomplishment = "wc-accomplishment";
+  const SymbolType_Relationships = "wc-relationships";
+  const SymbolType_Wealth = "wc-wealth";
+  const SymbolType_Purpose = "wc-purpose";
+  const SymbolType_Accomplishment = "wc-accomplishment";
 
   const symbolTypes = {
-    AddRelationships: SymbolType_AddRelationships,
-    AddWealth: SymbolType_AddWealth,
-    AddPurpose: SymbolType_AddPurpose,
-    AddAccomplishment: SymbolType_AddAccomplishment,
+    AddRelationships: SymbolType_Relationships,
+    AddWealth: SymbolType_Wealth,
+    Purpose: SymbolType_Purpose,
+    AddAccomplishment: SymbolType_Accomplishment,
   };
 
   var symbolTypesArray = [
     symbolTypes.AddRelationships,
     symbolTypes.AddWealth,
-    symbolTypes.AddPurpose,
+    symbolTypes.Purpose,
     symbolTypes.AddAccomplishment,
   ];
 
   const seededZeroToOneRandomFunction =
-    genericUtils.createSeededGetZeroToOneRandomFunction(3788448);
+    genericUtils.createSeededGetZeroToOneRandomFunction(387438748);
 
   //-----------------------------------
   //
@@ -284,7 +284,14 @@ define([
             layout
           );
           if (tryCount == numTriesForOptimalSymbolPicking) {
-            console.assert(false, "tried too many times to get a good map");
+            console.assert(
+              false,
+              "layoutIndex = " +
+                layoutIndex +
+                " instanceIndex = " +
+                instanceIndex +
+                ": tried too many times to get a good map: using it anyway."
+            );
           }
           if (
             mapsAreGood(testMaps) ||
@@ -311,7 +318,7 @@ define([
 
           // Did this quad have purpose?
           var numPurpose =
-            quadDesc.resourceTypeToResourceCountMap[symbolTypes.AddPurpose];
+            quadDesc.resourceTypeToResourceCountMap[symbolTypes.Purpose];
           numPurpose = numPurpose ? numPurpose : 0;
           if (numPurpose > 0) {
             var purposeNumbers = [];

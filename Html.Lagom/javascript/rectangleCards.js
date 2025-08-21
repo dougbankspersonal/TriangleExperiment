@@ -119,14 +119,6 @@ define([
       "Doug addNthQuad: opt_quadDesc = " + JSON.stringify(opt_quadDesc)
     );
 
-    /*
-    var quadType =
-      quadIndex == 0 || quadIndex == 3
-        ? rectangleCardData.quadTypes.Add
-        : rectangleCardData.quadTypes.Lose;
-    */
-    var quadType = rectangleCardData.quadTypes.Add;
-
     var resourceTypeToResourceCountMap = opt_quadDesc
       ? opt_quadDesc.resourceTypeToResourceCountMap
       : {};
@@ -141,7 +133,6 @@ define([
         "quad",
         "resource-count-" + totalResourceCount,
         "quad-index-" + quadIndex,
-        "quad-type-" + quadType,
       ],
       "quad"
     );
@@ -174,7 +165,7 @@ define([
         );
         currentResourceCount++;
 
-        if (resourceType == rectangleCardData.resourceTypes.AddPurpose) {
+        if (resourceType == rectangleCardData.symboleTypes.Purpose) {
           var purposeNumber = quadDesc.purposeNumbers.shift();
           var purposeNumberNode = htmlUtils.addDiv(
             imageNode,

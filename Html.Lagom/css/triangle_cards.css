@@ -51,7 +51,7 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  background-image: url("../images/WellPlayedCards/card-face.png");
+  background-image: url("../images/LagomCards/card-face.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -69,11 +69,8 @@
   width: 100%;
   height: 50%;
 }
-.card.front.well-played-card .front-wrapper .quads-row .quad.quad-type-add {
+.card.front.well-played-card .front-wrapper .quads-row .quad {
   background-color: rgba(220, 250, 220, 0.2);
-}
-.card.front.well-played-card .front-wrapper .quads-row .quad.quad-type-lose {
-  background-color: rgba(250, 220, 220, 0.2);
 }
 .card.front.well-played-card .front-wrapper .quads-row .quad.quad-index-2,
 .card.front.well-played-card .front-wrapper .quads-row .quad.quad-index-3 {
@@ -107,7 +104,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url("../images/WellPlayedCards/card-back.png");
+  background-image: url("../images/LagomCards/card-back.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -117,4 +114,4 @@
   height: 90%;
 }
 
-/*# sourceMappingURL=rectangle_cards.css.map */
+/*# sourceMappingURL=triangle_cards.css.map */
