@@ -1,7 +1,7 @@
 <html>
   <head>
-    <link rel="stylesheet" href="../../css/card_array.css" />
-    <link rel="stylesheet" href="../../css/well_played_cards.css" />
+    <link rel="stylesheet" href="../../css/rectangle_card_array.css" />
+    <link rel="stylesheet" href="../../css/rectangle_cards.css" />
     <link rel="stylesheet" href="../../css/well_played_images.css" />
     <link rel="stylesheet" href="../../SharedWebBoardGame/css/card.css" />
     <link rel="stylesheet" href="../../SharedWebBoardGame/css/main.css" />
@@ -51,8 +51,8 @@
         "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "javascript/wellPlayedCards",
-        "javascript/cardData",
+        "javascript/rectangleCards",
+        "javascript/rectangleCardData",
       ], function (
         dom,
         domStyle,
@@ -62,8 +62,8 @@
         genericUtils,
         htmlUtils,
         systemConfigs,
-        wellPlayedCards,
-        cardData
+        rectangleCards,
+        rectangleCardData
       ) {
         var cardWiggleDeg = 3;
 
@@ -125,7 +125,7 @@
         systemConfigs.setSystemConfigs({
           pageless: true,
         });
-        cardData.generateCardConfigs();
+        rectangleCardData.generateCardConfigs();
 
         var cardWidthSpacing = genericMeasurements.standardCardWidthPx * 0.5;
         var cardHeightSpacing = genericMeasurements.standardCardHeightPx * 0.5;
@@ -154,10 +154,10 @@
           var cardDesc = cardDescArray[i];
           var card;
           if (cardDesc.facedown) {
-            card = wellPlayedCards.addCardBack(pageOfItemsContentsNode, i);
+            card = rectangleCards.addCardBack(pageOfItemsContentsNode, i);
           } else {
             console.log("Doug: Adding card with index = " + cardDesc.index);
-            card = wellPlayedCards.addCardFront(
+            card = rectangleCards.addCardFront(
               pageOfItemsContentsNode,
               cardDesc.index
             );

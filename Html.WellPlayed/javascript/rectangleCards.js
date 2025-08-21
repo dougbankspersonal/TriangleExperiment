@@ -6,9 +6,16 @@ define([
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
-  "javascript/cardData",
+  "javascript/rectangleCardData",
   "dojo/domReady!",
-], function (domStyle, cards, debugLog, genericUtils, htmlUtils, cardData) {
+], function (
+  domStyle,
+  cards,
+  debugLog,
+  genericUtils,
+  htmlUtils,
+  rectangleCardData
+) {
   //-----------------------------------
   //
   // Constants
@@ -115,10 +122,10 @@ define([
     /*
     var quadType =
       quadIndex == 0 || quadIndex == 3
-        ? cardData.quadTypes.Add
-        : cardData.quadTypes.Lose;
+        ? rectangleCardData.quadTypes.Add
+        : rectangleCardData.quadTypes.Lose;
     */
-    var quadType = cardData.quadTypes.Add;
+    var quadType = rectangleCardData.quadTypes.Add;
 
     var resourceTypeToResourceCountMap = opt_quadDesc
       ? opt_quadDesc.resourceTypeToResourceCountMap
@@ -167,7 +174,7 @@ define([
         );
         currentResourceCount++;
 
-        if (resourceType == cardData.resourceTypes.AddPurpose) {
+        if (resourceType == rectangleCardData.resourceTypes.AddPurpose) {
           var purposeNumber = quadDesc.purposeNumbers.shift();
           var purposeNumberNode = htmlUtils.addDiv(
             imageNode,
@@ -235,7 +242,12 @@ define([
   }
 
   function addCardFront(parentNode, index) {
-    var cardConfig = cardData.getCardConfigAtIndex(index);
+    console.log("DougTmp: addCardFront: index = ", index);
+    var cardConfig = rectangleCardData.getCardConfigAtIndex(index);
+    console.log(
+      "DougTmp: addCardFront: cardConfig = ",
+      JSON.stringify(cardConfig)
+    );
     debugLog.debugLog(
       "Cards",
       "Doug: in addCardFront i == " +

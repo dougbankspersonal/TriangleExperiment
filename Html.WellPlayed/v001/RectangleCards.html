@@ -1,7 +1,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="../css/well_played_images.css" />
-    <link rel="stylesheet" href="../css/well_played_cards.css" />
+    <link rel="stylesheet" href="../css/rectangle_cards.css" />
     <link rel="stylesheet" href="../SharedWebBoardGame/css/card.css" />
     <link rel="stylesheet" href="../SharedWebBoardGame/css/main.css" />
     <link rel="stylesheet" href="../SharedWebBoardGame/css/image.css" />
@@ -51,16 +51,16 @@
         "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "javascript/cardData",
-        "javascript/wellPlayedCards",
+        "javascript/rectangleCardData",
+        "javascript/rectangleCards",
       ], function (
         cards,
         debugLog,
         genericUtils,
         htmlUtils,
         systemConfigs,
-        cardData,
-        wellPlayedCards
+        rectangleCardData,
+        rectangleCards
       ) {
         var sc = systemConfigs.getCardSystemConfigs();
         systemConfigs.setSystemConfigs(sc);
@@ -71,18 +71,18 @@
           "Doug: cardsPerRow = " + sc.cardsPerRow
         );
 
-        cardData.generateCardConfigs();
+        rectangleCardData.generateCardConfigs();
 
-        var numCards = cardData.getNumCards();
+        var numCards = rectangleCardData.getNumCards();
 
         debugLog.debugLog("CardConfigs", "Doug: numCards = " + numCards);
 
         var backConfig = {
-          callback: wellPlayedCards.addCardBack,
+          callback: rectangleCards.addCardBack,
           classes: ["well-played-card"],
         };
 
-        cards.addCards(numCards, wellPlayedCards.addCardFront, backConfig);
+        cards.addCards(numCards, rectangleCards.addCardFront, backConfig);
       });
     </script>
   </body>
