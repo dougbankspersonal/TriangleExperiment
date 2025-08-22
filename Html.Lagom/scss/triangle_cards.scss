@@ -1,4 +1,4 @@
-.card_array>.page_of_items_contents>.card.lagom-card {
+.card_array>.page_of_items_contents>.card.lagom {
   //    filter: drop-shadow(0 0 8px red);
   box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.5);
 }
@@ -8,48 +8,19 @@
 }
 
 
-.card.lagom-card {
+.card.lagom {
   font-family: "Quintessential", serif;
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
     1px 1px 0 #fff;
   font-weight: bold;
 }
 
-.card.front.lagom-card {
+.card.front.lagom {
   padding-top: 27px;
   padding-bottom: 27px;
   padding-left: 14px;
   padding-right: 14px;
   position: relative;
-  border: 4px solid rgb(157, 108, 4);
-
-  .discard-reward-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #eda;
-    border: 2px solid #9d6c04;
-
-    .colon {
-      font-family: 'Quintessential', serif;
-    }
-  }
-
-  .discard-reward-wrapper.index-0 {
-    top: 10px;
-    left: 10px;
-  }
-
-  .discard-reward-wrapper.index-1 {
-    bottom: 10px;
-    right: 10px;
-    transform: rotate(180deg);
-  }
 
   .front-wrapper {
     width: 100%;
@@ -58,11 +29,13 @@
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    background-image: url("../images/LagomCards/card-face.png");
-    background-size: cover;
+    background-image: url("../images/LagomCards/triangle-parchment-final.png");
     background-repeat: no-repeat;
-    background-position: center;
+    background-size: 100% auto;
+    /* scale by width, height auto */
+    background-position: 0px 0px;
 
+    /* flush with bottom */
     .sectors-row-0 {
       align-items: end;
     }
@@ -79,29 +52,14 @@
       height: 50%;
 
       .sector {
-        background-color: rgba(220, 250, 220, 0.2);
-      }
-
-      .sector.sector-index-2,
-      .sector.sector-index-3 {
-        transform: rotate(180deg);
-      }
-
-
-      .sector {
         display: flex;
         justify-content: center;
-        align-items: center;
-        position: relative;
-        border: 3px solid rgba(157, 108, 4, 0.4);
-        height: 100%;
-        width: 50%;
+        align-items: flex-end;
+        position: absolute;
         overflow: hidden;
 
         .symbol-image.pseudo_image {
           position: absolute;
-          top: 50%;
-          left: 50%;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -112,11 +70,12 @@
           }
         }
       }
+
     }
   }
 }
 
-.card.back.lagom-card {
+.card.back.lagom {
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -1,13 +1,4 @@
-/* Deprecated */
-
-define([
-  "dojo/dom-style",
-  "sharedJavascript/cards",
-  "sharedJavascript/debugLog",
-  "sharedJavascript/genericUtils",
-  "sharedJavascript/htmlUtils",
-  "dojo/domReady!",
-], function (domStyle, cards, debugLog, genericUtils, htmlUtils) {
+define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   // This should be a number with a sane value.
   function assertIsNumber(value) {
     if (typeof value !== "number" || isNaN(value)) {
@@ -153,7 +144,7 @@ define([
 
     debugLog.debugLog(
       "CardConfigs",
-      "Doug: makeCardConfig: sectorMaps = " + JSON.stringify(sectorMaps)
+      "makeCardConfig: sectorMaps = " + JSON.stringify(sectorMaps)
     );
 
     var cardConfig = {
@@ -169,7 +160,7 @@ define([
       var symbolsRequiringNumbers = opt_symbolsRequiringNumbers || {};
       debugLog.debugLog(
         "CardConfigs",
-        "Doug: makeCardConfig: symbolsRequiringNumbers = " +
+        "makeCardConfig: symbolsRequiringNumbers = " +
           JSON.stringify(symbolsRequiringNumbers)
       );
 

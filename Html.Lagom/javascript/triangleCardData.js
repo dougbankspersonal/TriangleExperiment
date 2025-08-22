@@ -2,319 +2,244 @@ define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
+  "javascript/lagomCardUtils",
+  "javascript/lagomCardDataUtils",
   "dojo/domReady!",
-], function (cards, debugLog, genericUtils) {
+], function (
+  cards,
+  debugLog,
+  genericUtils,
+  lagomCardUtils,
+  lagomCardDataUtils
+) {
   //-----------------------------------
   //
   // Constants
   //
   //-----------------------------------
-
   const SymbolType_Relationships = "wc-relationships";
   const SymbolType_Wealth = "wc-wealth";
   const SymbolType_Purpose = "wc-purpose";
   const SymbolType_Accomplishment = "wc-accomplishment";
 
   const symbolTypes = {
-    AddRelationships: SymbolType_Relationships,
-    AddWealth: SymbolType_Wealth,
+    Relationships: SymbolType_Relationships,
+    Wealth: SymbolType_Wealth,
     Purpose: SymbolType_Purpose,
-    AddAccomplishment: SymbolType_Accomplishment,
+    Accomplishment: SymbolType_Accomplishment,
   };
 
-  var symbolTypesArray = [
-    symbolTypes.AddRelationships,
-    symbolTypes.AddWealth,
+  const symbolTypesArray = [
+    symbolTypes.Relationships,
+    symbolTypes.Wealth,
     symbolTypes.Purpose,
-    symbolTypes.AddAccomplishment,
+    symbolTypes.Accomplishment,
   ];
 
   const seededZeroToOneRandomFunction =
-    genericUtils.createSeededGetZeroToOneRandomFunction(387438748);
+    genericUtils.createSeededGetZeroToOneRandomFunction(36593650);
 
   //-----------------------------------
   //
   // Global vars
   //
   //-----------------------------------
-  const gNumTriesForOptimalSymbolPicking = 10;
+  var gCardConfigs = [];
 
-  // Each card has N sectors.
-  const gNumSectorsPerCard = 4;
+  // All cards have 4 symbols.
+  var gNumSymbolsPerCard = 4;
+  // Triangle sectors are indexed like so:
+  //                 0
+  //                 2
+  //               1    3
 
-  // Each card has M symbols.
-  const gNumSymbolsPerCard = 6;
+  function generateOneZeroNoThreeArrays() {
+    const results = new Set();
 
-  // The order of sectors:
-  //            0
-  //            3
-  //          2   1
-  //
-  // I could generate this mathematically but it helps me to see them all explicitly spelled out.
-  // Symbol distribution wise:
-  // 2 outer sectors have 2, 1 outer sectors has 1: inner sectors has one.
-  const layout2211 = [2, 2, 1, 1];
-  const layout2121 = [2, 1, 2, 1];
-  const layout1221 = [1, 2, 2, 1];
+    function backtrack(arr, sum, zeros) {
+      if (arr.length === 4) {
+        if (sum === 4 && zeros === 1) {
+          results.add(JSON.stringify(arr));
+        }
+        return;
+      }
 
-  // 1 outer sectors has 2, 2 outer sectors have 1: inner sectors has 2.
-  const layout2112 = [2, 1, 1, 2];
-  const layout1212 = [1, 2, 1, 2];
-  const layout1122 = [1, 1, 2, 2];
+      for (let val = 0; val <= 2; val++) {
+        backtrack([...arr, val], sum + val, zeros + (val === 0 ? 1 : 0));
+      }
+    }
 
-  // 2 outer sectors have 2, 1 outer has 2: inner has 2.
-  const layout2202 = [2, 2, 0, 2];
-  const layout2022 = [2, 0, 2, 2];
-  const layout0222 = [0, 2, 2, 2];
+    backtrack([], 0, 0);
 
-  // 3 outer sectors have 2: inner sectors has 0.
-  const sectors = [2, 2, 2, 0];
+    return Array.from(results).map((s) => JSON.parse(s));
+  }
 
-  // Each   layout is equally likely.
-  const layouts = [
-    layout2211,
-    layout2121,
-    layout1221,
+  const gOneZeroNoThreeArrays = generateOneZeroNoThreeArrays();
 
-    layout2112,
-    layout1212,
-    layout1122,
+  console.log(
+    "gOneZeroNoThreeArrays = " + JSON.stringify(gOneZeroNoThreeArrays)
+  );
 
-    layout2202,
-    layout2022,
-    layout0222,
+  // we want various permutations.
+  function generateAllOneArrays(numArrays) {
+    var allOneArrays = [];
+    // Half have no blanks.
+    for (var i = 0; i < numArrays; i++) {
+      allOneArrays.push([1, 1, 1, 1]);
+    }
+    return allOneArrays;
+  }
 
-    layout2220,
+  var gAllOnesArrays = generateAllOneArrays(gOneZeroNoThreeArrays.length);
+
+  var gSymbolCountBySectorIndexArray = [
+    ...gOneZeroNoThreeArrays,
+    ...gAllOnesArrays,
   ];
 
-  // For each layout with have n instances of that layout.
-  const instancesPerLayout = 6;
-  const totalNumCards = layouts.length * instancesPerLayout;
-
-  // Card has numSymbolsPerCard, so...
-  const totalNumSymbols = totalNumCards * gNumSymbolsPerCard;
-  // N different symbol types...
-  const appearancesPerSymbol = totalNumSymbols / symbolTypesArray.length;
-
-  var cardConfigs = [];
-
-  // Should divide evenly.
-  console.assert(
-    appearancesPerSymbol == Math.floor(appearancesPerSymbol),
-    "appearancesPerSymbol == " +
-      appearancesPerSymbol +
-      ": " +
-      totalNumSymbols +
-      " / " +
-      symbolTypesArray.length +
-      " should be an integer."
+  console.log(
+    "gSymbolCountBySectorIndexArray = " +
+      JSON.stringify(gSymbolCountBySectorIndexArray)
   );
+
+  // For each symbolCountBySectorIndex, how many instances of that layout do we have?
+  // We are aiming for a 60-70is deck. 72?
+  const gNumInstancesPerLayout = 3;
+  const gTotalCardsInDeck =
+    gNumInstancesPerLayout * gSymbolCountBySectorIndexArray.length;
+
+  const gTotalSymbolsInDeck = gTotalCardsInDeck * gNumSymbolsPerCard;
+  const gNumInstancesEachSymbol = gTotalSymbolsInDeck / symbolTypesArray.length;
+
+  // Should divide evenly: each symbol has equal likelihood of showing up.
+  console.assert(
+    gNumInstancesEachSymbol == Math.floor(gNumInstancesEachSymbol),
+    "gNumInstancesEachSymbol is not an int: gNumInstancesEachSymbol = " +
+      gNumInstancesEachSymbol +
+      ": gTotalSymbolsInDeck = " +
+      gTotalSymbolsInDeck +
+      ": symbolTypesArray.length = " +
+      symbolTypesArray.length
+  );
+
+  gMaxPurpose = 6;
+  // This should slice up evenly so all purpose numbers have same likelihood of showing up.
+  // There are gNumInstancesEachSymbol purpose symbols in the deck.
+  const gInstancesEachPurposeNumber = gNumInstancesEachSymbol / gMaxPurpose;
+  console.assert(
+    gInstancesEachPurposeNumber == Math.floor(gInstancesEachPurposeNumber),
+    "gInstancesEachPurposeNumber is not an int"
+  );
+
+  var purposeNumbers = [];
+  for (var i = 0; i < gMaxPurpose; i++) {
+    purposeNumbers.push(i + 1);
+  }
+
+  // Many times we try to get a card that doesn't have too many of one symbol.
+  var gMaxTryCount = 10;
 
   //-----------------------------------
   //
   // Global functions
   //
   //-----------------------------------
-  function generateAllSymbolsUsedArray() {
-    var allSymbolsArray = [];
-    for (
-      var symbolIndex = 0;
-      symbolIndex < symbolTypesArray.length;
-      symbolIndex++
-    ) {
-      var symbolType = symbolTypesArray[symbolIndex];
-      for (
-        var symbolCount = 0;
-        symbolCount < appearancesPerSymbol;
-        symbolCount++
-      ) {
-        allSymbolsArray.push(symbolType);
-      }
-    }
-    debugLog.debugLog(
-      "CardConfigs",
-      "rawSymbolArray = " + JSON.stringify(allSymbolsArray)
-    );
-    return allSymbolsArray;
-  }
-
-  function generateAllPurposeNumbersArray() {
-    var allPurposeNumbersArray = [];
-    for (
-      var symbolIndex = 0;
-      symbolIndex < appearancesPerSymbol;
-      symbolIndex++
-    ) {
-      var purposeNumber = symbolIndex % gNumSymbolsPerCard;
-      allPurposeNumbersArray.push(purposeNumber + 1);
-    }
-    debugLog.debugLog(
-      "CardConfigs",
-      "allPurposeNumbersArray = " + JSON.stringify(allPurposeNumbersArray)
-    );
-    return allPurposeNumbersArray;
-  }
-
-  function mapsAreGood(maps) {
-    // Maps should have no more than N of any one symbol.
-    var totals = {};
-    for (var i = 0; i < maps.length; i++) {
-      var map = maps[i];
-      for (var symbolType in maps[i]) {
-        if (!totals[symbolType]) {
-          totals[symbolType] = 0;
-        }
-        totals[symbolType] += map[symbolType];
-      }
-    }
-    for (var symbolType in totals) {
-      if (totals[symbolType] > gNumSymbolsPerCard / 2) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   function generateCardConfigsInternal() {
-    var newCardConfigs = [];
+    var rawSymbolArray = lagomCardDataUtils.generateNCountArray(
+      symbolTypesArray,
+      gNumInstancesEachSymbol
+    );
+    debugLog.debugLog(
+      "CardConfig",
+      "rawSymbolArray = " + JSON.stringify(rawSymbolArray)
+    );
 
-    // Get an array of all symbols used across all cards.
-    // Not shuffled or anything.
-    var allSymbolsArray = generateAllSymbolsUsedArray();
-
-    // Also make an array of purpose numbers.  Again, not shuffled.
-    var allPurposeNumbersArray = generateAllPurposeNumbersArray();
+    // Make an array of purpose numbers:
+    var rawPurposeNumberArray = lagomCardDataUtils.generateNCountArray(
+      purposeNumbers,
+      gInstancesEachPurposeNumber
+    );
+    debugLog.debugLog(
+      "CardConfig",
+      "rawPurposeNumberArray = " + JSON.stringify(rawPurposeNumberArray)
+    );
 
     // Shuffle symbols and purpose numbers.
-    var shuffledSymbolArray = genericUtils.copyAndShuffleArray(
-      allSymbolsArray,
+    var shuffledArrayOfSymbols = genericUtils.copyAndShuffleArray(
+      rawSymbolArray,
       seededZeroToOneRandomFunction
     );
-    var shuffledPurposeNumberArray = genericUtils.copyAndShuffleArray(
-      allPurposeNumbersArray,
+    var shuffledArrayOfPurposeNumbers = genericUtils.copyAndShuffleArray(
+      rawPurposeNumberArray,
       seededZeroToOneRandomFunction
     );
 
-    for (var layoutIndex = 0; layoutIndex < layouts.length; layoutIndex++) {
-      debugLog.debugLog(
-        "CardConfigs",
-        "Doug: generateCardConfigsInternal layoutIndex = " + layoutIndex
-      );
+    var cardConfigsAccumulator = [];
 
-      debugLog.debugLog(
-        "CardConfigs",
-        "Doug: shuffledSymbolArray = " + JSON.stringify(shuffledSymbolArray)
-      );
-      debugLog.debugLog(
-        "CardConfigs",
-        "Doug: shuffledSymbolArray.length = " +
-          JSON.stringify(shuffledSymbolArray.length)
-      );
-      debugLog.debugLog(
-        "CardConfigs",
-        "Doug: shuffledPurposeNumberArray = " +
-          JSON.stringify(shuffledPurposeNumberArray)
-      );
-      debugLog.debugLog(
-        "CardConfigs",
-        "Doug: shuffledPurposeNumberArray.length = " +
-          JSON.stringify(shuffledPurposeNumberArray.length)
-      );
+    for (var cardIndex = 0; cardIndex < gTotalCardsInDeck; cardIndex++) {
+      var layoutIndex = Math.floor(cardIndex / gNumInstancesPerLayout);
+      var gSymbolCountBySectorIndex =
+        gSymbolCountBySectorIndexArray[layoutIndex];
 
-      var layout = layouts[layoutIndex];
-      debugLog.debugLog(
-        "CardConfigs",
-        "Doug: layout = " + JSON.stringify(layout)
-      );
-
-      // Make card configs for this layout.
-      for (
-        var instanceIndex = 0;
-        instanceIndex < instancesPerLayout;
-        instanceIndex++
-      ) {
-        // This is a lazy way to do it, but for now it'll do:
-        // If any map has any value > numSymbolsPerCard/2, then more than half the card is one symbol.  Maybe not
-        // good for gameplay?
-        // Reject and try again n times.
-        var maps;
-        var tryCount = 0;
-        while (true) {
-          var copyOfShuffledSymbolArray = genericUtils.copyAndShuffleArray(
-            shuffledSymbolArray,
+      // Try this N times until we get a card with a nice distribution of symbols.
+      var tryCount = 0;
+      var cardConfig;
+      while (true) {
+        // Make a copy which is different.
+        var copyOfShuffledArrayOfSymbols = genericUtils.copyAndShuffleArray(
+          shuffledArrayOfSymbols,
+          seededZeroToOneRandomFunction
+        );
+        var copyOfShuffledArrayOfPurposeNumbers =
+          genericUtils.copyAndShuffleArray(
+            shuffledArrayOfPurposeNumbers,
             seededZeroToOneRandomFunction
           );
-          var testMaps = makeSectorMaps(
-            copyOfShuffledSymbolArray,
-            layout,
-            gNumSymbolsPerCard
-          );
-          if (tryCount == gNumTriesForOptimalSymbolPicking) {
-            console.assert(
-              false,
-              "layoutIndex = " +
-                layoutIndex +
-                " instanceIndex = " +
-                instanceIndex +
-                ": tried too many times to get a good map: using it anyway."
-            );
-          }
-          if (
-            mapsAreGood(testMaps) ||
-            tryCount == gNumTriesForOptimalSymbolPicking
-          ) {
-            maps = testMaps;
-            shuffledSymbolArray = copyOfShuffledSymbolArray;
-            break;
-          }
-          tryCount++;
-        }
 
-        debugLog.debugLog(
-          "CardConfigs",
-          "Doug: maps = " + JSON.stringify(maps)
+        // Use the originals to make the call.
+        var symbolsRequiringNumbers = {
+          [symbolTypes.Purpose]: shuffledArrayOfPurposeNumbers,
+        };
+
+        cardConfig = lagomCardDataUtils.makeCardConfig(
+          shuffledArrayOfSymbols,
+          gSymbolCountBySectorIndex,
+          gNumSymbolsPerCard,
+          symbolsRequiringNumbers
         );
-        var cardConfig = {};
-        var sectorDescriptors = [];
-        for (var sectorIndex = 0; sectorIndex < maps.length; sectorIndex++) {
-          var sectorDescriptor = {
-            sectorIndex: sectorIndex,
-            sectorMap: maps[sectorIndex],
-          };
+        tryCount++;
 
-          // Did this sector have purpose?
-          var numPurpose = sectorDescriptor.sectorMap[symbolTypes.Purpose];
-          numPurpose = numPurpose ? numPurpose : 0;
-          if (numPurpose > 0) {
-            var purposeNumbers = [];
-            for (
-              var purposeIndex = 0;
-              purposeIndex < numPurpose;
-              purposeIndex++
-            ) {
-              var purposeNumber = shuffledPurposeNumberArray.shift();
-              purposeNumbers.push(purposeNumber);
-            }
-            sectorDescriptor.purposeNumbers = purposeNumbers;
-          }
-          sectorDescriptors.push(sectorDescriptor);
+        // If good, bail.
+        if (lagomCardUtils.cardHasNiceSymbolBalance(cardConfig)) {
+          break;
         }
-        cardConfig.sectorDescriptors = sectorDescriptors;
-        newCardConfigs.push(cardConfig);
-      } // One card.
-    } // One group.
+        // Too many tries: assert and bail.
+        if (tryCount >= gMaxTryCount) {
+          console.assert(
+            false,
+            "Failed to generate a good card after " + gMaxTryCount + " tries."
+          );
+          break;
+        }
+        // Try again.
+        shuffledArrayOfSymbols = copyOfShuffledArrayOfSymbols;
+        shuffledArrayOfPurposeNumbers = copyOfShuffledArrayOfPurposeNumbers;
+      }
 
-    return newCardConfigs;
+      cardConfigsAccumulator.push(cardConfig);
+    } // One card.
+
+    return cardConfigsAccumulator;
   }
 
   function getCardConfigAtIndex(index) {
-    return cards.getCardConfigAtIndex(cardConfigs, index);
+    return cards.getCardConfigAtIndex(gCardConfigs, index);
   }
 
   function generateCardConfigs() {
-    debugLog.debugLog("CardConfigs", "Doug: calling generateLowEndCardConfigs");
+    debugLog.debugLog("CardConfigs", "calling generateLowEndCardConfigs");
 
-    cardConfigs = generateCardConfigsInternal();
+    gCardConfigs = generateCardConfigsInternal();
   }
 
   //-----------------------------------
@@ -325,14 +250,15 @@ define([
   function getNumCards() {
     debugLog.debugLog(
       "CardConfigs",
-      "getNumCards: _cardConfigs = " + JSON.stringify(cardConfigs)
+      "getNumCards: _cardConfigs = " + JSON.stringify(gCardConfigs)
     );
-    return cards.getNumCardsFromConfigs(cardConfigs);
+    return cards.getNumCardsFromConfigs(gCardConfigs);
   }
 
   // This returned object becomes the defined value of this module
   return {
     symbolTypes: symbolTypes,
+    symbolTypesArray: symbolTypesArray,
 
     getNumCards: getNumCards,
     getCardConfigAtIndex: getCardConfigAtIndex,

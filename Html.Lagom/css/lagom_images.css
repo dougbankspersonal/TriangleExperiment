@@ -18,16 +18,8 @@ div.pseudo_image.wc-purpose {
   background-image: url("../images/LagomCards/wc-purpose.png");
 }
 
-div.pseudo_image.wc-lose-health {
-  background-image: url("../images/LagomCards/wc-lose-health.png");
-}
-
-div.pseudo_image.wc-lose-relationships {
-  background-image: url("../images/LagomCards/wc-lose-relationships.png");
-}
-
-div.pseudo_image.wc-lose-wealth {
-  background-image: url("../images/LagomCards/wc-lose-wealth.png");
+div.pseudo_image.wc-rest {
+  background-image: url("../images/LagomCards/wc-rest.png");
 }
 
 div.pseudo_image.lagom-title-shadow {
@@ -36,14 +28,6 @@ div.pseudo_image.lagom-title-shadow {
 
 div.pseudo_image.lagom-title {
   background-image: url("../images/LagomCards/lagom-title.png");
-}
-
-div.pseudo_image.discard {
-  background-image: url("../images/LagomCards/discard.png");
-}
-
-div.pseudo_image.coin {
-  background-image: url("../images/LagomCards/coin.png");
 }
 
 /*# sourceMappingURL=lagom_images.css.map */

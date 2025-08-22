@@ -48,6 +48,7 @@
       require([
         "sharedJavascript/cards",
         "sharedJavascript/debugLog",
+        "sharedJavascript/genericMeasurements",
         "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
@@ -56,13 +57,16 @@
       ], function (
         cards,
         debugLog,
+        genericMeasurements,
         genericUtils,
         htmlUtils,
         systemConfigs,
         rectangleCardData,
         rectangleCards
       ) {
-        var sc = systemConfigs.getCardSystemConfigs();
+        var sc = systemConfigs.getCardSystemConfigs({
+          cardHeightPx: genericMeasurements.standardCardWidthPx,
+        });
         systemConfigs.setSystemConfigs(sc);
 
         systemConfigs;
@@ -79,7 +83,13 @@
           classes: ["lagom"],
         };
 
-        cards.addCards(numCards, rectangleCards.addCardFront, backConfig);
+        function fudgedAddCardFront(parentNode, index) {
+          return rectangleCards.addCardFront(parentNode, index, {
+            isSquare: true,
+          });
+        }
+
+        cards.addCards(numCards, fudgedAddCardFront, backConfig);
       });
     </script>
   </body>

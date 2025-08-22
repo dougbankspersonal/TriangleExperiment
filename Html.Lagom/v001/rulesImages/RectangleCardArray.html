@@ -146,7 +146,7 @@
 
         debugLog.debugLog(
           "Cards",
-          "Doug: cardDescArray.length = ",
+          "cardDescArray.length = ",
           cardDescArray.length
         );
 
@@ -156,7 +156,6 @@
           if (cardDesc.facedown) {
             card = rectangleCards.addCardBack(pageOfItemsContentsNode, i);
           } else {
-            console.log("Doug: Adding card with index = " + cardDesc.index);
             card = rectangleCards.addCardFront(
               pageOfItemsContentsNode,
               cardDesc.index

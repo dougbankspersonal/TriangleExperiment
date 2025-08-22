@@ -4,6 +4,7 @@ define([
   "dojo/dom-style",
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
+  "sharedJavascript/genericMeasurements",
   "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
   "javascript/rectangleCardData",
@@ -12,6 +13,7 @@ define([
   domStyle,
   cards,
   debugLog,
+  genericMeasurements,
   genericUtils,
   htmlUtils,
   rectangleCardData
@@ -22,21 +24,41 @@ define([
   //
   //-----------------------------------
   const cardFrontPaddingPx = 0;
-  const imageSizesByResourceCount = {
-    1: 80,
-    2: 65,
-    3: 50,
+
+  const rect_imageSizePxByResourceCount = {
+    1: genericMeasurements.standardCardWidthPx * 0.33,
+    2: genericMeasurements.standardCardWidthPx * 0.271,
+    3: genericMeasurements.standardCardWidthPx * 0.24,
   };
 
-  const imageTranslateXByResourceCountAndIndex = {
-    1: [-50],
-    2: [-25, -75],
-    3: [-90, -90, 10],
+  const square_imageSizePxByResourceCount = {
+    1: genericMeasurements.standardCardWidthPx * 0.33,
+    2: genericMeasurements.standardCardWidthPx * 0.271,
+    3: genericMeasurements.standardCardWidthPx * 0.208,
   };
-  const imageTranslateYByResourceCountAndIndex = {
-    1: [-50],
-    2: [-100, -0],
-    3: [-125, 25, -50],
+
+  const rect_imageXPercentByResourceCountAndIndex = {
+    1: [0],
+    2: [25, -25],
+    3: [-35, 35, -35],
+  };
+
+  const square_imageXPercentByResourceCountAndIndex = {
+    1: [0],
+    2: [35, -35],
+    3: [-45, 0, 45],
+  };
+
+  const rect_imageYPercentByResourceCountAndIndex = {
+    1: [0],
+    2: [-40, 40],
+    3: [-75, 0, 75],
+  };
+
+  const square_imageYPercentByResourceCountAndIndex = {
+    1: [0],
+    2: [-35, 35],
+    3: [-45, 45, -45],
   };
 
   const gImageRotationBySectorIndex = [-45, 45, 45, -45];
@@ -53,11 +75,12 @@ define([
     imageNode,
     sectorIndex,
     symbolsThisSector,
-    symbolIndexInSector
+    symbolIndexInSector,
+    isSquare
   ) {
     debugLog.debugLog(
       "Cards",
-      "Doug: layoutPseudoImage: sectorIndex = " +
+      "layoutPseudoImage: sectorIndex = " +
         sectorIndex +
         " symbolsThisSector = " +
         symbolsThisSector +
@@ -65,55 +88,35 @@ define([
         symbolIndexInSector
     );
 
-    debugLog.debugLog(
-      "Cards",
-      "Doug: layoutPseudoImage: imageSizesByResourceCount = " +
-        JSON.stringify(imageSizesByResourceCount)
-    );
+    var xVals = isSquare
+      ? square_imageXPercentByResourceCountAndIndex
+      : rect_imageXPercentByResourceCountAndIndex;
+    var translateX = xVals[symbolsThisSector][symbolIndexInSector];
 
-    debugLog.debugLog(
-      "Cards",
-      "Doug: layoutPseudoImage: imageTranslateXByResourceCountAndIndex = " +
-        JSON.stringify(imageTranslateXByResourceCountAndIndex)
-    );
-    debugLog.debugLog(
-      "Cards",
-      "Doug: layoutPseudoImage: imageTranslateYByResourceCountAndIndex = " +
-        JSON.stringify(imageTranslateXByResourceCountAndIndex)
-    );
+    var yVals = isSquare
+      ? square_imageYPercentByResourceCountAndIndex
+      : rect_imageYPercentByResourceCountAndIndex;
 
-    var translateX =
-      imageTranslateXByResourceCountAndIndex[symbolsThisSector][
-        symbolIndexInSector
-      ];
-    var translateY =
-      imageTranslateYByResourceCountAndIndex[symbolsThisSector][
-        symbolIndexInSector
-      ];
-    debugLog.debugLog(
-      "Cards",
-      "Doug: layoutPseudoImage: translateX = " + JSON.stringify(translateX)
-    );
-    debugLog.debugLog(
-      "Cards",
-      "Doug: layoutPseudoImage: translateY = " + JSON.stringify(translateY)
-    );
+    var translateY = yVals[symbolsThisSector][symbolIndexInSector];
+
+    var sizes = isSquare
+      ? square_imageSizePxByResourceCount
+      : rect_imageSizePxByResourceCount;
 
     var rotation = gImageRotationBySectorIndex[sectorIndex];
     domStyle.set(imageNode, {
-      width: imageSizesByResourceCount[symbolsThisSector] + "px",
-      height: imageSizesByResourceCount[symbolsThisSector] + "px",
+      width: sizes[symbolsThisSector] + "px",
+      height: sizes[symbolsThisSector] + "px",
       transform: `translate(${translateX}%, ${translateY}%) rotate(${rotation}deg)`,
     });
   }
 
-  function addNthSector(parentNode, sectorIndex, opt_sectorDescriptor) {
-    debugLog.debugLog(
-      "Cards",
-      "Doug addNthSector: opt_sectorDescriptor = " +
-        JSON.stringify(opt_sectorDescriptor)
-    );
-
+  function addNthSector(
+    parentNode,
+    sectorIndex,
+    isSquare,
+    opt_sectorDescriptor
+  ) {
     var sectorDescriptor = opt_sectorDescriptor ? opt_sectorDescriptor : {};
 
     var sectorMap = sectorDescriptor ? sectorDescriptor.sectorMap : {};
@@ -159,7 +162,8 @@ define([
           imageNode,
           sectorIndex,
           symbolsThisSector,
-          symbolIndexInSector
+          symbolIndexInSector,
+          isSquare
         );
         symbolIndexInSector++;
 
@@ -178,16 +182,18 @@ define([
     return sectorNode;
   }
 
-  function addCardFront(parentNode, index) {
-    console.log("DougTmp: addCardFront: index = ", index);
-    var cardConfig = rectangleCardData.getCardConfigAtIndex(index);
+  function addCardFront(parentNode, index, opt_configs) {
     console.log(
-      "DougTmp: addCardFront: cardConfig = ",
-      JSON.stringify(cardConfig)
+      "Doug: genericMeasurements.standardCardWidthPx = " +
+        genericMeasurements.standardCardWidthPx
     );
+
+    var configs = opt_configs ? opt_configs : {};
+
+    var cardConfig = rectangleCardData.getCardConfigAtIndex(index);
     debugLog.debugLog(
       "Cards",
-      "Doug: in addCardFront i == " +
+      "in addCardFront i == " +
         index +
         " cardConfig = " +
         JSON.stringify(cardConfig)
@@ -219,7 +225,7 @@ define([
         var sectorDescriptor = cardConfig.sectorDescriptors[sectorIndex];
         console.assert(sectorDescriptor, "sectorDescriptor is null");
 
-        addNthSector(rowNode, sectorIndex, sectorDescriptor);
+        addNthSector(rowNode, sectorIndex, configs.isSquare, sectorDescriptor);
       }
     }
 

@@ -4,6 +4,7 @@ define([
   "dojo/dom-style",
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
+  "sharedJavascript/genericMeasurements",
   "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
   "javascript/triangleCardData",
@@ -12,6 +13,7 @@ define([
   domStyle,
   cards,
   debugLog,
+  genericMeasurements,
   genericUtils,
   htmlUtils,
   triangleCardData
@@ -22,27 +24,90 @@ define([
   //
   //-----------------------------------
   const cardFrontPaddingPx = 0;
+
+  var discardIconSize = 20;
+  var _discardRewardSupported = false;
+
+  // Triangle height = base/2 * rad(3).
+  // Row height is half that.
+  var rowHeight = (genericMeasurements.standardCardWidthPx * Math.sqrt(3)) / 4;
+  var sectorWidth = genericMeasurements.standardCardWidthPx / 2;
+
+  // This seems to need fudging a bit.
+  rowHeight += 2;
+
+  var sectorWidth = genericMeasurements.standardCardWidthPx / 2;
+
   const imageSizesByResourceCount = {
-    1: 80,
-    2: 65,
-    3: 50,
+    1: rowHeight * 0.5,
+    2: rowHeight * 0.3,
   };
+
+  // Euquilateral triangle: centeredd
 
   const imageTranslateXByResourceCountAndIndex = {
-    1: [-50],
-    2: [-25, -75],
-    3: [-90, -90, 10],
+    // One symbol: center in triangle.
+    1: [0],
+    // Two symbols: center in X, stagger in Y.
+    2: [0, 0],
   };
+
+  var smallImageSizeY = imageSizesByResourceCount[2];
+  var uprightCenter = smallImageSizeY / 2 - rowHeight / 3;
+  var invertedUprightCenter = smallImageSizeY / 2 - (2 * rowHeight) / 3;
+
+  const marginFor2Symbols = smallImageSizeY / 8;
+  const yOffsetFor2Symbols = -rowHeight / 10;
+
   const imageTranslateYByResourceCountAndIndex = {
-    1: [-50],
-    2: [-100, -0],
-    3: [-125, 25, -50],
+    // Item is aligned with bottom by default.
+    // Go down 1/2 the height of image, then up 1/3 of height of row.
+    1: [imageSizesByResourceCount[1] / 2 - rowHeight / 3],
+    // Two items in a stack spaced around center.
+    2: [
+      uprightCenter -
+        smallImageSizeY / 2 -
+        marginFor2Symbols +
+        yOffsetFor2Symbols,
+      uprightCenter +
+        smallImageSizeY / 2 +
+        marginFor2Symbols +
+        yOffsetFor2Symbols,
+    ],
   };
 
-  const gImageRotationBySectorIndex = [-45, 45, 45, -45];
+  // Sector 2 is it's own dumb thing because it's upside down.
+  const invertedImageTranslateYByResourceCountAndIndex = {
+    // Item is aligned with bottom by default.
+    // Go down height of image, then up the 2/3 row height.
+    1: [imageSizesByResourceCount[1] / 2 - (2 * rowHeight) / 3],
+    // Down half height of image then up full height of row.
+    // Then one symbol height down from that.
+    2: [
+      invertedUprightCenter -
+        smallImageSizeY / 2 -
+        marginFor2Symbols -
+        yOffsetFor2Symbols,
+      invertedUprightCenter +
+        smallImageSizeY / 2 +
+        marginFor2Symbols -
+        yOffsetFor2Symbols,
+    ],
+  };
 
-  const discardIconSize = 20;
-  const _discardRewardSupported = false;
+  const sectorXBySectorIndex = [0, -sectorWidth / 2, 0, sectorWidth / 2];
+  const sectorYBySectorIndex = [0, 0, 0, 0];
+
+  debugLog.debugLog("Cards", "rowHeight = " + JSON.stringify(rowHeight));
+  debugLog.debugLog(
+    "Cards",
+    "imageSizesByResourceCount = " + JSON.stringify(imageSizesByResourceCount)
+  );
+  debugLog.debugLog(
+    "Cards",
+    "imageTranslateYByResourceCountAndIndex = " +
+      JSON.stringify(imageTranslateYByResourceCountAndIndex)
+  );
 
   //-----------------------------------
   //
@@ -52,121 +117,155 @@ define([
   function layoutPseudoImage(
     imageNode,
     sectorIndex,
-    totalResourceCount,
-    imageIndex
+    symbolsThisSector,
+    symbolIndexInSector
   ) {
     debugLog.debugLog(
       "Cards",
-      "Doug: layoutPseudoImage: sectorIndex = " +
+      "layoutPseudoImage: sectorIndex = " +
         sectorIndex +
-        " totalResourceCount = " +
-        totalResourceCount +
-        " imageIndex = " +
-        imageIndex
+        " symbolsThisSector = " +
+        symbolsThisSector +
+        " symbolIndexInSector = " +
+        symbolIndexInSector
     );
 
     debugLog.debugLog(
       "Cards",
-      "Doug: layoutPseudoImage: imageSizesByResourceCount = " +
+      "layoutPseudoImage: imageSizesByResourceCount = " +
         JSON.stringify(imageSizesByResourceCount)
     );
 
     debugLog.debugLog(
       "Cards",
-      "Doug: layoutPseudoImage: imageTranslateXByResourceCountAndIndex = " +
+      "layoutPseudoImage: imageTranslateXByResourceCountAndIndex = " +
         JSON.stringify(imageTranslateXByResourceCountAndIndex)
     );
     debugLog.debugLog(
       "Cards",
-      "Doug: layoutPseudoImage: imageTranslateYByResourceCountAndIndex = " +
+      "layoutPseudoImage: imageTranslateYByResourceCountAndIndex = " +
         JSON.stringify(imageTranslateXByResourceCountAndIndex)
-    );
-
-    debugLog.debugLog(
-      "Cards",
-      "Doug: layoutPseudoImage: totalResourceCount = " +
-        JSON.stringify(totalResourceCount)
-    );
-    debugLog.debugLog(
-      "Cards",
-      "Doug: layoutPseudoImage: imageIndex = " + JSON.stringify(imageIndex)
     );
 
     var translateX =
-      imageTranslateXByResourceCountAndIndex[totalResourceCount][imageIndex];
-    var translateY =
-      imageTranslateYByResourceCountAndIndex[totalResourceCount][imageIndex];
+      imageTranslateXByResourceCountAndIndex[symbolsThisSector][
+        symbolIndexInSector
+      ];
+
+    var translateY;
+    if (sectorIndex == 2) {
+      translateY =
+        invertedImageTranslateYByResourceCountAndIndex[symbolsThisSector][
+          symbolIndexInSector
+        ];
+    } else {
+      translateY =
+        imageTranslateYByResourceCountAndIndex[symbolsThisSector][
+          symbolIndexInSector
+        ];
+    }
+
     debugLog.debugLog(
       "Cards",
-      "Doug: layoutPseudoImage: translateX = " + JSON.stringify(translateX)
+      "layoutPseudoImage: translateX = " + JSON.stringify(translateX)
     );
     debugLog.debugLog(
       "Cards",
-      "Doug: layoutPseudoImage: translateY = " + JSON.stringify(translateY)
+      "layoutPseudoImage: translateY = " + JSON.stringify(translateY)
     );
 
-    var rotation = gImageRotationBySectorIndex[sectorIndex];
     domStyle.set(imageNode, {
-      width: imageSizesByResourceCount[totalResourceCount] + "px",
-      height: imageSizesByResourceCount[totalResourceCount] + "px",
-      transform: `translate(${translateX}%, ${translateY}%) rotate(${rotation}deg)`,
+      width: imageSizesByResourceCount[symbolsThisSector] + "px",
+      height: imageSizesByResourceCount[symbolsThisSector] + "px",
+      transform: `translate(${translateX}px, ${translateY}px)`,
     });
   }
 
-  function addNthSector(parentNode, sectorIndex, opt_sectorDesc) {
+  function addNthSector(parentNode, sectorIndex, opt_sectorDescriptor) {
     debugLog.debugLog(
       "Cards",
-      "Doug addNthSector: opt_sectorDesc = " + JSON.stringify(opt_sectorDesc)
+      "Doug addNthSector: opt_sectorDescriptor = " +
+        JSON.stringify(opt_sectorDescriptor)
     );
 
-    var sectorMap = opt_sectorDesc ? opt_sectorDesc.sectorMap : {};
+    var sectorDescriptor = opt_sectorDescriptor ? opt_sectorDescriptor : {};
 
-    var totalResourceCount = genericUtils.sumHistogram(sectorMap);
+    var sectorMap = sectorDescriptor ? sectorDescriptor.sectorMap : {};
+
+    var symbolsThisSector = genericUtils.sumHistogram(sectorMap);
 
     var sectorNode = htmlUtils.addDiv(
       parentNode,
       [
         "sector",
-        "symbol-count-" + totalResourceCount,
-        "symbol-index-" + sectorIndex,
+        "symbol-count-" + symbolsThisSector,
+        "sector-index-" + sectorIndex,
       ],
       "sector"
     );
 
-    if (totalResourceCount == 0) {
+    var xPos = sectorXBySectorIndex[sectorIndex];
+    var yPos = sectorYBySectorIndex[sectorIndex];
+
+    // Force size, position, rotation
+    domStyle.set(sectorNode, {
+      width: `${sectorWidth}px`,
+      height: `${rowHeight}px`,
+      transform: `translate(${xPos}px, ${yPos}px)`,
+      "transform-origin": "center",
+    });
+
+    if (symbolsThisSector == 0) {
+      // Add the 'rest' symbol.
+      var imageNode = htmlUtils.addImage(
+        sectorNode,
+        ["symbol-image", "wc-rest"],
+        "symbol-image-" + "wc-rest" + "-" + 0
+      );
+      layoutPseudoImage(imageNode, sectorIndex, 1, 0);
+
       return sectorNode;
     }
 
-    var sectorDesc = opt_sectorDesc;
-    var currentResourceCount = 0;
-    for (var resourceType in sectorMap) {
-      var thisResourceCount = sectorDesc.sectorMap[resourceType] || 0;
-      if (thisResourceCount <= 0) {
+    var symbolIndexInSector = 0;
+
+    for (var symbolType in sectorMap) {
+      var symbolCount = sectorMap[symbolType] || 0;
+      if (symbolCount <= 0) {
         continue;
       }
 
-      for (var i = 0; i < thisResourceCount; i++) {
-        var cssClass = resourceType;
+      var numbersForSymbol = null;
+      if (
+        sectorDescriptor.numbersBySymbolType &&
+        sectorDescriptor.numbersBySymbolType[symbolType]
+      ) {
+        numbersForSymbol = sectorDescriptor.numbersBySymbolType[symbolType];
+      }
+
+      for (var symbolIndex = 0; symbolIndex < symbolCount; symbolIndex++) {
+        var cssClass = symbolType;
         var imageNode = htmlUtils.addImage(
           sectorNode,
           ["symbol-image", cssClass],
-          "symbol-image-" + resourceType + "-" + i
+          "symbol-image-" + symbolType + "-" + symbolIndex
         );
         layoutPseudoImage(
           imageNode,
           sectorIndex,
-          totalResourceCount,
-          currentResourceCount
+          symbolsThisSector,
+          symbolIndexInSector
         );
-        currentResourceCount++;
+        symbolIndexInSector++;
 
-        if (resourceType == triangleCardData.symbolTypes.Purpose) {
-          var purposeNumber = sectorDesc.purposeNumbers.shift();
-          var purposeNumberNode = htmlUtils.addDiv(
+        if (numbersForSymbol) {
+          console.assert(symbolIndex < numbersForSymbol.length);
+          var number = numbersForSymbol[symbolIndex];
+          var numberNode = htmlUtils.addDiv(
             imageNode,
             ["symbol-number"],
             "symbol-number",
-            purposeNumber
+            number.toString()
           );
         }
       }
@@ -175,25 +274,23 @@ define([
   }
 
   function addCardFront(parentNode, index) {
-    console.log("DougTmp: addCardFront: index = ", index);
     var cardConfig = triangleCardData.getCardConfigAtIndex(index);
-    console.log(
-      "DougTmp: addCardFront: cardConfig = ",
-      JSON.stringify(cardConfig)
-    );
     debugLog.debugLog(
       "Cards",
-      "Doug: in addCardFront i == " +
+      "in addCardFront i == " +
         index +
         " cardConfig = " +
         JSON.stringify(cardConfig)
     );
 
-    var id = "lagom-card-" + index;
-    var classes = ["lagom-card"];
+    var id = "lagom-" + index;
+    var classes = ["lagom"];
     var cardFrontNode = cards.addCardFront(parentNode, classes, id);
     domStyle.set(cardFrontNode, {
       padding: cardFrontPaddingPx + "px",
+      border: "none",
+      "border-width": "none",
+      "border-style": "none",
     });
 
     var frontWrapperNode = htmlUtils.addDiv(
@@ -202,26 +299,26 @@ define([
       "front-wrapper"
     );
 
-    // 2 rows, 2 sectors in each.
+    // 2 rows.  Top has 1 sector, bottom 3.
+    var clumnCountByRow = [1, 3];
+    var sectorIndex = 0;
     for (var rowIndex = 0; rowIndex < 2; rowIndex++) {
       var rowNode = htmlUtils.addDiv(
         frontWrapperNode,
         ["sectors-row", "sectors-row-" + rowIndex],
         "sectors-row-" + rowIndex
       );
+      domStyle.set(rowNode, {
+        height: rowHeight + "px",
+      });
 
-      for (var columnIndex = 0; columnIndex < 2; columnIndex++) {
-        var sectorIndex = rowIndex * 2 + columnIndex;
-        var sectorDesc = null;
-        for (var k = 0; k < cardConfig.sectorDescriptors.length; k++) {
-          var sectorDescriptor = cardConfig.sectorDescriptors[k];
-          if (sectorDescriptor.sectorIndex == sectorIndex) {
-            sectorDesc = sectorDescriptor;
-            break;
-          }
-        }
+      var columnCount = clumnCountByRow[rowIndex];
+      for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+        var sectorDescriptor = cardConfig.sectorDescriptors[sectorIndex];
+        console.assert(sectorDescriptor, "sectorDescriptor is null");
 
-        addNthSector(rowNode, sectorIndex, sectorDesc);
+        addNthSector(rowNode, sectorIndex, sectorDescriptor);
+        sectorIndex++;
       }
     }
 

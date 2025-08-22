@@ -39,7 +39,8 @@ define([
   //-----------------------------------
   var gCardConfigs = [];
 
-  const gSymbolCountBySectorIndex = [1, 1, 2, 3];
+  const gSymbolCountBySectorIndex = [0, 3, 2, 1];
+
   var gNumSymbolsPerCard = 0;
   for (var i = 0; i < gSymbolCountBySectorIndex.length; i++) {
     gNumSymbolsPerCard += gSymbolCountBySectorIndex[i];
@@ -60,13 +61,18 @@ define([
       symbolTypesArray.length
   );
 
-  gMaxPurpose = 7;
+  gMaxPurpose = 9;
   // This should slice up evenly so all purpose numbers have same likelihood of showing up.
   // There are gNumInstancesEachSymbol purpose symbols in the deck.
   const gInstancesEachPurposeNumber = gNumInstancesEachSymbol / gMaxPurpose;
   console.assert(
     gInstancesEachPurposeNumber == Math.floor(gInstancesEachPurposeNumber),
-    "gInstancesEachPurposeNumber is not an int"
+    "gInstancesEachPurposeNumber is not an int: gInstancesEachPurposeNumber = " +
+      gInstancesEachPurposeNumber +
+      ", gNumInstancesEachSymbol = " +
+      gNumInstancesEachSymbol +
+      ", gMaxPurpose = " +
+      gMaxPurpose
   );
 
   var purposeNumbers = [];
@@ -114,27 +120,26 @@ define([
     for (var cardIndex = 0; cardIndex < gTotalCardsInDeck; cardIndex++) {
       debugLog.debugLog(
         "CardConfigs",
-        "Doug: generateCardConfigsInternal cardIndex = " + cardIndex
+        "generateCardConfigsInternal cardIndex = " + cardIndex
       );
 
       debugLog.debugLog(
         "CardConfigs",
-        "Doug: shuffledArrayOfSymbols = " +
-          JSON.stringify(shuffledArrayOfSymbols)
+        "shuffledArrayOfSymbols = " + JSON.stringify(shuffledArrayOfSymbols)
       );
       debugLog.debugLog(
         "CardConfigs",
-        "Doug: shuffledArrayOfSymbols.length = " +
+        "shuffledArrayOfSymbols.length = " +
           JSON.stringify(shuffledArrayOfSymbols.length)
       );
       debugLog.debugLog(
         "CardConfigs",
-        "Doug: shuffledArrayOfPurposeNumbers = " +
+        "shuffledArrayOfPurposeNumbers = " +
           JSON.stringify(shuffledArrayOfPurposeNumbers)
       );
       debugLog.debugLog(
         "CardConfigs",
-        "Doug: shuffledArrayOfPurposeNumbers.length = " +
+        "shuffledArrayOfPurposeNumbers.length = " +
           JSON.stringify(shuffledArrayOfPurposeNumbers.length)
       );
 
@@ -160,7 +165,7 @@ define([
   }
 
   function generateCardConfigs() {
-    debugLog.debugLog("CardConfigs", "Doug: calling generateLowEndCardConfigs");
+    debugLog.debugLog("CardConfigs", "calling generateLowEndCardConfigs");
 
     gCardConfigs = generateCardConfigsInternal();
   }
