@@ -39,10 +39,10 @@ define([
     3: [-125, 25, -50],
   };
 
-  const imageRotationByQuadIndex = [-45, 45, 45, -45];
+  const gImageRotationBySectorIndex = [-45, 45, 45, -45];
 
-  var discardIconSize = 20;
-  var _discardRewardSupported = false;
+  const discardIconSize = 20;
+  const _discardRewardSupported = false;
 
   //-----------------------------------
   //
@@ -51,14 +51,14 @@ define([
   //-----------------------------------
   function layoutPseudoImage(
     imageNode,
-    quadIndex,
+    sectorIndex,
     totalResourceCount,
     imageIndex
   ) {
     debugLog.debugLog(
       "Cards",
-      "Doug: layoutPseudoImage: quadIndex = " +
-        quadIndex +
+      "Doug: layoutPseudoImage: sectorIndex = " +
+        sectorIndex +
         " totalResourceCount = " +
         totalResourceCount +
         " imageIndex = " +
@@ -105,7 +105,7 @@ define([
       "Doug: layoutPseudoImage: translateY = " + JSON.stringify(translateY)
     );
 
-    var rotation = imageRotationByQuadIndex[quadIndex];
+    var rotation = gImageRotationBySectorIndex[sectorIndex];
     domStyle.set(imageNode, {
       width: imageSizesByResourceCount[totalResourceCount] + "px",
       height: imageSizesByResourceCount[totalResourceCount] + "px",
@@ -113,39 +113,34 @@ define([
     });
   }
 
-  function addNthQuad(parentNode, quadIndex, opt_quadDesc) {
+  function addNthSector(parentNode, sectorIndex, opt_sectorDesc) {
     debugLog.debugLog(
       "Cards",
-      "Doug addNthQuad: opt_quadDesc = " + JSON.stringify(opt_quadDesc)
+      "Doug addNthSector: opt_sectorDesc = " + JSON.stringify(opt_sectorDesc)
     );
 
-    var resourceTypeToResourceCountMap = opt_quadDesc
-      ? opt_quadDesc.resourceTypeToResourceCountMap
-      : {};
+    var sectorMap = opt_sectorDesc ? opt_sectorDesc.sectorMap : {};
 
-    var totalResourceCount = genericUtils.sumHistogram(
-      resourceTypeToResourceCountMap
-    );
+    var totalResourceCount = genericUtils.sumHistogram(sectorMap);
 
-    var quadNode = htmlUtils.addDiv(
+    var sectorNode = htmlUtils.addDiv(
       parentNode,
       [
-        "quad",
-        "resource-count-" + totalResourceCount,
-        "quad-index-" + quadIndex,
+        "sector",
+        "symbol-count-" + totalResourceCount,
+        "symbol-index-" + sectorIndex,
       ],
-      "quad"
+      "sector"
     );
 
     if (totalResourceCount == 0) {
-      return quadNode;
+      return sectorNode;
     }
 
-    var quadDesc = opt_quadDesc;
+    var sectorDesc = opt_sectorDesc;
     var currentResourceCount = 0;
-    for (var resourceType in resourceTypeToResourceCountMap) {
-      var thisResourceCount =
-        quadDesc.resourceTypeToResourceCountMap[resourceType] || 0;
+    for (var resourceType in sectorMap) {
+      var thisResourceCount = sectorDesc.sectorMap[resourceType] || 0;
       if (thisResourceCount <= 0) {
         continue;
       }
@@ -153,83 +148,30 @@ define([
       for (var i = 0; i < thisResourceCount; i++) {
         var cssClass = resourceType;
         var imageNode = htmlUtils.addImage(
-          quadNode,
-          ["resource-image", cssClass],
-          "resource-image-" + resourceType + "-" + i
+          sectorNode,
+          ["symbol-image", cssClass],
+          "symbol-image-" + resourceType + "-" + i
         );
         layoutPseudoImage(
           imageNode,
-          quadIndex,
+          sectorIndex,
           totalResourceCount,
           currentResourceCount
         );
         currentResourceCount++;
 
-        if (resourceType == triangleCardData.symboleTypes.Purpose) {
-          var purposeNumber = quadDesc.purposeNumbers.shift();
+        if (resourceType == triangleCardData.symbolTypes.Purpose) {
+          var purposeNumber = sectorDesc.purposeNumbers.shift();
           var purposeNumberNode = htmlUtils.addDiv(
             imageNode,
-            ["purpose-number"],
-            "purpose-number",
+            ["symbol-number"],
+            "symbol-number",
             purposeNumber
           );
         }
       }
     }
-    return quadNode;
-  }
-
-  function maybeAddDiscardReward(parent, opt_discardReward) {
-    if (_discardRewardSupported == false) {
-      return null;
-    }
-
-    var discardReward = opt_discardReward ? opt_discardReward : 0;
-
-    if (discardReward == 0) {
-      return null;
-    }
-
-    var rewardWrapperNode = htmlUtils.addDiv(
-      parent,
-      ["discard-reward-wrapper"],
-      "discard-reward-wrapper"
-    );
-
-    var discardImageNode = htmlUtils.addImage(
-      rewardWrapperNode,
-      ["discard"],
-      "discard"
-    );
-
-    domStyle.set(discardImageNode, {
-      width: discardIconSize + "px",
-      height: discardIconSize + "px",
-    });
-
-    var colonNode = htmlUtils.addDiv(
-      rewardWrapperNode,
-      ["colon"],
-      "colon",
-      ":"
-    );
-    domStyle.set(colonNode, {
-      "font-size": discardIconSize + "px",
-    });
-
-    // Add the coins.
-    for (var j = 0; j < discardReward; j++) {
-      var coinNode = htmlUtils.addImage(
-        rewardWrapperNode,
-        ["coin"],
-        "coin-" + j.toString()
-      );
-      domStyle.set(coinNode, {
-        width: discardIconSize + "px",
-        height: discardIconSize + "px",
-      });
-    }
-    return rewardWrapperNode;
+    return sectorNode;
   }
 
   function addCardFront(parentNode, index) {
@@ -247,8 +189,8 @@ define([
         JSON.stringify(cardConfig)
     );
 
-    var id = "well-played-card-" + index;
-    var classes = ["well-played-card"];
+    var id = "lagom-card-" + index;
+    var classes = ["lagom-card"];
     var cardFrontNode = cards.addCardFront(parentNode, classes, id);
     domStyle.set(cardFrontNode, {
       padding: cardFrontPaddingPx + "px",
@@ -260,36 +202,35 @@ define([
       "front-wrapper"
     );
 
-    // 2 rows, 2 quads in each.
+    // 2 rows, 2 sectors in each.
     for (var rowIndex = 0; rowIndex < 2; rowIndex++) {
       var rowNode = htmlUtils.addDiv(
         frontWrapperNode,
-        ["quads-row", "quads-row-" + rowIndex],
-        "quads-row-" + rowIndex
+        ["sectors-row", "sectors-row-" + rowIndex],
+        "sectors-row-" + rowIndex
       );
 
       for (var columnIndex = 0; columnIndex < 2; columnIndex++) {
-        var quadIndex = rowIndex * 2 + columnIndex;
-        var quadDesc = null;
-        for (var k = 0; k < cardConfig.quadDescs.length; k++) {
-          var qd = cardConfig.quadDescs[k];
-          if (qd.quadIndex == quadIndex) {
-            quadDesc = qd;
+        var sectorIndex = rowIndex * 2 + columnIndex;
+        var sectorDesc = null;
+        for (var k = 0; k < cardConfig.sectorDescriptors.length; k++) {
+          var sectorDescriptor = cardConfig.sectorDescriptors[k];
+          if (sectorDescriptor.sectorIndex == sectorIndex) {
+            sectorDesc = sectorDescriptor;
             break;
           }
         }
 
-        addNthQuad(rowNode, quadIndex, quadDesc);
+        addNthSector(rowNode, sectorIndex, sectorDesc);
       }
     }
 
-    maybeAddDiscardReward(cardFrontNode, cardConfig.discardReward);
     return cardFrontNode;
   }
 
   function addCardBack(parent, index) {
     var cardBackNode = cards.addCardBack(parent, index, {
-      classes: ["well-played-card"],
+      classes: ["lagom"],
     });
     var titleImageNode = htmlUtils.addImage(
       cardBackNode,

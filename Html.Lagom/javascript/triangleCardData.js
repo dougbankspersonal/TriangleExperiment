@@ -37,35 +37,38 @@ define([
   // Global vars
   //
   //-----------------------------------
-  const numTriesForOptimalSymbolPicking = 10;
+  const gNumTriesForOptimalSymbolPicking = 10;
 
-  // Each card has 4 quads containing six symbols.
-  const numSymbolsPerCard = 6;
+  // Each card has N sectors.
+  const gNumSectorsPerCard = 4;
 
-  // The order of quads:
+  // Each card has M symbols.
+  const gNumSymbolsPerCard = 6;
+
+  // The order of sectors:
   //            0
   //            3
   //          2   1
   //
   // I could generate this mathematically but it helps me to see them all explicitly spelled out.
   // Symbol distribution wise:
-  // 2 outer quads have 2, 1 outer quad has 1: inner quad has one.
+  // 2 outer sectors have 2, 1 outer sectors has 1: inner sectors has one.
   const layout2211 = [2, 2, 1, 1];
   const layout2121 = [2, 1, 2, 1];
   const layout1221 = [1, 2, 2, 1];
 
-  // 1 outer quad has 2, 2 outer quads have 1: inner quad has 2.
+  // 1 outer sectors has 2, 2 outer sectors have 1: inner sectors has 2.
   const layout2112 = [2, 1, 1, 2];
   const layout1212 = [1, 2, 1, 2];
   const layout1122 = [1, 1, 2, 2];
 
-  // 2 outer quads have 2, 1 outer has 2: inner has 2.
+  // 2 outer sectors have 2, 1 outer has 2: inner has 2.
   const layout2202 = [2, 2, 0, 2];
   const layout2022 = [2, 0, 2, 2];
   const layout0222 = [0, 2, 2, 2];
 
-  // 3 outer quads have 2: inner quad has 0.
-  const layout2220 = [2, 2, 2, 0];
+  // 3 outer sectors have 2: inner sectors has 0.
+  const sectors = [2, 2, 2, 0];
 
   // Each   layout is equally likely.
   const layouts = [
@@ -89,7 +92,7 @@ define([
   const totalNumCards = layouts.length * instancesPerLayout;
 
   // Card has numSymbolsPerCard, so...
-  const totalNumSymbols = totalNumCards * numSymbolsPerCard;
+  const totalNumSymbols = totalNumCards * gNumSymbolsPerCard;
   // N different symbol types...
   const appearancesPerSymbol = totalNumSymbols / symbolTypesArray.length;
 
@@ -112,44 +115,6 @@ define([
   // Global functions
   //
   //-----------------------------------
-  // Returns ordered array one map per quad.
-  // Map maps symbol name to count of that symbol in that quad.
-  function makeMapsForASingleCard(shuffledArrayOfSymbols, layout) {
-    var sumFromCountPerQuad = 0;
-    for (var i = 0; i < layout.length; i++) {
-      sumFromCountPerQuad += layout[i];
-    }
-    console.assert(
-      sumFromCountPerQuad == numSymbolsPerCard,
-      "makeMapsForASingleCard: sumFromCountPerQuad = " +
-        sumFromCountPerQuad +
-        " numSymbolsPerCard = " +
-        numSymbolsPerCard
-    );
-    console.assert(
-      shuffledArrayOfSymbols.length >= numSymbolsPerCard,
-      "makeMapsForASingleCard: shuffledArrayOfSymbols.length:" +
-        shuffledArrayOfSymbols.length +
-        " < numSymbolsPerCard:" +
-        numSymbolsPerCard
-    );
-
-    var maps = [];
-    for (var i = 0; i < layout.length; i++) {
-      var map = {};
-      for (var j = 0; j < layout[i]; j++) {
-        var symbolType = shuffledArrayOfSymbols.shift();
-        if (!map[symbolType]) {
-          map[symbolType] = 0;
-        }
-        map[symbolType]++;
-      }
-      maps.push(map);
-    }
-
-    return maps;
-  }
-
   function generateAllSymbolsUsedArray() {
     var allSymbolsArray = [];
     for (
@@ -180,7 +145,7 @@ define([
       symbolIndex < appearancesPerSymbol;
       symbolIndex++
     ) {
-      var purposeNumber = symbolIndex % numSymbolsPerCard;
+      var purposeNumber = symbolIndex % gNumSymbolsPerCard;
       allPurposeNumbersArray.push(purposeNumber + 1);
     }
     debugLog.debugLog(
@@ -203,7 +168,7 @@ define([
       }
     }
     for (var symbolType in totals) {
-      if (totals[symbolType] > numSymbolsPerCard / 2) {
+      if (totals[symbolType] > gNumSymbolsPerCard / 2) {
         return false;
       }
     }
@@ -279,11 +244,12 @@ define([
             shuffledSymbolArray,
             seededZeroToOneRandomFunction
           );
-          var testMaps = makeMapsForASingleCard(
+          var testMaps = makeSectorMaps(
             copyOfShuffledSymbolArray,
-            layout
+            layout,
+            gNumSymbolsPerCard
           );
-          if (tryCount == numTriesForOptimalSymbolPicking) {
+          if (tryCount == gNumTriesForOptimalSymbolPicking) {
             console.assert(
               false,
               "layoutIndex = " +
@@ -295,7 +261,7 @@ define([
           }
           if (
             mapsAreGood(testMaps) ||
-            tryCount == numTriesForOptimalSymbolPicking
+            tryCount == gNumTriesForOptimalSymbolPicking
           ) {
             maps = testMaps;
             shuffledSymbolArray = copyOfShuffledSymbolArray;
@@ -309,16 +275,15 @@ define([
           "Doug: maps = " + JSON.stringify(maps)
         );
         var cardConfig = {};
-        var quadDescs = [];
-        for (var quadIndex = 0; quadIndex < maps.length; quadIndex++) {
-          var quadDesc = {
-            quadIndex: quadIndex,
-            resourceTypeToResourceCountMap: maps[quadIndex],
+        var sectorDescriptors = [];
+        for (var sectorIndex = 0; sectorIndex < maps.length; sectorIndex++) {
+          var sectorDescriptor = {
+            sectorIndex: sectorIndex,
+            sectorMap: maps[sectorIndex],
           };
 
-          // Did this quad have purpose?
-          var numPurpose =
-            quadDesc.resourceTypeToResourceCountMap[symbolTypes.Purpose];
+          // Did this sector have purpose?
+          var numPurpose = sectorDescriptor.sectorMap[symbolTypes.Purpose];
           numPurpose = numPurpose ? numPurpose : 0;
           if (numPurpose > 0) {
             var purposeNumbers = [];
@@ -330,11 +295,11 @@ define([
               var purposeNumber = shuffledPurposeNumberArray.shift();
               purposeNumbers.push(purposeNumber);
             }
-            quadDesc.purposeNumbers = purposeNumbers;
+            sectorDescriptor.purposeNumbers = purposeNumbers;
           }
-          quadDescs.push(quadDesc);
+          sectorDescriptors.push(sectorDescriptor);
         }
-        cardConfig.quadDescs = quadDescs;
+        cardConfig.sectorDescriptors = sectorDescriptors;
         newCardConfigs.push(cardConfig);
       } // One card.
     } // One group.

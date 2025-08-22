@@ -1,4 +1,4 @@
-.card_array>.page_of_items_contents>.card.well-played-card {
+.card_array>.page_of_items_contents>.card.lagom-card {
   //    filter: drop-shadow(0 0 8px red);
   box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.5);
 }
@@ -8,14 +8,14 @@
 }
 
 
-.card.well-played-card {
+.card.lagom-card {
   font-family: "Quintessential", serif;
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,
     1px 1px 0 #fff;
   font-weight: bold;
 }
 
-.card.front.well-played-card {
+.card.front.lagom-card {
   padding-top: 27px;
   padding-bottom: 27px;
   padding-left: 14px;
@@ -63,32 +63,32 @@
     background-repeat: no-repeat;
     background-position: center;
 
-    .quads-row-0 {
+    .sectors-row-0 {
       align-items: end;
     }
 
-    .quads-row-1 {
+    .sectors-row-1 {
       align-items: start;
     }
 
-    .quads-row {
+    .sectors-row {
       display: flex;
       flex-direction: row;
       justify-content: center;
       width: 100%;
       height: 50%;
 
-      .quad {
+      .sector {
         background-color: rgba(220, 250, 220, 0.2);
       }
 
-      .quad.quad-index-2,
-      .quad.quad-index-3 {
+      .sector.sector-index-2,
+      .sector.sector-index-3 {
         transform: rotate(180deg);
       }
 
 
-      .quad {
+      .sector {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -98,7 +98,7 @@
         width: 50%;
         overflow: hidden;
 
-        .resource-image.pseudo_image {
+        .symbol-image.pseudo_image {
           position: absolute;
           top: 50%;
           left: 50%;
@@ -106,7 +106,7 @@
           justify-content: center;
           align-items: center;
 
-          .purpose-number {
+          .symbol-number {
             font-size: 32px;
             font-weight: bold;
           }
@@ -116,7 +116,7 @@
   }
 }
 
-.card.back.well-played-card {
+.card.back.lagom-card {
   display: flex;
   flex-direction: column;
   justify-content: center;

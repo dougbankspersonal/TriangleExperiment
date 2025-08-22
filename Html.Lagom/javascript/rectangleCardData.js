@@ -2,8 +2,9 @@ define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
+  "javascript/lagomCardDataUtils",
   "dojo/domReady!",
-], function (cards, debugLog, genericUtils) {
+], function (cards, debugLog, genericUtils, lagomCardDataUtils) {
   //-----------------------------------
   //
   // Constants
@@ -21,17 +22,11 @@ define([
     Accomplishment: SymbolType_Accomplishment,
   };
 
-  const resourceTypesAdd = [
-    symbolTypes.AddWealth,
+  const symbolTypesArray = [
+    symbolTypes.Relationships,
+    symbolTypes.Wealth,
     symbolTypes.Purpose,
-    symbolTypes.AddRelationships,
-    symbolTypes.AddAccomplishment,
-  ];
-
-  const resourceTypesLose = [
-    symbolTypes.LoseWealth,
-    symbolTypes.LoseHealth,
-    symbolTypes.LoseRelationships,
+    symbolTypes.Accomplishment,
   ];
 
   const seededZeroToOneRandomFunction =
@@ -42,115 +37,84 @@ define([
   // Global vars
   //
   //-----------------------------------
-  var _cardConfigs = [];
+  var gCardConfigs = [];
 
-  var _symbolsPerQuad = [1, 1, 2, 3];
-  var _numSymbolsPerCard = 0;
-  for (var i = 0; i < _symbolsPerQuad.length; i++) {
-    _numSymbolsPerCard += _symbolsPerQuad[i];
+  const gSymbolCountBySectorIndex = [1, 1, 2, 3];
+  var gNumSymbolsPerCard = 0;
+  for (var i = 0; i < gSymbolCountBySectorIndex.length; i++) {
+    gNumSymbolsPerCard += gSymbolCountBySectorIndex[i];
   }
 
-  var _numGroups = 5;
-  var _numCardsPerGroup = 12;
-  var _totalNumCards = _numGroups * _numCardsPerGroup;
-  var _totalSymbolsPerGroup = _numCardsPerGroup * _numSymbolsPerCard;
-  var _totalSymbolsOfOneTypePerGroup =
-    _totalSymbolsPerGroup / resourceTypesAdd.length;
-  // Should divide evenly.
+  const gTotalCardsInDeck = 60;
+  const gTotalSymbolsInDeck = gTotalCardsInDeck * gNumSymbolsPerCard;
+  const gNumInstancesEachSymbol = gTotalSymbolsInDeck / symbolTypesArray.length;
+
+  // Should divide evenly: each symbol has equal likelihood of showing up.
   console.assert(
-    _totalSymbolsOfOneTypePerGroup ==
-      Math.floor(_totalSymbolsOfOneTypePerGroup),
-    "Total symbols of one type per group should divide evenly."
+    gNumInstancesEachSymbol == Math.floor(gNumInstancesEachSymbol),
+    "gNumInstancesEachSymbol is not an int: gNumInstancesEachSymbol = " +
+      gNumInstancesEachSymbol +
+      ": gTotalSymbolsInDeck = " +
+      gTotalSymbolsInDeck +
+      ": symbolTypesArray.length = " +
+      symbolTypesArray.length
   );
+
+  gMaxPurpose = 7;
+  // This should slice up evenly so all purpose numbers have same likelihood of showing up.
+  // There are gNumInstancesEachSymbol purpose symbols in the deck.
+  const gInstancesEachPurposeNumber = gNumInstancesEachSymbol / gMaxPurpose;
+  console.assert(
+    gInstancesEachPurposeNumber == Math.floor(gInstancesEachPurposeNumber),
+    "gInstancesEachPurposeNumber is not an int"
+  );
+
+  var purposeNumbers = [];
+  for (var i = 0; i < gMaxPurpose; i++) {
+    purposeNumbers.push(i + 1);
+  }
 
   //-----------------------------------
   //
   // Global functions
   //
   //-----------------------------------
-  function makeMapsForASingleCard(shuffledArrayOfSymbols, countPerQuad) {
-    var sumFromCountPerQuad = 0;
-    for (var i = 0; i < countPerQuad.length; i++) {
-      sumFromCountPerQuad += countPerQuad[i];
-    }
-    console.assert(
-      sumFromCountPerQuad == _numSymbolsPerCard,
-      "makeMapsForASingleCard: sumFromCountPerQuad = " +
-        sumFromCountPerQuad +
-        " _numSymbolsPerCard = " +
-        _numSymbolsPerCard
+  function generateCardConfigsInternal() {
+    var rawSymbolArray = lagomCardDataUtils.generateNCountArray(
+      symbolTypesArray,
+      gNumInstancesEachSymbol
     );
-    console.assert(
-      shuffledArrayOfSymbols.length >= _numSymbolsPerCard,
-      "makeMapsForASingleCard: shuffledArrayOfSymbols.length:" +
-        shuffledArrayOfSymbols.length +
-        " < _numSymbolsPerCard:" +
-        _numSymbolsPerCard
-    );
-
-    var maps = [];
-    for (var i = 0; i < countPerQuad.length; i++) {
-      var map = {};
-      for (var j = 0; j < countPerQuad[i]; j++) {
-        var symbolType = shuffledArrayOfSymbols.shift();
-        if (!map[symbolType]) {
-          map[symbolType] = 0;
-        }
-        map[symbolType]++;
-      }
-      maps.push(map);
-    }
-    return maps;
-  }
-
-  function _generateCardConfigsInternal() {
-    var rawSymbolArray = [];
-    for (var cardIndex = 0; cardIndex < resourceTypesAdd.length; cardIndex++) {
-      var symbolType = resourceTypesAdd[cardIndex];
-      for (
-        var symbolCount = 0;
-        symbolCount < _totalSymbolsOfOneTypePerGroup;
-        symbolCount++
-      ) {
-        rawSymbolArray.push(symbolType);
-      }
-    }
     debugLog.debugLog(
-      "CardConfigs",
+      "CardConfig",
       "rawSymbolArray = " + JSON.stringify(rawSymbolArray)
     );
 
     // Make an array of purpose numbers:
-    var rawPurposeNumberArray = [];
-    for (
-      var symbolIndex = 0;
-      symbolIndex < _totalSymbolsOfOneTypePerGroup;
-      symbolIndex++
-    ) {
-      var purposeNumber = symbolIndex % _numSymbolsPerCard;
-      rawPurposeNumberArray.push(purposeNumber + 1);
-    }
+    var rawPurposeNumberArray = lagomCardDataUtils.generateNCountArray(
+      purposeNumbers,
+      gInstancesEachPurposeNumber
+    );
     debugLog.debugLog(
-      "CardConfigs",
+      "CardConfig",
       "rawPurposeNumberArray = " + JSON.stringify(rawPurposeNumberArray)
     );
 
-    var lecc = [];
+    // Shuffle symbols and purpose numbers.
+    var shuffledArrayOfSymbols = genericUtils.copyAndShuffleArray(
+      rawSymbolArray,
+      seededZeroToOneRandomFunction
+    );
+    var shuffledArrayOfPurposeNumbers = genericUtils.copyAndShuffleArray(
+      rawPurposeNumberArray,
+      seededZeroToOneRandomFunction
+    );
 
-    for (var groupIndex = 0; groupIndex < _numGroups; groupIndex++) {
+    var cardConfigsAccumulator = [];
+
+    for (var cardIndex = 0; cardIndex < gTotalCardsInDeck; cardIndex++) {
       debugLog.debugLog(
         "CardConfigs",
-        "Doug: generateLowEndCardConfigs groupIndex = " + groupIndex
-      );
-
-      // Shuffle symbols and purpose numbers.
-      var shuffledArrayOfSymbols = genericUtils.copyAndShuffleArray(
-        rawSymbolArray,
-        seededZeroToOneRandomFunction
-      );
-      var shuffledArrayOfPurposeNumbers = genericUtils.copyAndShuffleArray(
-        rawPurposeNumberArray,
-        seededZeroToOneRandomFunction
+        "Doug: generateCardConfigsInternal cardIndex = " + cardIndex
       );
 
       debugLog.debugLog(
@@ -174,57 +138,31 @@ define([
           JSON.stringify(shuffledArrayOfPurposeNumbers.length)
       );
 
-      // For purpose: we have _totalSymbolsOfOneTypePerGroup
+      var symbolsRequiringNumbers = {
+        [symbolTypes.Purpose]: shuffledArrayOfPurposeNumbers,
+      };
 
-      // Now make cards.
-      for (var cardIndex = 0; cardIndex < _numCardsPerGroup; cardIndex++) {
-        var maps = makeMapsForASingleCard(shuffledArrayOfSymbols, [1, 1, 2, 3]);
-        debugLog.debugLog(
-          "CardConfigs",
-          "Doug: maps = " + JSON.stringify(maps)
-        );
-        var cardConfig = {};
-        var quadDescs = [];
-        for (var quadIndex = 0; quadIndex < maps.length; quadIndex++) {
-          var quadDesc = {
-            quadIndex: quadIndex,
-            resourceTypeToResourceCountMap: maps[quadIndex],
-          };
+      var cardConfig = lagomCardDataUtils.makeCardConfig(
+        shuffledArrayOfSymbols,
+        gSymbolCountBySectorIndex,
+        gNumSymbolsPerCard,
+        symbolsRequiringNumbers
+      );
 
-          // Did this quad have purpose?
-          var numPurpose =
-            quadDesc.resourceTypeToResourceCountMap[symbolTypes.Purpose];
-          numPurpose = numPurpose ? numPurpose : 0;
-          if (numPurpose > 0) {
-            var purposeNumbers = [];
-            for (
-              var purposeIndex = 0;
-              purposeIndex < numPurpose;
-              purposeIndex++
-            ) {
-              var purposeNumber = shuffledArrayOfPurposeNumbers.shift();
-              purposeNumbers.push(purposeNumber);
-            }
-            quadDesc.purposeNumbers = purposeNumbers;
-          }
-          quadDescs.push(quadDesc);
-        }
-        cardConfig.quadDescs = quadDescs;
-        lecc.push(cardConfig);
-      } // One card.
-    } // One group.
+      cardConfigsAccumulator.push(cardConfig);
+    } // One card.
 
-    return lecc;
+    return cardConfigsAccumulator;
   }
 
   function getCardConfigAtIndex(index) {
-    return cards.getCardConfigAtIndex(_cardConfigs, index);
+    return cards.getCardConfigAtIndex(gCardConfigs, index);
   }
 
   function generateCardConfigs() {
     debugLog.debugLog("CardConfigs", "Doug: calling generateLowEndCardConfigs");
 
-    _cardConfigs = _generateCardConfigsInternal();
+    gCardConfigs = generateCardConfigsInternal();
   }
 
   //-----------------------------------
@@ -235,16 +173,15 @@ define([
   function getNumCards() {
     debugLog.debugLog(
       "CardConfigs",
-      "getNumCards: _cardConfigs = " + JSON.stringify(_cardConfigs)
+      "getNumCards: _cardConfigs = " + JSON.stringify(gCardConfigs)
     );
-    return cards.getNumCardsFromConfigs(_cardConfigs);
+    return cards.getNumCardsFromConfigs(gCardConfigs);
   }
 
   // This returned object becomes the defined value of this module
   return {
-    symboleTypes: symbolTypes,
-    resourceTypesAdd: resourceTypesAdd,
-    resourceTypesLose: resourceTypesLose,
+    symbolTypes: symbolTypes,
+    symbolTypesArray: symbolTypesArray,
 
     getNumCards: getNumCards,
     getCardConfigAtIndex: getCardConfigAtIndex,
