@@ -115,7 +115,7 @@ define([
       gNumInstancesEachSymbol
     );
     debugLog(
-      "CardConfig",
+      "triangleCardData",
       "rawSymbolArray = " + JSON.stringify(rawSymbolArray)
     );
 
@@ -178,14 +178,14 @@ define([
   }
 
   function generateCardConfigs() {
-    debugLog("CardConfigs", "calling generateLowEndCardConfigs");
+    debugLog("triangleCardData", "calling generateCardConfigs");
 
     gCardConfigs = generateCardConfigsInternal();
   }
 
   function getNumCards() {
     debugLog(
-      "CardConfigs",
+      "triangleCardData",
       "getNumCards: _cardConfigs = " + JSON.stringify(gCardConfigs)
     );
     return cards.getNumCardsFromConfigs(gCardConfigs);

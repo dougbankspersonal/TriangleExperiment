@@ -25,8 +25,6 @@ define([
   // Constants
   //
   //-----------------------------------
-  const gCardFrontPaddingPx = 0;
-
   // Triangle height = base/2 * rad(3).
   // Row height is half that.
   // This seems to need fudging a bit: hence the +2.
@@ -91,12 +89,6 @@ define([
     var id = "lagom-" + index;
     var classes = ["lagom"];
     var cardFrontNode = cards.addCardFront(parentNode, classes, id);
-    domStyle.set(cardFrontNode, {
-      padding: gCardFrontPaddingPx + "px",
-      border: "initial",
-      "border-width": "initial",
-      "border-style": "initial",
-    });
 
     var frontWrapperNode = htmlUtils.addDiv(
       cardFrontNode,

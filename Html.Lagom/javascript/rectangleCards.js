@@ -25,8 +25,6 @@ define([
   // Constants
   //
   //-----------------------------------
-  const gCardFrontPaddingPx = 0;
-
   const gRect_symbolSizePxBySymbolCount = {
     1: genericMeasurements.standardCardWidthPx * 0.33,
     2: genericMeasurements.standardCardWidthPx * 0.271,
@@ -97,9 +95,7 @@ define([
     var classes = ["lagom"];
     var cardFrontNode = cards.addCardFront(parentNode, classes, id);
     domStyle.set(cardFrontNode, {
-      padding: gCardFrontPaddingPx + "px",
       "border-width": `${genericMeasurements.cardFrontBorderWidthPx}px`,
-      "border-style": "solid",
     });
 
     var frontWrapperNode = htmlUtils.addDiv(

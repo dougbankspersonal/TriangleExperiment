@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="../css/lagom_images.css" />
+    <link rel="stylesheet" href="../css/midlife_cards.css" />
+    <link rel="stylesheet" href="../SharedWebBoardGame/css/card.css" />
+    <link rel="stylesheet" href="../SharedWebBoardGame/css/main.css" />
+    <link rel="stylesheet" href="../SharedWebBoardGame/css/image.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quintessential&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <style type="text/css"></style>
+  </head>
+
+  <body id="body">
+    <!-- configure Dojo -->
+    <script>
+      // Instead of using data-dojo-config, we're creating a dojoConfig
+      // object *before* we load dojo.js; they're functionally identical,
+      // it's just easier to read this approach with a larger configuration.
+      var dojoConfig = {
+        baseUrl: "..",
+        async: true,
+        // This code registers the correct location of the "demo"
+        // package so we can load Dojo from the CDN whilst still
+        // being able to load local modules
+        packages: [
+          { name: "dojo", location: "../../bower_components/dojo" },
+          { name: "javascript", location: "javascript" },
+          {
+            name: "sharedJavascript",
+            location: "SharedWebBoardgame/javascript",
+          },
+        ],
+      };
+    </script>
+    <!-- load Dojo -->
+    <script src="../../../bower_components/dojo/dojo.js"></script>
+
+    <script>
+      require([
+        "sharedJavascript/cards",
+        "sharedJavascript/debugLog",
+        "sharedJavascript/genericMeasurements",
+        "sharedJavascript/genericUtils",
+        "sharedJavascript/htmlUtils",
+        "sharedJavascript/systemConfigs",
+        "javascript/midlifeCardData",
+        "javascript/midlifeCards",
+      ], function (
+        cards,
+        debugLogModule,
+        genericMeasurements,
+        genericUtils,
+        htmlUtils,
+        systemConfigs,
+        midlifeCardData,
+        midlifeCards
+      ) {
+        var debugLog = debugLogModule.debugLog;
+
+        var sc = systemConfigs.getCardSystemConfigs({
+          cardHeightPx: genericMeasurements.standardCardWidthPx * 1.3,
+          cardWidthPx: genericMeasurements.standardCardWidthPx * 1.3,
+        });
+        systemConfigs.setSystemConfigs(sc);
+
+        systemConfigs;
+        debugLog("CardConfigs", "cardsPerRow = " + sc.cardsPerRow);
+
+        midlifeCardData.generateCardConfigs();
+
+        var numCards = midlifeCardData.getNumCards();
+
+        debugLog("CardConfigs", "numCards = " + numCards);
+
+        var backConfig = {
+          callback: midlifeCards.addCardBack,
+          classes: ["lagom"],
+        };
+
+        cards.addCards(numCards, midlifeCards.addCardFront, backConfig);
+      });
+    </script>
+  </body>
+</html>
