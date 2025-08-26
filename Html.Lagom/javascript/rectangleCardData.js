@@ -4,7 +4,9 @@ define([
   "sharedJavascript/genericUtils",
   "javascript/lagomCardDataUtils",
   "dojo/domReady!",
-], function (cards, debugLog, genericUtils, lagomCardDataUtils) {
+], function (cards, debugLogModule, genericUtils, lagomCardDataUtils) {
+  var debugLog = debugLogModule.debugLog;
+
   //-----------------------------------
   //
   // Constants
@@ -15,21 +17,21 @@ define([
   const SymbolType_Purpose = "wc-purpose";
   const SymbolType_Accomplishment = "wc-accomplishment";
 
-  const symbolTypes = {
+  const gSymbolTypes = {
     Relationships: SymbolType_Relationships,
     Wealth: SymbolType_Wealth,
     Purpose: SymbolType_Purpose,
     Accomplishment: SymbolType_Accomplishment,
   };
 
-  const symbolTypesArray = [
-    symbolTypes.Relationships,
-    symbolTypes.Wealth,
-    symbolTypes.Purpose,
-    symbolTypes.Accomplishment,
+  const gSymbolTypesArray = [
+    gSymbolTypes.Relationships,
+    gSymbolTypes.Wealth,
+    gSymbolTypes.Purpose,
+    gSymbolTypes.Accomplishment,
   ];
 
-  const seededZeroToOneRandomFunction =
+  const getRandomZeroToOne =
     genericUtils.createSeededGetZeroToOneRandomFunction(36593650);
 
   //-----------------------------------
@@ -39,16 +41,18 @@ define([
   //-----------------------------------
   var gCardConfigs = [];
 
-  const gSymbolCountBySectorIndex = [0, 3, 2, 1];
+  const gTotalCardsInDeck = 72;
+  const gMaxPurpose = 9;
+  const gDistribution = [0, 3, 2, 1];
 
   var gNumSymbolsPerCard = 0;
-  for (var i = 0; i < gSymbolCountBySectorIndex.length; i++) {
-    gNumSymbolsPerCard += gSymbolCountBySectorIndex[i];
+  for (var i = 0; i < gDistribution.length; i++) {
+    gNumSymbolsPerCard += gDistribution[i];
   }
 
-  const gTotalCardsInDeck = 60;
   const gTotalSymbolsInDeck = gTotalCardsInDeck * gNumSymbolsPerCard;
-  const gNumInstancesEachSymbol = gTotalSymbolsInDeck / symbolTypesArray.length;
+  const gNumInstancesEachSymbol =
+    gTotalSymbolsInDeck / gSymbolTypesArray.length;
 
   // Should divide evenly: each symbol has equal likelihood of showing up.
   console.assert(
@@ -58,10 +62,9 @@ define([
       ": gTotalSymbolsInDeck = " +
       gTotalSymbolsInDeck +
       ": symbolTypesArray.length = " +
-      symbolTypesArray.length
+      gSymbolTypesArray.length
   );
 
-  gMaxPurpose = 9;
   // This should slice up evenly so all purpose numbers have same likelihood of showing up.
   // There are gNumInstancesEachSymbol purpose symbols in the deck.
   const gInstancesEachPurposeNumber = gNumInstancesEachSymbol / gMaxPurpose;
@@ -75,10 +78,13 @@ define([
       gMaxPurpose
   );
 
-  var purposeNumbers = [];
-  for (var i = 0; i < gMaxPurpose; i++) {
-    purposeNumbers.push(i + 1);
-  }
+  var gNumberedSymbolDetailsMap = {
+    [gSymbolTypes.Purpose]: {
+      minValue: 1,
+      maxValue: gMaxPurpose,
+      history: {},
+    },
+  };
 
   //-----------------------------------
   //
@@ -86,76 +92,46 @@ define([
   //
   //-----------------------------------
   function generateCardConfigsInternal() {
-    var rawSymbolArray = lagomCardDataUtils.generateNCountArray(
-      symbolTypesArray,
-      gNumInstancesEachSymbol
-    );
-    debugLog.debugLog(
-      "CardConfig",
-      "rawSymbolArray = " + JSON.stringify(rawSymbolArray)
-    );
-
-    // Make an array of purpose numbers:
-    var rawPurposeNumberArray = lagomCardDataUtils.generateNCountArray(
-      purposeNumbers,
-      gInstancesEachPurposeNumber
-    );
-    debugLog.debugLog(
-      "CardConfig",
-      "rawPurposeNumberArray = " + JSON.stringify(rawPurposeNumberArray)
-    );
-
-    // Shuffle symbols and purpose numbers.
-    var shuffledArrayOfSymbols = genericUtils.copyAndShuffleArray(
-      rawSymbolArray,
-      seededZeroToOneRandomFunction
-    );
-    var shuffledArrayOfPurposeNumbers = genericUtils.copyAndShuffleArray(
-      rawPurposeNumberArray,
-      seededZeroToOneRandomFunction
-    );
-
     var cardConfigsAccumulator = [];
 
+    var symbolHistory = {};
+
     for (var cardIndex = 0; cardIndex < gTotalCardsInDeck; cardIndex++) {
-      debugLog.debugLog(
+      debugLog(
         "CardConfigs",
         "generateCardConfigsInternal cardIndex = " + cardIndex
       );
 
-      debugLog.debugLog(
-        "CardConfigs",
-        "shuffledArrayOfSymbols = " + JSON.stringify(shuffledArrayOfSymbols)
+      // Just for clarity: sum the distribution array, it should equal num symbols per card.
+      var totalSymbolsInDistribution =
+        lagomCardDataUtils.sumDistribution(gDistribution);
+      console.assert(
+        totalSymbolsInDistribution == gNumSymbolsPerCard,
+        "Total symbols do not match num symbols per card"
       );
-      debugLog.debugLog(
-        "CardConfigs",
-        "shuffledArrayOfSymbols.length = " +
-          JSON.stringify(shuffledArrayOfSymbols.length)
-      );
-      debugLog.debugLog(
-        "CardConfigs",
-        "shuffledArrayOfPurposeNumbers = " +
-          JSON.stringify(shuffledArrayOfPurposeNumbers)
-      );
-      debugLog.debugLog(
-        "CardConfigs",
-        "shuffledArrayOfPurposeNumbers.length = " +
-          JSON.stringify(shuffledArrayOfPurposeNumbers.length)
-      );
-
-      var symbolsRequiringNumbers = {
-        [symbolTypes.Purpose]: shuffledArrayOfPurposeNumbers,
-      };
 
       var cardConfig = lagomCardDataUtils.makeCardConfig(
-        shuffledArrayOfSymbols,
-        gSymbolCountBySectorIndex,
-        gNumSymbolsPerCard,
-        symbolsRequiringNumbers
+        gSymbolTypesArray,
+        gNumInstancesEachSymbol,
+        symbolHistory,
+        gDistribution,
+        gNumberedSymbolDetailsMap,
+        getRandomZeroToOne
       );
 
       cardConfigsAccumulator.push(cardConfig);
     } // One card.
+
+    debugLog(
+      "CardConfigHistories",
+      "symbolHistory = ",
+      JSON.stringify(symbolHistory)
+    );
+    debugLog(
+      "CardConfigHistories",
+      "gNumberedSymbolDetailsMap = ",
+      JSON.stringify(gNumberedSymbolDetailsMap)
+    );
 
     return cardConfigsAccumulator;
   }
@@ -165,7 +141,7 @@ define([
   }
 
   function generateCardConfigs() {
-    debugLog.debugLog("CardConfigs", "calling generateLowEndCardConfigs");
+    debugLog("CardConfigs", "calling generateLowEndCardConfigs");
 
     gCardConfigs = generateCardConfigsInternal();
   }
@@ -176,7 +152,7 @@ define([
   //
   //-----------------------------------
   function getNumCards() {
-    debugLog.debugLog(
+    debugLog(
       "CardConfigs",
       "getNumCards: _cardConfigs = " + JSON.stringify(gCardConfigs)
     );
@@ -185,8 +161,8 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
-    symbolTypes: symbolTypes,
-    symbolTypesArray: symbolTypesArray,
+    symbolTypes: gSymbolTypes,
+    symbolTypesArray: gSymbolTypesArray,
 
     getNumCards: getNumCards,
     getCardConfigAtIndex: getCardConfigAtIndex,

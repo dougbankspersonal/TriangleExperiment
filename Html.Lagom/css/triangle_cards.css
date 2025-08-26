@@ -69,14 +69,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url("../images/LagomCards/card-back.png");
+  background-image: url("../images/LagomCards/triangle-card-back.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-}
-.card.back.lagom .lagom-title-shadow {
-  width: 90%;
-  height: 90%;
+  border-width: initial;
+  border-style: initial;
+  border: initial;
 }
 
 /*# sourceMappingURL=triangle_cards.css.map */

@@ -5,193 +5,87 @@ define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
-  "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
+  "javascript/lagomCardUtils",
   "javascript/rectangleCardData",
   "dojo/domReady!",
 ], function (
   domStyle,
   cards,
-  debugLog,
+  debugLogModule,
   genericMeasurements,
-  genericUtils,
   htmlUtils,
+  lagomCardUtils,
   rectangleCardData
 ) {
+  var debugLog = debugLogModule.debugLog;
+
   //-----------------------------------
   //
   // Constants
   //
   //-----------------------------------
-  const cardFrontPaddingPx = 0;
+  const gCardFrontPaddingPx = 0;
 
-  const rect_imageSizePxByResourceCount = {
+  const gRect_symbolSizePxBySymbolCount = {
     1: genericMeasurements.standardCardWidthPx * 0.33,
     2: genericMeasurements.standardCardWidthPx * 0.271,
     3: genericMeasurements.standardCardWidthPx * 0.24,
   };
 
-  const square_imageSizePxByResourceCount = {
+  const gSquare_symbolSizePxBySymbolCount = {
     1: genericMeasurements.standardCardWidthPx * 0.33,
-    2: genericMeasurements.standardCardWidthPx * 0.271,
+    2: genericMeasurements.standardCardWidthPx * 0.211,
     3: genericMeasurements.standardCardWidthPx * 0.208,
   };
 
-  const rect_imageXPercentByResourceCountAndIndex = {
+  const gSectorWidth = genericMeasurements.standardCardWidthPx / 2;
+  const gSquareSectorHeight = gSectorWidth;
+  const gRectSectorHeight = genericMeasurements.standardCardHeightPx / 2;
+  const gRect_symbolXPxBySymbolCountAndIndex = {
     1: [0],
-    2: [25, -25],
-    3: [-35, 35, -35],
+    2: [0.17 * gSectorWidth, -0.17 * gSectorWidth],
+    3: [-0.2 * gSectorWidth, 0, 0.2 * gSectorWidth],
   };
 
-  const square_imageXPercentByResourceCountAndIndex = {
+  const gRect_symbolYPxBySymbolCountAndIndex = {
     1: [0],
-    2: [35, -35],
-    3: [-45, 0, 45],
+    2: [0.22 * gSquareSectorHeight, -0.22 * gSquareSectorHeight],
+    3: [
+      -0.27 * gSquareSectorHeight,
+      0.27 * gSquareSectorHeight,
+      -0.27 * gSquareSectorHeight,
+    ],
   };
 
-  const rect_imageYPercentByResourceCountAndIndex = {
+  const gSquare_symbolXPxBySymbolCountAndIndex = {
     1: [0],
-    2: [-40, 40],
-    3: [-75, 0, 75],
+    2: [0.17 * gSectorWidth, -0.17 * gSectorWidth],
+    3: [-0.2 * gSectorWidth, 0, 0.2 * gSectorWidth],
   };
 
-  const square_imageYPercentByResourceCountAndIndex = {
+  const gSquare_symbolYPxBySymbolCountAndIndex = {
     1: [0],
-    2: [-35, 35],
-    3: [-45, 45, -45],
+    2: [0.17 * gSquareSectorHeight, -0.17 * gSquareSectorHeight],
+    3: [
+      -0.2 * gSquareSectorHeight,
+      0.2 * gSquareSectorHeight,
+      -0.2 * gSquareSectorHeight,
+    ],
   };
 
-  const gImageRotationBySectorIndex = [-45, 45, 45, -45];
-
-  var discardIconSize = 20;
-  var _discardRewardSupported = false;
+  const gSymbolRotationDegBySectorIndex = [-45, 45, 45, -45];
 
   //-----------------------------------
   //
   // Functions
   //
   //-----------------------------------
-  function layoutPseudoImage(
-    imageNode,
-    sectorIndex,
-    symbolsThisSector,
-    symbolIndexInSector,
-    isSquare
-  ) {
-    debugLog.debugLog(
-      "Cards",
-      "layoutPseudoImage: sectorIndex = " +
-        sectorIndex +
-        " symbolsThisSector = " +
-        symbolsThisSector +
-        " symbolIndexInSector = " +
-        symbolIndexInSector
-    );
-
-    var xVals = isSquare
-      ? square_imageXPercentByResourceCountAndIndex
-      : rect_imageXPercentByResourceCountAndIndex;
-    var translateX = xVals[symbolsThisSector][symbolIndexInSector];
-
-    var yVals = isSquare
-      ? square_imageYPercentByResourceCountAndIndex
-      : rect_imageYPercentByResourceCountAndIndex;
-
-    var translateY = yVals[symbolsThisSector][symbolIndexInSector];
-
-    var sizes = isSquare
-      ? square_imageSizePxByResourceCount
-      : rect_imageSizePxByResourceCount;
-
-    var rotation = gImageRotationBySectorIndex[sectorIndex];
-    domStyle.set(imageNode, {
-      width: sizes[symbolsThisSector] + "px",
-      height: sizes[symbolsThisSector] + "px",
-      transform: `translate(${translateX}%, ${translateY}%) rotate(${rotation}deg)`,
-    });
-  }
-
-  function addNthSector(
-    parentNode,
-    sectorIndex,
-    isSquare,
-    opt_sectorDescriptor
-  ) {
-    var sectorDescriptor = opt_sectorDescriptor ? opt_sectorDescriptor : {};
-
-    var sectorMap = sectorDescriptor ? sectorDescriptor.sectorMap : {};
-
-    var symbolsThisSector = genericUtils.sumHistogram(sectorMap);
-
-    var sectorNode = htmlUtils.addDiv(
-      parentNode,
-      [
-        "sector",
-        "symbol-count-" + symbolsThisSector,
-        "sector-index-" + sectorIndex,
-      ],
-      "sector"
-    );
-    if (symbolsThisSector == 0) {
-      return sectorNode;
-    }
-
-    var symbolIndexInSector = 0;
-    for (var symbolType in sectorMap) {
-      var symbolCount = sectorMap[symbolType] || 0;
-      if (symbolCount <= 0) {
-        continue;
-      }
-
-      var numbersForSymbol = null;
-      if (
-        sectorDescriptor.numbersBySymbolType &&
-        sectorDescriptor.numbersBySymbolType[symbolType]
-      ) {
-        numbersForSymbol = sectorDescriptor.numbersBySymbolType[symbolType];
-      }
-
-      for (var symbolIndex = 0; symbolIndex < symbolCount; symbolIndex++) {
-        var cssClass = symbolType;
-        var imageNode = htmlUtils.addImage(
-          sectorNode,
-          ["symbol-image", cssClass],
-          "symbol-image-" + symbolType + "-" + symbolIndex
-        );
-        layoutPseudoImage(
-          imageNode,
-          sectorIndex,
-          symbolsThisSector,
-          symbolIndexInSector,
-          isSquare
-        );
-        symbolIndexInSector++;
-
-        if (numbersForSymbol) {
-          console.assert(symbolIndex < numbersForSymbol.length);
-          var number = numbersForSymbol[symbolIndex];
-          var numberNode = htmlUtils.addDiv(
-            imageNode,
-            ["symbol-number"],
-            "symbol-number",
-            number.toString()
-          );
-        }
-      }
-    }
-    return sectorNode;
-  }
-
   function addCardFront(parentNode, index, opt_configs) {
-    console.log(
-      "Doug: genericMeasurements.standardCardWidthPx = " +
-        genericMeasurements.standardCardWidthPx
-    );
-
     var configs = opt_configs ? opt_configs : {};
 
     var cardConfig = rectangleCardData.getCardConfigAtIndex(index);
-    debugLog.debugLog(
+    debugLog(
       "Cards",
       "in addCardFront i == " +
         index +
@@ -203,7 +97,9 @@ define([
     var classes = ["lagom"];
     var cardFrontNode = cards.addCardFront(parentNode, classes, id);
     domStyle.set(cardFrontNode, {
-      padding: cardFrontPaddingPx + "px",
+      padding: gCardFrontPaddingPx + "px",
+      "border-width": `${genericMeasurements.cardFrontBorderWidthPx}px`,
+      "border-style": "solid",
     });
 
     var frontWrapperNode = htmlUtils.addDiv(
@@ -225,7 +121,25 @@ define([
         var sectorDescriptor = cardConfig.sectorDescriptors[sectorIndex];
         console.assert(sectorDescriptor, "sectorDescriptor is null");
 
-        addNthSector(rowNode, sectorIndex, configs.isSquare, sectorDescriptor);
+        var sectorConfigs = {
+          isSquare: configs.isSquare === true,
+          symbolSizePxBySymbolCount:
+            configs.isSquare === true
+              ? gSquare_symbolSizePxBySymbolCount
+              : gRect_symbolSizePxBySymbolCount,
+          symbolXPxBySymbolCountAndIndex:
+            configs.isSquare === true
+              ? gSquare_symbolXPxBySymbolCountAndIndex
+              : gRect_symbolXPxBySymbolCountAndIndex,
+          symbolYPxBySymbolCountAndIndex:
+            configs.isSquare === true
+              ? gSquare_symbolYPxBySymbolCountAndIndex
+              : gRect_symbolYPxBySymbolCountAndIndex,
+          symbolRotationsDeg: gSymbolRotationDegBySectorIndex,
+          sectorDescriptor: sectorDescriptor,
+        };
+
+        lagomCardUtils.addNthSector(rowNode, sectorIndex, sectorConfigs);
       }
     }
 
@@ -235,6 +149,10 @@ define([
   function addCardBack(parent, index) {
     var cardBackNode = cards.addCardBack(parent, index, {
       classes: ["lagom"],
+    });
+    domStyle.set(cardBackNode, {
+      "border-width": `${genericMeasurements.cardFrontBorderWidthPx}px`,
+      "border-style": "solid",
     });
     var titleImageNode = htmlUtils.addImage(
       cardBackNode,

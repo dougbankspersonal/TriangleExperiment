@@ -57,7 +57,7 @@
         dom,
         domStyle,
         cards,
-        debugLog,
+        debugLogModule,
         genericMeasurements,
         genericUtils,
         htmlUtils,
@@ -65,6 +65,8 @@
         rectangleCards,
         rectangleCardData
       ) {
+        var debugLog = debugLogModule.debugLog;
+
         var cardWiggleDeg = 3;
 
         const seededZeroToOneRandomFunction =
@@ -144,11 +146,7 @@
 
         var cardDescArray = setupCardDescArray;
 
-        debugLog.debugLog(
-          "Cards",
-          "cardDescArray.length = ",
-          cardDescArray.length
-        );
+        debugLog("Cards", "cardDescArray.length = ", cardDescArray.length);
 
         for (var i = 0; i < cardDescArray.length; i++) {
           var cardDesc = cardDescArray[i];

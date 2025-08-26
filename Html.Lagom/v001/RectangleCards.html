@@ -55,24 +55,26 @@
         "javascript/rectangleCards",
       ], function (
         cards,
-        debugLog,
+        debugLogModule,
         genericUtils,
         htmlUtils,
         systemConfigs,
         rectangleCardData,
         rectangleCards
       ) {
+        var debugLog = debugLogModule.debugLog;
+
         var sc = systemConfigs.getCardSystemConfigs();
         systemConfigs.setSystemConfigs(sc);
 
         systemConfigs;
-        debugLog.debugLog("CardConfigs", "cardsPerRow = " + sc.cardsPerRow);
+        debugLog("CardConfigs", "cardsPerRow = " + sc.cardsPerRow);
 
         rectangleCardData.generateCardConfigs();
 
         var numCards = rectangleCardData.getNumCards();
 
-        debugLog.debugLog("CardConfigs", "numCards = " + numCards);
+        debugLog("CardConfigs", "numCards = " + numCards);
 
         var backConfig = {
           callback: rectangleCards.addCardBack,

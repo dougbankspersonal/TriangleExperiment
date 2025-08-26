@@ -56,7 +56,7 @@
         "javascript/rectangleCards",
       ], function (
         cards,
-        debugLog,
+        debugLogModule,
         genericMeasurements,
         genericUtils,
         htmlUtils,
@@ -64,19 +64,20 @@
         rectangleCardData,
         rectangleCards
       ) {
+        var debugLog = debugLogModule.debugLog;
         var sc = systemConfigs.getCardSystemConfigs({
           cardHeightPx: genericMeasurements.standardCardWidthPx,
         });
         systemConfigs.setSystemConfigs(sc);
 
         systemConfigs;
-        debugLog.debugLog("CardConfigs", "cardsPerRow = " + sc.cardsPerRow);
+        debugLog("CardConfigs", "cardsPerRow = " + sc.cardsPerRow);
 
         rectangleCardData.generateCardConfigs();
 
         var numCards = rectangleCardData.getNumCards();
 
-        debugLog.debugLog("CardConfigs", "numCards = " + numCards);
+        debugLog("CardConfigs", "numCards = " + numCards);
 
         var backConfig = {
           callback: rectangleCards.addCardBack,

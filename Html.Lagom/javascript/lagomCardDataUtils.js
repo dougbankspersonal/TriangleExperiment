@@ -1,4 +1,10 @@
-define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
+define([
+  "sharedJavascript/debugLog",
+  "sharedJavascript/genericUtils",
+  "dojo/domReady!",
+], function (debugLogModule, genericUtils) {
+  var debugLog = debugLogModule.debugLog;
+
   // This should be a number with a sane value.
   function assertIsNumber(value) {
     if (typeof value !== "number" || isNaN(value)) {
@@ -13,67 +19,51 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
   // symbols are in sector of that index on the card.
   // Count all the symbols.
   // Do some sanity checking along the way.
-  function totalSymbolsInAllSectors(sectorIndexToNumSymbolsInSector) {
+  function sumDistribution(distribution) {
     var retVal = 0;
     for (
       var sectorIndex = 0;
-      sectorIndex < sectorIndexToNumSymbolsInSector.length;
+      sectorIndex < distribution.length;
       sectorIndex++
     ) {
-      assertIsNumber(sectorIndexToNumSymbolsInSector[sectorIndex]);
-      retVal += sectorIndexToNumSymbolsInSector[sectorIndex];
+      assertIsNumber(distribution[sectorIndex]);
+      retVal += distribution[sectorIndex];
     }
     return retVal;
   }
 
-  // We want to describe a card.
-  // We are given:
-  // * Shuffled array of symbols: when we need a symbol just pull off the front.
-  // * an array where each element says how many symbols are in the sector of that index.
-  // * an expected number of symbols on entire card.
-  // First sanity check: sum of symbol count in sectorIndexToNumSymbolsInSector should be
-  // expectedNumSymbolsPerCard.
-  // Then fill in card description:
-  // * Each card has n sectors.
-  // * Each sector has n symbols.
-  // * To describe a sector: a map from symbol name to num instances of that symbol.
-  // * To describe a card: ordered array of sector maps.
+  // We want to describe what symbols go where in a card.
+  // Passes back an array: one entry for each sector.
+  // Each entry is a histogram mapping type of symbol to the number of times the symbol
+  // appears in that sector (if a symbol is missing from histogram -> zero appearances
+  // in the sector)
   function makeSectorMaps(
-    shuffledArrayOfSymbols,
-    sectorIndexToNumSymbolsInSector,
-    expectedNumSymbolsPerCard
+    symbolTypesArray, // Array of all possible symbol types.
+    countPerSymbolInDeck, // How many of each symbol in the deck (we are assuming all symbols have equal representation)
+    symbolHistory, // Symbol to count histogram: how many times have we already used this symbol.
+    distribution, // N element array for n = number of sectors.  Each element says how many symbols in that sector.
+    getRandomZeroToOne // Seeded rand function.
   ) {
-    // Sanity checking: count of symbols in sectorIndexToNumSymbolsInSector should be expected num symbols
-    // per card.
-    var totalSymbolsOnCard = totalSymbolsInAllSectors(
-      sectorIndexToNumSymbolsInSector
-    );
-    console.assert(
-      totalSymbolsOnCard == expectedNumSymbolsPerCard,
-      "makeSectorMaps: totalSymbolsOnCard = " +
-        totalSymbolsOnCard +
-        "; gNumSymbolsPerCard = " +
-        expectedNumSymbolsPerCard
-    );
-
-    console.assert(
-      shuffledArrayOfSymbols.length >= expectedNumSymbolsPerCard,
-      "makeSectorMaps: shuffledArrayOfSymbols.length:" +
-        shuffledArrayOfSymbols.length +
-        " < _numSymbolsPerCard:" +
-        expectedNumSymbolsPerCard
-    );
-
     // build the card description: an array of sector maps.
     var sectorMaps = [];
+
+    var totalSymbolsInDistribution = sumDistribution(distribution);
+
     for (
       var sectorIndex = 0;
-      sectorIndex < sectorIndexToNumSymbolsInSector.length;
+      sectorIndex < distribution.length;
       sectorIndex++
     ) {
       var sectorMap = {};
-      for (var j = 0; j < sectorIndexToNumSymbolsInSector[sectorIndex]; j++) {
-        var symbolType = shuffledArrayOfSymbols.shift();
+      var symbolCount = distribution[sectorIndex];
+      for (var j = 0; j < symbolCount; j++) {
+        var symbolType = genericUtils.getRandomFromArrayWithRails(
+          symbolTypesArray,
+          symbolHistory,
+          totalSymbolsInDistribution / 2,
+          countPerSymbolInDeck,
+          getRandomZeroToOne
+        );
         if (!sectorMap[symbolType]) {
           sectorMap[symbolType] = 0;
         }
@@ -84,34 +74,46 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     return sectorMaps;
   }
 
-  // We have a sector with different symbols in it.
-  // Some symbols may also require a number (it's not just wealth, it's wealth 2 or whatever).
-  // Pull required numbers from shuffled array of numbers, add them to a table
-  // of numbers-by-symbol on the sectorDescriptor.
-  function maybeAddNumbers(
+  // Sector descriptor: map from sector index to histogram of symbol appearance in sector.
+  // symbolType: What type of symbol needs numbers attached.
+  // minValue, maxValue: we are going to add a number from [minValue, maxValue] for each symbol of given type.
+  // history: a histogram mapping number to times we've used this number in all of the deck.
+  // maxInstances: in the entire deck, we are not allowed to have any more than this number of any particular number.
+  // getRandomZeroToOne: seeded rand function.
+  function addNumbers(
     sectorDescriptor,
-    symbolTypeRequiringNumbers,
-    shuffledArrayOfNumbers
+    symbolType,
+    minValue,
+    maxValue,
+    history,
+    maxInstances,
+    getRandomZeroToOne
   ) {
-    var numNumbersRequired =
-      sectorDescriptor.sectorMap[symbolTypeRequiringNumbers];
+    var maxFrequencyDifference = (maxValue - minValue) / 2;
+    var numberArray = [];
+    for (var i = minValue; i <= maxValue; i++) {
+      numberArray[i] = i;
+    }
+    var numNumbersRequired = sectorDescriptor.sectorMap[symbolType];
     numNumbersRequired = numNumbersRequired ? numNumbersRequired : 0;
+
     if (numNumbersRequired > 0) {
       var numbers = [];
-      for (
-        var numberCount = 0;
-        numberCount < numNumbersRequired;
-        numberCount++
-      ) {
-        var number = shuffledArrayOfNumbers.shift();
+      for (var i = 0; i < numNumbersRequired; i++) {
+        var number = genericUtils.getRandomFromArrayWithRails(
+          numberArray,
+          history,
+          maxFrequencyDifference,
+          maxInstances,
+          getRandomZeroToOne
+        );
         numbers.push(number);
       }
       sectorDescriptor.numbersBySymbolType =
         sectorDescriptor.numbersBySymbolType
           ? sectorDescriptor.numbersBySymbolType
           : {};
-      sectorDescriptor.numbersBySymbolType[symbolTypeRequiringNumbers] =
-        numbers;
+      sectorDescriptor.numbersBySymbolType[symbolType] = numbers;
     }
   }
 
@@ -123,27 +125,31 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
         retVal.push(value);
       }
     }
-    debugLog.debugLog(
-      "CardConfigs",
+    debugLog(
+      "LagomCardData",
       "generateNCountArray retVal = " + JSON.stringify(retVal)
     );
     return retVal;
   }
 
   function makeCardConfig(
-    shuffledArrayOfSymbols,
-    symbolCountBySectorIndex,
-    expectedSymbolCount,
-    opt_symbolsRequiringNumbers
+    symbolTypesArray, // Set of symbols to choose from.
+    countPerSymbolInDeck, // For any symbol, max times it can appear.
+    symbolHistory, // Record of previous choices.
+    distribution, // The number of symbols in each sector.
+    numberedSymbolDetailsMap, // Details on which symbols need numbers, how to number.
+    getRandomZeroToOne // Seeded rand function,
   ) {
     var sectorMaps = makeSectorMaps(
-      shuffledArrayOfSymbols,
-      symbolCountBySectorIndex,
-      expectedSymbolCount
+      symbolTypesArray,
+      countPerSymbolInDeck,
+      symbolHistory,
+      distribution,
+      getRandomZeroToOne
     );
 
-    debugLog.debugLog(
-      "CardConfigs",
+    debugLog(
+      "LagomCardData",
       "makeCardConfig: sectorMaps = " + JSON.stringify(sectorMaps)
     );
 
@@ -157,16 +163,31 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
       };
 
       // For any symbol that needs numbers, add those numbers.
-      var symbolsRequiringNumbers = opt_symbolsRequiringNumbers || {};
-      debugLog.debugLog(
-        "CardConfigs",
-        "makeCardConfig: symbolsRequiringNumbers = " +
-          JSON.stringify(symbolsRequiringNumbers)
+      debugLog(
+        "LagomCardData",
+        "makeCardConfig: numberedSymbolDetails = " +
+          JSON.stringify(numberedSymbolDetailsMap)
       );
 
-      for (var symbolType in symbolsRequiringNumbers) {
-        var shuffledNumbers = symbolsRequiringNumbers[symbolType];
-        maybeAddNumbers(sectorDescriptor, symbolType, shuffledNumbers);
+      for (var symbolType in numberedSymbolDetailsMap) {
+        var numberedSymbolDetails = numberedSymbolDetailsMap[symbolType];
+        var minValue = numberedSymbolDetails.minValue;
+        var maxValue = numberedSymbolDetails.maxValue;
+        var maxInstances = numberedSymbolDetails.maxInstances;
+        var history = numberedSymbolDetails.history
+          ? numberedSymbolDetails.history
+          : {};
+
+        addNumbers(
+          sectorDescriptor,
+          symbolType,
+          minValue,
+          maxValue,
+          history,
+          maxInstances,
+          getRandomZeroToOne
+        );
+        numberedSymbolDetailsMap[symbolType].history = history;
       }
 
       cardConfig.sectorDescriptors.push(sectorDescriptor);
@@ -174,11 +195,43 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (debugLog) {
     return cardConfig;
   }
 
+  function aggregateSymbolCountMaps(cardConfig) {
+    var symbolCountMap = {};
+    for (
+      var sectorIndex = 0;
+      sectorIndex < cardConfig.sectorDescriptors.length;
+      sectorIndex++
+    ) {
+      var sectorMap = cardConfig.sectorDescriptors[sectorIndex].sectorMap;
+      for (var symbolType in sectorMap) {
+        if (!symbolCountMap[symbolType]) {
+          symbolCountMap[symbolType] = 0;
+        }
+        symbolCountMap[symbolType] += sectorMap[symbolType];
+      }
+    }
+    return symbolCountMap;
+  }
+
+  // No symbol should be more than half the symbols.
+  function cardHasNiceSymbolBalance(cardConfig) {
+    var symbolCountMap = aggregateSymbolCountMaps(cardConfig);
+    var totalSymbols = Object.values(symbolCountMap).reduce((a, b) => a + b, 0);
+    for (var symbolType in symbolCountMap) {
+      if (symbolCountMap[symbolType] > totalSymbols / 2) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   // This returned object becomes the defined value of this module
   return {
     makeSectorMaps: makeSectorMaps,
-    maybeAddNumbers: maybeAddNumbers,
+    addNumbers: addNumbers,
     generateNCountArray: generateNCountArray,
     makeCardConfig: makeCardConfig,
+    cardHasNiceSymbolBalance: cardHasNiceSymbolBalance,
+    sumDistribution: sumDistribution,
   };
 });
