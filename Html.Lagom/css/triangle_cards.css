@@ -1,3 +1,16 @@
+body,
+html {
+  background: transparent !important;
+}
+
+.page_of_cards {
+  background: transparent !important;
+}
+
+.page_of_items_contents {
+  background: transparent !important;
+}
+
 .card_array > .page_of_items_contents > .card.lagom {
   box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.5);
 }
