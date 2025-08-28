@@ -12,9 +12,6 @@ define([
   // Constants
   //
   //-----------------------------------
-  const getRandomZeroToOne =
-    genericUtils.createSeededGetZeroToOneRandomFunction(36593650);
-
   var gCardConfigs = [];
 
   var gGoodOptionsMap = {
@@ -215,7 +212,7 @@ define([
         gBadOptionsKeysHistory,
         gGoodOptionsKeys.length / 2,
         gGoodOptionInstanceCount,
-        getRandomZeroToOne,
+        lagoCardDataUtils.getRandomZeroToOne,
         function (option) {
           return optionValidationCallback(option, optionsThisCard);
         }
@@ -229,7 +226,7 @@ define([
         gBadOptionsKeysHistory,
         gBadOptionsKeys.length / 2,
         gBadOptionInstanceCount,
-        getRandomZeroToOne,
+        lagoCardDataUtils.getRandomZeroToOne,
         function (option) {
           return optionValidationCallback(option, optionsThisCard);
         }

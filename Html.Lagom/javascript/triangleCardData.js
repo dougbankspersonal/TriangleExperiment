@@ -19,32 +19,10 @@ define([
   // Constants
   //
   //-----------------------------------
-  const SymbolType_Accomplishment = "wc-accomplishment";
-  const SymbolType_Relationships = "wc-relationships";
-  const SymbolType_Purpose = "wc-purpose";
-  const SymbolType_Wealth = "wc-wealth";
-
-  const gSymbolTypes = {
-    Accomplishment: SymbolType_Accomplishment,
-    Purpose: SymbolType_Purpose,
-    Relationships: SymbolType_Relationships,
-    Wealth: SymbolType_Wealth,
-  };
-
-  const gSymbolTypesArray = [
-    gSymbolTypes.Relationships,
-    gSymbolTypes.Wealth,
-    gSymbolTypes.Purpose,
-    gSymbolTypes.Accomplishment,
-  ];
-
-  const getRandomZeroToOne =
-    genericUtils.createSeededGetZeroToOneRandomFunction(4747575);
-
   var gCardConfigs = [];
 
   const gTotalCardsInDeck = 72;
-  const gMaxPurpose = 9;
+  const gMaxPurposeValue = 9;
   const gNumSymbolsPerCard = 5;
   // Triangle sectors are indexed like so:
   //                 0
@@ -65,44 +43,28 @@ define([
 
   // Should divide evenly: each symbol has equal likelihood of showing up.
   console.assert(
-    gTotalSymbolsInDeck % gSymbolTypesArray.length == 0,
+    gTotalSymbolsInDeck % lagomCardDataUtils.numSymbols == 0,
     "gTotalSymbolsInDeck = " +
       gTotalSymbolsInDeck +
-      ": symbolTypesArray.length = " +
-      gSymbolTypesArray.length
+      ": lagomCardDataUtils.numSymbols = " +
+      lagomCardDataUtils.numSymbols
   );
   const gNumInstancesEachSymbol =
-    gTotalSymbolsInDeck / gSymbolTypesArray.length;
-
-  // Purpose numbers should also slice up evenly.
-  console.assert(
-    gNumInstancesEachSymbol % gMaxPurpose == 0,
-    "gNumInstancesEachSymbol = ",
-    gNumInstancesEachSymbol,
-    ": gMaxPurpose == ",
-    gMaxPurpose
-  );
+    gTotalSymbolsInDeck / lagomCardDataUtils.numSymbols;
 
   // This should slice up evenly so all purpose numbers have same likelihood of showing up.
   // There are gNumInstancesEachSymbol purpose symbols in the deck.
-  const gInstancesEachPurposeNumber = gNumInstancesEachSymbol / gMaxPurpose;
+  const gNumInstancesEachPurposeValue =
+    gNumInstancesEachSymbol / gMaxPurposeValue;
   console.assert(
-    gInstancesEachPurposeNumber == Math.floor(gInstancesEachPurposeNumber),
-    "gInstancesEachPurposeNumber is not an int: gInstancesEachPurposeNumber = " +
-      gInstancesEachPurposeNumber +
+    gNumInstancesEachPurposeValue == Math.floor(gNumInstancesEachPurposeValue),
+    "gInstancesEachPurposeValue is not an int: gInstancesEachPurposeValue = " +
+      gNumInstancesEachPurposeValue +
       ", gNumInstancesEachSymbol = " +
       gNumInstancesEachSymbol +
       ", gMaxPurpose = " +
-      gMaxPurpose
+      gMaxPurposeValue
   );
-
-  var gNumberedSymbolDetailsMap = {
-    [gSymbolTypes.Purpose]: {
-      minValue: 1,
-      maxValue: gMaxPurpose,
-      history: {},
-    },
-  };
 
   //-----------------------------------
   //
@@ -110,15 +72,6 @@ define([
   //
   //-----------------------------------
   function generateCardConfigsInternal() {
-    var rawSymbolArray = lagomCardDataUtils.generateNCountArray(
-      gSymbolTypesArray,
-      gNumInstancesEachSymbol
-    );
-    debugLog(
-      "triangleCardData",
-      "rawSymbolArray = " + JSON.stringify(rawSymbolArray)
-    );
-
     var cardConfigsAccumulator = [];
 
     var symbolHistory = {};
@@ -133,12 +86,9 @@ define([
       var cardConfig;
       while (true) {
         cardConfig = lagomCardDataUtils.makeCardConfig(
-          gSymbolTypesArray, // Set of symbols to choose from.
           gNumInstancesEachSymbol, // For any symbol, max times it can appear.
           symbolHistory, // Record of previous choices.
-          distribution, // The number of symbols in each sector.
-          gNumberedSymbolDetailsMap,
-          getRandomZeroToOne
+          distribution // The number of symbols in each sector.
         );
         triesToGenerateAValidRandomCardConfig++;
 
@@ -180,6 +130,13 @@ define([
   function generateCardConfigs() {
     debugLog("triangleCardData", "calling generateCardConfigs");
 
+    lagomCardDataUtils.setNumberingDetailsForSymbol(
+      lagomCardDataUtils.symbolTypes.Purpose,
+      1,
+      gMaxPurposeValue,
+      gNumInstancesEachPurposeValue
+    );
+
     gCardConfigs = generateCardConfigsInternal();
   }
 
@@ -193,9 +150,6 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
-    symbolTypes: gSymbolTypes,
-    symbolTypesArray: gSymbolTypesArray,
-
     getNumCards: getNumCards,
     getCardConfigAtIndex: getCardConfigAtIndex,
     generateCardConfigs: generateCardConfigs,

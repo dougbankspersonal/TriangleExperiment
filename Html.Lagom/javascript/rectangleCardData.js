@@ -9,40 +9,13 @@ define([
 
   //-----------------------------------
   //
-  // Constants
-  //
-  //-----------------------------------
-  const SymbolType_Relationships = "wc-relationships";
-  const SymbolType_Wealth = "wc-wealth";
-  const SymbolType_Purpose = "wc-purpose";
-  const SymbolType_Accomplishment = "wc-accomplishment";
-
-  const gSymbolTypes = {
-    Relationships: SymbolType_Relationships,
-    Wealth: SymbolType_Wealth,
-    Purpose: SymbolType_Purpose,
-    Accomplishment: SymbolType_Accomplishment,
-  };
-
-  const gSymbolTypesArray = [
-    gSymbolTypes.Relationships,
-    gSymbolTypes.Wealth,
-    gSymbolTypes.Purpose,
-    gSymbolTypes.Accomplishment,
-  ];
-
-  const getRandomZeroToOne =
-    genericUtils.createSeededGetZeroToOneRandomFunction(36593650);
-
-  //-----------------------------------
-  //
   // Global vars
   //
   //-----------------------------------
   var gCardConfigs = [];
 
   const gTotalCardsInDeck = 72;
-  const gMaxPurpose = 9;
+  const gMaxPurposeValue = 9;
   const gDistribution = [0, 3, 2, 1];
 
   var gNumSymbolsPerCard = 0;
@@ -52,7 +25,7 @@ define([
 
   const gTotalSymbolsInDeck = gTotalCardsInDeck * gNumSymbolsPerCard;
   const gNumInstancesEachSymbol =
-    gTotalSymbolsInDeck / gSymbolTypesArray.length;
+    gTotalSymbolsInDeck / lagomCardDataUtils.numSymbols;
 
   // Should divide evenly: each symbol has equal likelihood of showing up.
   console.assert(
@@ -61,30 +34,23 @@ define([
       gNumInstancesEachSymbol +
       ": gTotalSymbolsInDeck = " +
       gTotalSymbolsInDeck +
-      ": symbolTypesArray.length = " +
-      gSymbolTypesArray.length
+      ": numSymbols = " +
+      lagomCardDataUtils.numSymbols
   );
 
   // This should slice up evenly so all purpose numbers have same likelihood of showing up.
   // There are gNumInstancesEachSymbol purpose symbols in the deck.
-  const gInstancesEachPurposeNumber = gNumInstancesEachSymbol / gMaxPurpose;
+  const gNumInstancesEachPurposeValue =
+    gNumInstancesEachSymbol / gMaxPurposeValue;
   console.assert(
-    gInstancesEachPurposeNumber == Math.floor(gInstancesEachPurposeNumber),
-    "gInstancesEachPurposeNumber is not an int: gInstancesEachPurposeNumber = " +
-      gInstancesEachPurposeNumber +
+    gNumInstancesEachPurposeValue == Math.floor(gNumInstancesEachPurposeValue),
+    "gInstancesEachPurposeValue is not an int: gInstancesEachPurposeValue = " +
+      gNumInstancesEachPurposeValue +
       ", gNumInstancesEachSymbol = " +
       gNumInstancesEachSymbol +
       ", gMaxPurpose = " +
-      gMaxPurpose
+      gMaxPurposeValue
   );
-
-  var gNumberedSymbolDetailsMap = {
-    [gSymbolTypes.Purpose]: {
-      minValue: 1,
-      maxValue: gMaxPurpose,
-      history: {},
-    },
-  };
 
   //-----------------------------------
   //
@@ -111,12 +77,9 @@ define([
       );
 
       var cardConfig = lagomCardDataUtils.makeCardConfig(
-        gSymbolTypesArray,
         gNumInstancesEachSymbol,
         symbolHistory,
-        gDistribution,
-        gNumberedSymbolDetailsMap,
-        getRandomZeroToOne
+        gDistribution
       );
 
       cardConfigsAccumulator.push(cardConfig);
@@ -127,11 +90,6 @@ define([
       "symbolHistory = ",
       JSON.stringify(symbolHistory)
     );
-    debugLog(
-      "CardConfigHistories",
-      "gNumberedSymbolDetailsMap = ",
-      JSON.stringify(gNumberedSymbolDetailsMap)
-    );
 
     return cardConfigsAccumulator;
   }
@@ -141,7 +99,14 @@ define([
   }
 
   function generateCardConfigs() {
-    debugLog("CardConfigs", "calling generateLowEndCardConfigs");
+    debugLog("CardConfigs", "calling generateCardConfigs");
+
+    lagomCardDataUtils.setNumberingDetailsForSymbol(
+      lagomCardDataUtils.symbolTypes.Purpose,
+      1,
+      gMaxPurposeValue,
+      gNumInstancesEachPurposeValue
+    );
 
     gCardConfigs = generateCardConfigsInternal();
   }
@@ -161,9 +126,6 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
-    symbolTypes: gSymbolTypes,
-    symbolTypesArray: gSymbolTypesArray,
-
     getNumCards: getNumCards,
     getCardConfigAtIndex: getCardConfigAtIndex,
     generateCardConfigs: generateCardConfigs,

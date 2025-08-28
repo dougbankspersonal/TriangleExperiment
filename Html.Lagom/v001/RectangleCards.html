@@ -51,6 +51,7 @@
         "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
+        "javascript/lagomCardDataUtils",
         "javascript/rectangleCardData",
         "javascript/rectangleCards",
       ], function (
@@ -59,6 +60,7 @@
         genericUtils,
         htmlUtils,
         systemConfigs,
+        lagomCardDataUtils,
         rectangleCardData,
         rectangleCards
       ) {
@@ -67,14 +69,13 @@
         var sc = systemConfigs.getCardSystemConfigs();
         systemConfigs.setSystemConfigs(sc);
 
-        systemConfigs;
-        debugLog("CardConfigs", "cardsPerRow = " + sc.cardsPerRow);
+        debugLog("RectangleCards", "cardsPerRow = " + sc.cardsPerRow);
 
         rectangleCardData.generateCardConfigs();
 
         var numCards = rectangleCardData.getNumCards();
 
-        debugLog("CardConfigs", "numCards = " + numCards);
+        debugLog("RectangleCards", "numCards = " + numCards);
 
         var backConfig = {
           callback: rectangleCards.addCardBack,

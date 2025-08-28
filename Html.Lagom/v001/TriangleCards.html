@@ -52,6 +52,7 @@
         "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
+        "javascript/lagomCardDataUtils",
         "javascript/triangleCardData",
         "javascript/triangleCards",
       ], function (
@@ -61,6 +62,7 @@
         genericUtils,
         htmlUtils,
         systemConfigs,
+        lagomCardDataUtils,
         triangleCardData,
         triangleCards
       ) {
@@ -70,15 +72,13 @@
         });
 
         systemConfigs.setSystemConfigs(sc);
-
-        systemConfigs;
-        debugLog("CardConfigs", "cardsPerRow = " + sc.cardsPerRow);
+        debugLog("TriangleCards", "cardsPerRow = " + sc.cardsPerRow);
 
         triangleCardData.generateCardConfigs();
 
         var numCards = triangleCardData.getNumCards();
 
-        debugLog("CardConfigs", "numCards = " + numCards);
+        debugLog("TriangleCards", "numCards = " + numCards);
 
         var backConfig = {
           callback: triangleCards.addCardBack,
