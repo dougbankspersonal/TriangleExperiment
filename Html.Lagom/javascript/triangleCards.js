@@ -32,9 +32,9 @@ define([
   const gSectorWidthPx = genericMeasurements.standardCardWidthPx / 2;
   const gSectorHeightPx = genericMeasurements.triangleCardHeightPx / 2;
   const gSymbolSizePxBySymbolCount = {
-    1: gSectorHeightPx * 0.5,
-    2: gSectorHeightPx * 0.35,
-    3: gSectorHeightPx * 0.35,
+    1: gSectorHeightPx * 0.48,
+    2: gSectorHeightPx * 0.28,
+    3: gSectorHeightPx * 0.28,
   };
 
   // Euquilateral triangle: centeregTriangleHeightPx
@@ -50,8 +50,8 @@ define([
   // Go down 1/2 the height of image, then up 1/3 of height of row.
   const oneItemYPx = gLargeImageSizePx * 0.5 - gSectorHeightPx * 0.33;
 
-  const oneOfTwoItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.6;
-  const twoOfTwoItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.25;
+  const oneOfTwoItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.53;
+  const twoOfTwoItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.19;
 
   const oneOfThreeItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.25;
   const twoOfThreeItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.6;

@@ -15,7 +15,13 @@ define([
   var gCardConfigs = [];
 
   const gTotalCardsInDeck = 72;
+
   const gMaxPurposeValue = 9;
+  console.assert(
+    gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
+    "gMaxPurposeValue is greater than numPurposeSprites"
+  );
+
   const gDistribution = [0, 3, 2, 1];
 
   var gNumSymbolsPerCard = 0;
@@ -44,55 +50,13 @@ define([
     gNumInstancesEachSymbol / gMaxPurposeValue;
   console.assert(
     gNumInstancesEachPurposeValue == Math.floor(gNumInstancesEachPurposeValue),
-    "gInstancesEachPurposeValue is not an int: gInstancesEachPurposeValue = " +
+    "gNumInstancesEachPurposeValue is not an int: gNumInstancesEachPurposeValue = " +
       gNumInstancesEachPurposeValue +
       ", gNumInstancesEachSymbol = " +
       gNumInstancesEachSymbol +
       ", gMaxPurpose = " +
       gMaxPurposeValue
   );
-
-  //-----------------------------------
-  //
-  // Global functions
-  //
-  //-----------------------------------
-  function generateCardConfigsInternal() {
-    var cardConfigsAccumulator = [];
-
-    var symbolHistory = {};
-
-    for (var cardIndex = 0; cardIndex < gTotalCardsInDeck; cardIndex++) {
-      debugLog(
-        "CardConfigs",
-        "generateCardConfigsInternal cardIndex = " + cardIndex
-      );
-
-      // Just for clarity: sum the distribution array, it should equal num symbols per card.
-      var totalSymbolsInDistribution =
-        lagomCardDataUtils.sumDistribution(gDistribution);
-      console.assert(
-        totalSymbolsInDistribution == gNumSymbolsPerCard,
-        "Total symbols do not match num symbols per card"
-      );
-
-      var cardConfig = lagomCardDataUtils.makeCardConfig(
-        gNumInstancesEachSymbol,
-        symbolHistory,
-        gDistribution
-      );
-
-      cardConfigsAccumulator.push(cardConfig);
-    } // One card.
-
-    debugLog(
-      "CardConfigHistories",
-      "symbolHistory = ",
-      JSON.stringify(symbolHistory)
-    );
-
-    return cardConfigsAccumulator;
-  }
 
   function getCardConfigAtIndex(index) {
     return cards.getCardConfigAtIndex(gCardConfigs, index);
@@ -108,7 +72,10 @@ define([
       gNumInstancesEachPurposeValue
     );
 
-    gCardConfigs = generateCardConfigsInternal();
+    gCardConfigs = lagomCardDataUtils.generateCardConfigs(
+      gTotalCardsInDeck,
+      gValidDistributions
+    );
   }
 
   //-----------------------------------

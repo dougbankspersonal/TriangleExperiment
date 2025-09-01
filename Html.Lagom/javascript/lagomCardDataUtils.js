@@ -23,11 +23,21 @@ define([
     gSymbolTypes.Purpose,
     gSymbolTypes.Accomplishment,
   ];
+  const transparencyForColors = 0.2;
+  const gSymbolToColorMap = {
+    [gSymbolTypes.Relationships]: `rgba(128, 255, 128, ${transparencyForColors})`,
+    [gSymbolTypes.Wealth]: `rgba(255, 255, 128, ${transparencyForColors})`,
+    [gSymbolTypes.Purpose]: `rgba(255, 0, 0, ${transparencyForColors})`,
+    [gSymbolTypes.Accomplishment]: `rgba(0, 128, 255, ${transparencyForColors})`,
+  };
 
   const gNumSymbols = gSymbolTypesArray.length;
 
   const getRandomZeroToOne =
     genericUtils.createSeededGetZeroToOneRandomFunction(36593650);
+
+  const gPurposeSpriteRows = 3;
+  const gPurposeSpriteColumns = 3;
 
   //-----------------------------------
   //
@@ -83,6 +93,12 @@ define([
       retVal += distribution[sectorIndex];
     }
     return retVal;
+  }
+
+  function sumSectorMap(sectorMap) {
+    // sectorMap maps symbol type to count of that symbol in sector.
+    // We want the total of all symbols in sector.
+    return Object.values(sectorMap).reduce((sum, count) => sum + count, 0);
   }
 
   // We want to describe what symbols go where in a card.
@@ -293,10 +309,12 @@ define([
     return symbolCountMap;
   }
 
-  // No symbol should be more than half the symbols.
-  function cardHasNiceSymbolBalance(cardConfig) {
+  function noSymbolHasMajority(cardConfig) {
+    // Map from symbol type -> num instances in config.
     var symbolCountMap = aggregateSymbolCountMaps(cardConfig);
+    // Count all symbols on card.
     var totalSymbols = Object.values(symbolCountMap).reduce((a, b) => a + b, 0);
+    // Check: no symbol should have majority of card.
     for (var symbolType in symbolCountMap) {
       if (symbolCountMap[symbolType] > totalSymbols / 2) {
         return false;
@@ -305,20 +323,102 @@ define([
     return true;
   }
 
+  function hasAtLeastTwoSymbolTypes(cardConfig) {
+    var symbolCountMap = aggregateSymbolCountMaps(cardConfig);
+    var numSymbolTypes = Object.keys(symbolCountMap).length;
+    return numSymbolTypes >= 2;
+  }
+
+  // Is this a good card config?  Caller passes in zero or more things to test.
+  function checkCardConfig(checks) {
+    // Run the card config through each check.
+    for (var i = 0; i < checks.length; i++) {
+      if (!checks[i](cardConfig)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function getColorForSymbol(symbolType) {
+    return gSymbolToColorMap[symbolType] || "transparent";
+  }
+
+  function countSymbolsInSector(cardConfig, sectorIndex) {
+    var sectorMap = cardConfig.sectorDescriptors[sectorIndex].sectorMap;
+    var symbolCount = sumSectorMap(sectorMap);
+    return symbolCount;
+  }
+
+  function generateCardConfigs(totalCardsInDeck, validDistributions) {
+    var cardConfigsAccumulator = [];
+
+    var symbolHistory = {};
+
+    for (var cardIndex = 0; cardIndex < totalCardsInDeck; cardIndex++) {
+      var distributionIndex = cardIndex % validDistributions.length;
+
+      var distribution = validDistributions[distributionIndex];
+
+      // Make sure it passes all checks.
+      var triesToGenerateAValidRandomCardConfig = 0;
+      var cardConfig;
+      while (true) {
+        cardConfig = lagomCardDataUtils.makeCardConfig(
+          gNumInstancesEachSymbol, // For any symbol, max times it can appear.
+          symbolHistory, // Record of previous choices.
+          distribution // The number of symbols in each sector.
+        );
+        triesToGenerateAValidRandomCardConfig++;
+
+        // If good, bail.
+        if (lagomCardDataUtils.checkCardConfig(cardConfig, gChecks)) {
+          break;
+        }
+
+        // Too many tries: assert and bail.
+        if (
+          triesToGenerateAValidRandomCardConfig >=
+          gMaxTriesToGenerateAValidRandomCardConfig
+        ) {
+          console.assert(
+            false,
+            "Failed to generate a good card after " +
+              gMaxTriesToGenerateAValidRandomCardConfig +
+              " tries."
+          );
+          break;
+        }
+        // Try again.
+      }
+
+      cardConfigsAccumulator.push(cardConfig);
+    } // One card.
+
+    return cardConfigsAccumulator;
+  }
+
   // This returned object becomes the defined value of this module
   return {
     symbolTypes: gSymbolTypes,
     symbolTypesArray: gSymbolTypesArray,
     numSymbols: gNumSymbols,
+    purposeSpriteColumns: gPurposeSpriteColumns,
+    purposeSpriteRows: gPurposeSpriteRows,
+    numPurposeSprites: gPurposeSpriteColumns * gPurposeSpriteRows,
     getRandomZeroToOne: getRandomZeroToOne,
 
     makeSectorMaps: makeSectorMaps,
     addNumbersForSymbol: addNumbersForSymbol,
     generateNCountArray: generateNCountArray,
     makeCardConfig: makeCardConfig,
-    cardHasNiceSymbolBalance: cardHasNiceSymbolBalance,
     sumDistribution: sumDistribution,
-
     setNumberingDetailsForSymbol: setNumberingDetailsForSymbol,
+    getColorForSymbol: getColorForSymbol,
+    countSymbolsInSector: countSymbolsInSector,
+    noSymbolHasMajority: noSymbolHasMajority,
+    hasAtLeastTwoSymbolTypes: hasAtLeastTwoSymbolTypes,
+    checkCardConfig: checkCardConfig,
+    generateCardConfigs: generateCardConfigs,
   };
 });

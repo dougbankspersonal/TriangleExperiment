@@ -54,13 +54,18 @@
   width: 50%;
   overflow: hidden;
 }
-.card.front.lagom .front-wrapper .sectors-row .sector .symbol-image.pseudo_image {
+.card.front.lagom .front-wrapper .sectors-row .sector .symbol-container {
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.card.front.lagom .front-wrapper .sectors-row .sector .symbol-image.pseudo_image .symbol-number {
+.card.front.lagom .front-wrapper .sectors-row .sector .symbol-container .symbol-image.pseudo_image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card.front.lagom .front-wrapper .sectors-row .sector .symbol-container .symbol-image.pseudo_image .symbol-number {
   font-size: 32px;
   font-weight: bold;
 }

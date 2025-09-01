@@ -59,15 +59,21 @@
         width: 50%;
         overflow: hidden;
 
-        .symbol-image.pseudo_image {
+        .symbol-container {
           position: absolute;
           display: flex;
           justify-content: center;
           align-items: center;
 
-          .symbol-number {
-            font-size: 32px;
-            font-weight: bold;
+          .symbol-image.pseudo_image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .symbol-number {
+              font-size: 32px;
+              font-weight: bold;
+            }
           }
         }
       }

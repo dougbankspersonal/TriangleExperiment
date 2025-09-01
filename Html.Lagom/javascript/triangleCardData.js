@@ -21,14 +21,55 @@ define([
   //-----------------------------------
   var gCardConfigs = [];
 
-  const gTotalCardsInDeck = 72;
-  const gMaxPurposeValue = 9;
-  const gNumSymbolsPerCard = 5;
   // Triangle sectors are indexed like so:
   //                 0
   //                 2
   //               1    3
   const gNumSectors = 4;
+  const gMiddleSectorIndex = 2;
+
+  const gTotalCardsInDeck = 80;
+
+  // Things we frequently twiddle.
+  // Keep them here in "configs", add/uncomment as needed.
+  const sixSymbolConfig = {
+    numSymbolsPerCard: 6,
+    maxPurposeValue: 9,
+    checks: [lagomCardDataUtils.noSymbolHasMajority],
+  };
+  const fiveSymbolConfig = {
+    numSymbolsPerCard: 5,
+    maxPurposeValue: 9,
+    checks: [lagomCardDataUtils.noSymbolHasMajority],
+  };
+  const threeSymbolConfig = {
+    numSymbolsPerCard: 3,
+    maxPurposeValue: 4,
+    checks: [
+      lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
+      function (cardConfig) {
+        return (
+          0 ==
+          lagomCardDataUtils.countSymbolsInSector(
+            cardConfig,
+            gMiddleSectorIndex
+          )
+        );
+      },
+    ],
+  };
+
+  // This is it. where we set confgs.
+  const gCardConfig = threeSymbolConfig;
+
+  const gNumSymbolsPerCard = gCardConfig.numSymbolsPerCard;
+  const gMaxPurposeValue = gCardConfig.maxPurposeValue;
+  const gChecks = gCardConfig.checks;
+
+  console.assert(
+    gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
+    "gMaxPurposeValue is greater than numPurposeSprites"
+  );
 
   // How many times we try to get a card that doesn't have too many of one symbol.
   const gMaxTriesToGenerateAValidRandomCardConfig = 20;
@@ -58,7 +99,7 @@ define([
     gNumInstancesEachSymbol / gMaxPurposeValue;
   console.assert(
     gNumInstancesEachPurposeValue == Math.floor(gNumInstancesEachPurposeValue),
-    "gInstancesEachPurposeValue is not an int: gInstancesEachPurposeValue = " +
+    "gNumInstancesEachPurposeValue is not an int: gNumInstancesEachPurposeValue = " +
       gNumInstancesEachPurposeValue +
       ", gNumInstancesEachSymbol = " +
       gNumInstancesEachSymbol +
@@ -70,53 +111,6 @@ define([
   //
   // Global functions
   //
-  //-----------------------------------
-  function generateCardConfigsInternal() {
-    var cardConfigsAccumulator = [];
-
-    var symbolHistory = {};
-
-    for (var cardIndex = 0; cardIndex < gTotalCardsInDeck; cardIndex++) {
-      var distributionIndex = cardIndex % gValidDistributions.length;
-
-      var distribution = gValidDistributions[distributionIndex];
-
-      // Try this N times until we get a card with a nice distribution of symbols.
-      var triesToGenerateAValidRandomCardConfig = 0;
-      var cardConfig;
-      while (true) {
-        cardConfig = lagomCardDataUtils.makeCardConfig(
-          gNumInstancesEachSymbol, // For any symbol, max times it can appear.
-          symbolHistory, // Record of previous choices.
-          distribution // The number of symbols in each sector.
-        );
-        triesToGenerateAValidRandomCardConfig++;
-
-        // If good, bail.
-        if (lagomCardDataUtils.cardHasNiceSymbolBalance(cardConfig)) {
-          break;
-        }
-        // Too many tries: assert and bail.
-        if (
-          triesToGenerateAValidRandomCardConfig >=
-          gMaxTriesToGenerateAValidRandomCardConfig
-        ) {
-          console.assert(
-            false,
-            "Failed to generate a good card after " +
-              gMaxTriesToGenerateAValidRandomCardConfig +
-              " tries."
-          );
-          break;
-        }
-        // Try again.
-      }
-
-      cardConfigsAccumulator.push(cardConfig);
-    } // One card.
-
-    return cardConfigsAccumulator;
-  }
 
   //-----------------------------------
   //
@@ -128,7 +122,16 @@ define([
   }
 
   function generateCardConfigs() {
-    debugLog("triangleCardData", "calling generateCardConfigs");
+    debugLog("triangleCardData", "gTotalCardsInDeck = " + gTotalCardsInDeck);
+    debugLog("triangleCardData", "gNumSymbolsPerCard = " + gNumSymbolsPerCard);
+    debugLog(
+      "triangleCardData",
+      "gTotalSymbolsInDeck = " + gTotalSymbolsInDeck
+    );
+    debugLog(
+      "triangleCardData",
+      "gNumInstancesEachSymbol = " + gNumInstancesEachSymbol
+    );
 
     lagomCardDataUtils.setNumberingDetailsForSymbol(
       lagomCardDataUtils.symbolTypes.Purpose,
@@ -137,7 +140,10 @@ define([
       gNumInstancesEachPurposeValue
     );
 
-    gCardConfigs = generateCardConfigsInternal();
+    gCardConfigs = lagomCardDataUtils.generateCardConfigs(
+      gTotalCardsInDeck,
+      gValidDistributions
+    );
   }
 
   function getNumCards() {

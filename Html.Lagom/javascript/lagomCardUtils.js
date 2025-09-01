@@ -18,12 +18,16 @@ define([
 
   const gSymbolToSpriteSheetGridSize = {
     [lagomCardDataUtils.symbolTypes.Relationships]: [4, 5],
+    [lagomCardDataUtils.symbolTypes.Purpose]: [
+      lagomCardDataUtils.purposeSpriteColumns,
+      lagomCardDataUtils.purposeSpriteRows,
+    ],
   };
 
   // Tracks all symbols added ever.
   var gSymbolToGlobalSymbolCount = {};
 
-  function configureSymbol(
+  function configureSymbolContainer(
     symbolNode,
     sectorIndex,
     symbolIndexInSector,
@@ -100,7 +104,7 @@ define([
     return numberNode;
   }
 
-  function addSpriteSheetInfo(symbolNode, symbolType, globalSymbolCount) {
+  function addSpriteSheetInfo(symbolNode, symbolType, indexIntoSpriteSheet) {
     // Get the sprite info on this symbol type.
     var spriteSheetGridSize = gSymbolToSpriteSheetGridSize[symbolType];
     console.assert(spriteSheetGridSize, "spriteSheetGridSize is null");
@@ -108,8 +112,8 @@ define([
     var numColumns = spriteSheetGridSize[0];
     var numRows = spriteSheetGridSize[1];
 
-    var thisColumn = globalSymbolCount % numColumns; // 0..columns-1
-    var thisRow = Math.floor(globalSymbolCount / numColumns) % numRows; // 0..rows-1
+    var thisColumn = indexIntoSpriteSheet % numColumns; // 0..columns-1
+    var thisRow = Math.floor(indexIntoSpriteSheet / numColumns) % numRows; // 0..rows-1
 
     // I think of cells like
     // [0, 0], [1, 0], [2, 0]
@@ -170,28 +174,48 @@ define([
       }
       var globalSymbolCount = gSymbolToGlobalSymbolCount[symbolType] || 0;
 
-      var symbolNode = htmlUtils.addImage(
+      var symbolContainerNode = htmlUtils.addDiv(
         sectorNode,
+        ["symbol-container", symbolType],
+        "symbol-container-" + symbolType + "-" + i
+      );
+
+      var symbolColor = lagomCardDataUtils.getColorForSymbol(symbolType);
+
+      domStyle.set(symbolContainerNode, {
+        background: `radial-gradient(circle, ${symbolColor} 0%,  ${symbolColor} 50%, transparent 70%)`,
+      });
+
+      var symbolNode = htmlUtils.addImage(
+        symbolContainerNode,
         cssClasses,
         "symbol-image-" + symbolType + "-" + i
       );
 
-      var thisSymbolIndexInSector = numSymbolsPreviouslyAdded + i;
-
-      configureSymbol(
-        symbolNode,
+      configureSymbolContainer(
+        symbolContainerNode,
         sectorIndex,
         numSymbolsPreviouslyAdded + i,
         totalSymbolsInThisSector,
         configs
       );
 
-      if (numbersForSymbol) {
-        addNumberForSymbol(symbolNode, i, numbersForSymbol);
-      }
-
+      // Numbers, sprite sheet: numbers are index into sprite sheet.
+      // No numbers, sprite sheet: use global symbol count as index into sprite sheet.
+      // Numbers, no sprite sheet: write number over symbol.
+      // No number, no sprite sheet: nothing to do.
       if (usesSpriteSheet) {
-        addSpriteSheetInfo(symbolNode, symbolType, globalSymbolCount);
+        var indexIntoSpriteSheet;
+        if (numbersForSymbol) {
+          indexIntoSpriteSheet = numbersForSymbol[i];
+        } else {
+          indexIntoSpriteSheet = globalSymbolCount;
+        }
+        addSpriteSheetInfo(symbolNode, symbolType, indexIntoSpriteSheet);
+      } else {
+        if (numbersForSymbol) {
+          addNumberForSymbol(symbolNode, i, numbersForSymbol);
+        }
       }
 
       // Keep a global count.
@@ -243,7 +267,7 @@ define([
         ["symbol-image", "wc-rest"],
         "symbol-image-" + "wc-rest" + "-" + 0
       );
-      configureSymbol(symbolNode, sectorIndex, 0, 1, configs);
+      configureSymbolContainer(symbolNode, sectorIndex, 0, 1, configs);
 
       return sectorNode;
     }
