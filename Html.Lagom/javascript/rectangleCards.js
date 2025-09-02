@@ -131,7 +131,7 @@ define([
             configs.isSquare === true
               ? gSquare_symbolYPxBySymbolCountAndIndex
               : gRect_symbolYPxBySymbolCountAndIndex,
-          symbolRotationsDeg: gSymbolRotationDegBySectorIndex,
+          symbolRotationDeg: gSymbolRotationDegBySectorIndex[sectorIndex],
           sectorDescriptor: sectorDescriptor,
         };
 

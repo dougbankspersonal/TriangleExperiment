@@ -47,6 +47,7 @@ define([
   var gSymbolToNumberingDetailsMap = {
     [gSymbolTypes.Purpose]: {
       minValue: 1,
+      maxValue: 8,
       history: {},
     },
   };
@@ -350,7 +351,12 @@ define([
     return symbolCount;
   }
 
-  function generateCardConfigs(totalCardsInDeck, validDistributions) {
+  function generateCardConfigs(
+    totalCardsInDeck,
+    numInstancesEachSymbol,
+    validDistributions,
+    checks
+  ) {
     var cardConfigsAccumulator = [];
 
     var symbolHistory = {};
@@ -364,15 +370,15 @@ define([
       var triesToGenerateAValidRandomCardConfig = 0;
       var cardConfig;
       while (true) {
-        cardConfig = lagomCardDataUtils.makeCardConfig(
-          gNumInstancesEachSymbol, // For any symbol, max times it can appear.
+        cardConfig = makeCardConfig(
+          numInstancesEachSymbol, // For any symbol, max times it can appear.
           symbolHistory, // Record of previous choices.
           distribution // The number of symbols in each sector.
         );
         triesToGenerateAValidRandomCardConfig++;
 
         // If good, bail.
-        if (lagomCardDataUtils.checkCardConfig(cardConfig, gChecks)) {
+        if (checkCardConfig(cardConfig, checks)) {
           break;
         }
 

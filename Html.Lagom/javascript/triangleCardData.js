@@ -39,24 +39,24 @@ define([
   };
   const fiveSymbolConfig = {
     numSymbolsPerCard: 5,
-    maxPurposeValue: 9,
+    maxPurposeValue: 8,
     checks: [lagomCardDataUtils.noSymbolHasMajority],
   };
+
   const threeSymbolConfig = {
-    numSymbolsPerCard: 3,
-    maxPurposeValue: 4,
-    checks: [
-      lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
-      function (cardConfig) {
-        return (
-          0 ==
-          lagomCardDataUtils.countSymbolsInSector(
-            cardConfig,
-            gMiddleSectorIndex
-          )
-        );
+    starterCardConfigs: {
+      sectorDescriptors: {
+        [0]: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+        [1]: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+        [2]: {
+          [lagomCardDataUtils.symbolTypes.Relationship]: 1,
+        },
       },
-    ],
+    },
   };
 
   // This is it. where we set confgs.
@@ -65,11 +65,6 @@ define([
   const gNumSymbolsPerCard = gCardConfig.numSymbolsPerCard;
   const gMaxPurposeValue = gCardConfig.maxPurposeValue;
   const gChecks = gCardConfig.checks;
-
-  console.assert(
-    gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
-    "gMaxPurposeValue is greater than numPurposeSprites"
-  );
 
   // How many times we try to get a card that doesn't have too many of one symbol.
   const gMaxTriesToGenerateAValidRandomCardConfig = 20;
@@ -133,6 +128,14 @@ define([
       "gNumInstancesEachSymbol = " + gNumInstancesEachSymbol
     );
 
+    debugLog("generateCardConfigs", "gNumSymbolsPerCard =", gNumSymbolsPerCard);
+    debugLog("generateCardConfigs", "gMaxPurposeValue =", gMaxPurposeValue);
+
+    console.assert(
+      gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
+      "gMaxPurposeValue is greater than numPurposeSprites"
+    );
+
     lagomCardDataUtils.setNumberingDetailsForSymbol(
       lagomCardDataUtils.symbolTypes.Purpose,
       1,
@@ -142,8 +145,17 @@ define([
 
     gCardConfigs = lagomCardDataUtils.generateCardConfigs(
       gTotalCardsInDeck,
-      gValidDistributions
+      gNumInstancesEachSymbol,
+      gValidDistributions,
+      gChecks
     );
+
+    // Add on some starter cards
+    gCardConfigs.push(threeSymbolConfig);
+    gCardConfigs.push(threeSymbolConfig);
+    gCardConfigs.push(threeSymbolConfig);
+    gCardConfigs.push(threeSymbolConfig);
+    gCardConfigs.push(threeSymbolConfig);
   }
 
   function getNumCards() {

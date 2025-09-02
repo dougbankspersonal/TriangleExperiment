@@ -17,36 +17,33 @@ define([
   var debugLog = debugLogModule.debugLog;
 
   const gSymbolToSpriteSheetGridSize = {
-    [lagomCardDataUtils.symbolTypes.Relationships]: [4, 5],
-    [lagomCardDataUtils.symbolTypes.Purpose]: [
+    //   [lagomCardDataUtils.symbolTypes.Relationships]: [4, 5],
+    /* [lagomCardDataUtils.symbolTypes.Purpose]: [
       lagomCardDataUtils.purposeSpriteColumns,
       lagomCardDataUtils.purposeSpriteRows,
-    ],
+    ],*/
   };
 
   // Tracks all symbols added ever.
   var gSymbolToGlobalSymbolCount = {};
 
-  function configureSymbolContainer(
+  function configureSymbolNode(
     symbolNode,
-    sectorIndex,
     symbolIndexInSector,
     symbolsThisSector,
     configs
   ) {
     debugLog(
-      "configureSymbol",
-      "configureSymbol: sectorIndex = " +
-        sectorIndex +
-        " symbolsThisSector = " +
-        symbolsThisSector +
-        " symbolIndexInSector = " +
-        symbolIndexInSector
+      "configureSymbolNode",
+      "symbolsThisSector = ",
+      JSON.stringify(symbolsThisSector)
     );
-
-    debugLog("configureSymbol", "symbolsThisSector = ", symbolsThisSector);
-    debugLog("configureSymbol", "sectorIndex = ", sectorIndex);
-    debugLog("configureSymbol", "configs = ", JSON.stringify(configs));
+    debugLog(
+      "configureSymbolNode",
+      "symbolIndexInSector = ",
+      JSON.stringify(symbolIndexInSector)
+    );
+    debugLog("configureSymbolNode", "configs = ", JSON.stringify(configs));
 
     var symbolXPixels =
       configs.symbolXPxBySymbolCountAndIndex[symbolsThisSector][
@@ -57,8 +54,8 @@ define([
         symbolIndexInSector
       ];
     var symbolSizePx = configs.symbolSizePxBySymbolCount[symbolsThisSector];
-    var symbolRotationDeg = configs.symbolRotationsDeg
-      ? configs.symbolRotationsDeg[sectorIndex]
+    var symbolRotationDeg = configs.symbolRotationDeg
+      ? configs.symbolRotationDeg
       : 0;
 
     debugLog(
@@ -82,7 +79,12 @@ define([
     });
   }
 
-  function addNumberForSymbol(symbolNode, symbolIndex, numbersForSymbol) {
+  function addNumberForSymbol(
+    symbolNode,
+    symbolIndex,
+    numbersForSymbol,
+    symbolSizePx
+  ) {
     console.assert(symbolIndex < numbersForSymbol.length);
     debugLog(
       "addNumberForSymbol",
@@ -101,6 +103,9 @@ define([
       "symbol-number",
       number.toString()
     );
+    domStyle.set(numberNode, {
+      "font-size": symbolSizePx * 0.6 + "px",
+    });
     return numberNode;
   }
 
@@ -174,27 +179,14 @@ define([
       }
       var globalSymbolCount = gSymbolToGlobalSymbolCount[symbolType] || 0;
 
-      var symbolContainerNode = htmlUtils.addDiv(
-        sectorNode,
-        ["symbol-container", symbolType],
-        "symbol-container-" + symbolType + "-" + i
-      );
-
-      var symbolColor = lagomCardDataUtils.getColorForSymbol(symbolType);
-
-      domStyle.set(symbolContainerNode, {
-        background: `radial-gradient(circle, ${symbolColor} 0%,  ${symbolColor} 50%, transparent 70%)`,
-      });
-
       var symbolNode = htmlUtils.addImage(
-        symbolContainerNode,
+        sectorNode,
         cssClasses,
         "symbol-image-" + symbolType + "-" + i
       );
 
-      configureSymbolContainer(
-        symbolContainerNode,
-        sectorIndex,
+      configureSymbolNode(
+        symbolNode,
         numSymbolsPreviouslyAdded + i,
         totalSymbolsInThisSector,
         configs
@@ -214,7 +206,10 @@ define([
         addSpriteSheetInfo(symbolNode, symbolType, indexIntoSpriteSheet);
       } else {
         if (numbersForSymbol) {
-          addNumberForSymbol(symbolNode, i, numbersForSymbol);
+          var symbolSizePx =
+            configs.symbolSizePxBySymbolCount[totalSymbolsInThisSector];
+
+          addNumberForSymbol(symbolNode, i, numbersForSymbol, symbolSizePx);
         }
       }
 
@@ -267,7 +262,7 @@ define([
         ["symbol-image", "wc-rest"],
         "symbol-image-" + "wc-rest" + "-" + 0
       );
-      configureSymbolContainer(symbolNode, sectorIndex, 0, 1, configs);
+      configureSymbolNode(symbolNode, 0, 1, configs);
 
       return sectorNode;
     }

@@ -17,12 +17,10 @@ define([
   const gTotalCardsInDeck = 72;
 
   const gMaxPurposeValue = 9;
-  console.assert(
-    gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
-    "gMaxPurposeValue is greater than numPurposeSprites"
-  );
 
   const gDistribution = [0, 3, 2, 1];
+  const gValidDistributions = [gDistribution];
+  const gChecks = [lagomCardDataUtils.noSymbolHasMajority];
 
   var gNumSymbolsPerCard = 0;
   for (var i = 0; i < gDistribution.length; i++) {
@@ -30,6 +28,7 @@ define([
   }
 
   const gTotalSymbolsInDeck = gTotalCardsInDeck * gNumSymbolsPerCard;
+
   const gNumInstancesEachSymbol =
     gTotalSymbolsInDeck / lagomCardDataUtils.numSymbols;
 
@@ -65,6 +64,9 @@ define([
   function generateCardConfigs() {
     debugLog("CardConfigs", "calling generateCardConfigs");
 
+    deb8gLog("generteCardCpfog", "gTotalSymbolsInDeck = gTotalSymbolsInDeck);
+    const gTotalSymbolsInDeck = gTotalCardsInDeck * gNumSymbolsPerCard;
+
     lagomCardDataUtils.setNumberingDetailsForSymbol(
       lagomCardDataUtils.symbolTypes.Purpose,
       1,
@@ -74,7 +76,17 @@ define([
 
     gCardConfigs = lagomCardDataUtils.generateCardConfigs(
       gTotalCardsInDeck,
-      gValidDistributions
+      gNumInstancesEachSymbol,
+      gValidDistributions,
+      gChecks
+    );
+
+    console.assert(
+      gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
+      "gMaxPurposeValue: " +
+        gMaxPurposeValue +
+        "   is greater than numPurposeSprites: numPurposeSprites = " +
+        lagomCardDataUtils.numPurposeSprites
     );
   }
 

@@ -56,7 +56,7 @@ define([
   const oneOfThreeItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.25;
   const twoOfThreeItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.6;
   const threeOfThreeItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.25;
-  const gsymbolYPxBySymbolCountAndIndex = {
+  const gSymbolYPxBySymbolCountAndIndex = {
     1: [oneItemYPx],
     // Two items in a stack spaced around center
     2: [oneOfTwoItemYPx, twoOfTwoItemYPx],
@@ -71,6 +71,7 @@ define([
   ];
   const gSectorYBySectorIndexPx = [0, 0, 0, 0];
   const gSectorRotationBySectorIndexDeg = [0, 0, 180, 0];
+  const gSymbolRotationBySectorIndexDeg = [0, 0, -180, 0];
 
   //-----------------------------------
   //
@@ -118,7 +119,8 @@ define([
           sectorDescriptor: sectorDescriptor,
           symbolSizePxBySymbolCount: gSymbolSizePxBySymbolCount,
           symbolXPxBySymbolCountAndIndex: gSymbolXPxBySymbolCountAndIndex,
-          symbolYPxBySymbolCountAndIndex: gsymbolYPxBySymbolCountAndIndex,
+          symbolYPxBySymbolCountAndIndex: gSymbolYPxBySymbolCountAndIndex,
+          symbolRotationDeg: gSymbolRotationBySectorIndexDeg[sectorIndex],
           sectorStyling: {
             height: gTriangleHeightPx / 2 + "px",
             width: gSectorWidthPx + "px",
