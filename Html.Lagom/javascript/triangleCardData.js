@@ -1,17 +1,10 @@
 define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
-  "sharedJavascript/genericUtils",
   "javascript/distributions",
   "javascript/lagomCardDataUtils",
   "dojo/domReady!",
-], function (
-  cards,
-  debugLogModule,
-  genericUtils,
-  distributions,
-  lagomCardDataUtils
-) {
+], function (cards, debugLogModule, distributions, lagomCardDataUtils) {
   var debugLog = debugLogModule.debugLog;
 
   //-----------------------------------
@@ -44,18 +37,32 @@ define([
   };
 
   const threeSymbolConfig = {
-    starterCardConfigs: {
-      sectorDescriptors: {
-        [0]: {
-          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+    numSymbolsPerCard: 3,
+    maxPurposeValue: 4,
+    checks: [
+      lagomCardDataUtils.noSymbolHasMajority,
+      lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
+      lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
+    ],
+    starterCardConfig: {
+      isStarterCard: true,
+      sectorDescriptors: [
+        {
+          sectorMap: {
+            [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+          },
         },
-        [1]: {
-          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        {
+          sectorMap: {
+            [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+          },
         },
-        [2]: {
-          [lagomCardDataUtils.symbolTypes.Relationship]: 1,
+        {
+          sectorMap: {
+            [lagomCardDataUtils.symbolTypes.Relationship]: 1,
+          },
         },
-      },
+      ],
     },
   };
 
@@ -65,6 +72,7 @@ define([
   const gNumSymbolsPerCard = gCardConfig.numSymbolsPerCard;
   const gMaxPurposeValue = gCardConfig.maxPurposeValue;
   const gChecks = gCardConfig.checks;
+  const gStarterCardConfig = gCardConfig.starterCardConfig;
 
   // How many times we try to get a card that doesn't have too many of one symbol.
   const gMaxTriesToGenerateAValidRandomCardConfig = 20;
@@ -150,12 +158,11 @@ define([
       gChecks
     );
 
-    // Add on some starter cards
-    gCardConfigs.push(threeSymbolConfig);
-    gCardConfigs.push(threeSymbolConfig);
-    gCardConfigs.push(threeSymbolConfig);
-    gCardConfigs.push(threeSymbolConfig);
-    gCardConfigs.push(threeSymbolConfig);
+    if (gStarterCardConfig) {
+      for (var i = 0; i < lagomCardDataUtils.maxPlayers; i++) {
+        gCardConfigs.unshift(gStarterCardConfig);
+      }
+    }
   }
 
   function getNumCards() {

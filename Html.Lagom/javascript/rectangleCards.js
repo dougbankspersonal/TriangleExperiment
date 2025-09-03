@@ -82,27 +82,12 @@ define([
   function addCardFront(parentNode, index, opt_configs) {
     var configs = opt_configs ? opt_configs : {};
 
-    var cardConfig = rectangleCardData.getCardConfigAtIndex(index);
-    debugLog(
-      "Cards",
-      "in addCardFront i == " +
-        index +
-        " cardConfig = " +
-        JSON.stringify(cardConfig)
-    );
+    var [cardFrontNode, frontWrapperNode] =
+      lagomCardUtils.addCardFrontAndWrapper(parentNode, cardConfig, index);
 
-    var id = "lagom-" + index;
-    var classes = ["lagom"];
-    var cardFrontNode = cards.addCardFront(parentNode, classes, id);
     domStyle.set(cardFrontNode, {
       "border-width": `${genericMeasurements.cardFrontBorderWidthPx}px`,
     });
-
-    var frontWrapperNode = htmlUtils.addDiv(
-      cardFrontNode,
-      ["front-wrapper"],
-      "front-wrapper"
-    );
 
     // 2 rows, 2 sectors in each.
     for (var rowIndex = 0; rowIndex < 2; rowIndex++) {
@@ -150,11 +135,6 @@ define([
       "border-width": `${genericMeasurements.cardFrontBorderWidthPx}px`,
       "border-style": "solid",
     });
-    var titleImageNode = htmlUtils.addImage(
-      cardBackNode,
-      ["lagom-title-shadow"],
-      "title"
-    );
     return cardBackNode;
   }
 

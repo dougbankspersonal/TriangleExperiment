@@ -26,19 +26,6 @@
 }
 
 .card.back.lagom {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   border: 4px solid rgb(157, 108, 4);
   background-image: url("../images/LagomCards/card-back.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-
-  .lagom-title-shadow {
-    width: 90%;
-    height: 90%;
-
-  }
 }

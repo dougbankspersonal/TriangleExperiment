@@ -80,22 +80,9 @@ define([
   //-----------------------------------
   function addCardFront(parentNode, index) {
     var cardConfig = triangleCardData.getCardConfigAtIndex(index);
-    debugLog(
-      "Cards",
-      "in addCardFront i == " +
-        index +
-        " cardConfig = " +
-        JSON.stringify(cardConfig)
-    );
-    var id = "lagom-" + index;
-    var classes = ["lagom"];
-    var cardFrontNode = cards.addCardFront(parentNode, classes, id);
 
-    var frontWrapperNode = htmlUtils.addDiv(
-      cardFrontNode,
-      ["front-wrapper"],
-      "front-wrapper"
-    );
+    var [cardFrontNode, frontWrapperNode] =
+      lagomCardUtils.addCardFrontAndWrapper(parentNode, cardConfig, index);
 
     // 2 rows.  Top has 1 sector, bottom 3.
     var clumnCountByRow = [1, 3];
@@ -135,8 +122,14 @@ define([
   }
 
   function addCardBack(parent, index) {
+    var config = triangleCardData.getCardConfigAtIndex(index);
+    var classes = ["lagom"];
+
+    if (config.isStarterCard) {
+      classes.push("starter");
+    }
     var cardBackNode = cards.addCardBack(parent, index, {
-      classes: ["lagom"],
+      classes: classes,
     });
     return cardBackNode;
   }

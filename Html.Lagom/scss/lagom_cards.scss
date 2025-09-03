@@ -61,7 +61,6 @@ html {
           display: flex;
           justify-content: center;
           align-items: center;
-
         }
       }
     }
@@ -73,11 +72,8 @@ html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url("../images/LagomCards/triangle-card-back.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  border-width: initial;
-  border-style: initial;
-  border: initial;
+
 }

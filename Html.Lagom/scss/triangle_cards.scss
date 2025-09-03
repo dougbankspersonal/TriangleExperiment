@@ -23,18 +23,21 @@
       }
     }
   }
+
+  .front-wrapper.starter {
+    background-image: url("../images/LagomCards/starter-triangle-parchment-final.png");
+  }
+
 }
 
 .card.back.lagom {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   background-image: url("../images/LagomCards/triangle-card-back.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
   border-width: initial;
   border-style: initial;
   border: initial;
+}
+
+.card.back.lagom.starter {
+  background-image: url("../images/LagomCards/starter-triangle-card-back.png");
+
 }

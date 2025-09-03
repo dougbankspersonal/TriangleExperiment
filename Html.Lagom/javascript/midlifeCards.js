@@ -106,12 +106,6 @@ define([
       "border-width": `${genericMeasurements.cardFrontBorderWidthPx}px`,
       "border-style": "solid",
     });
-    var titleImageNode = htmlUtils.addImage(
-      cardBackNode,
-      ["lagom-title-shadow"],
-      "title"
-    );
-
     var leftHalfNode = htmlUtils.addDiv(
       cardBackNode,
       ["half-shade", "left"],

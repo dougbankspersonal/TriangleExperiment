@@ -2,18 +2,13 @@
 
 define([
   "dojo/dom-style",
+  "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
   "javascript/lagomCardDataUtils",
   "dojo/domReady!",
-], function (
-  domStyle,
-  debugLogModule,
-  genericUtils,
-  htmlUtils,
-  lagomCardDataUtils
-) {
+], function (domStyle, cards, debugLogModule, genericUtils, htmlUtils) {
   var debugLog = debugLogModule.debugLog;
 
   const gSymbolToSpriteSheetGridSize = {
@@ -289,8 +284,33 @@ define([
     return sectorNode;
   }
 
+  function addCardFrontAndWrapper(parentNode, cardConfig, index) {
+    debugLog(
+      "triangleCards",
+      "in addCardFront i == " +
+        index +
+        " cardConfig = " +
+        JSON.stringify(cardConfig)
+    );
+    var id = "lagom-" + index;
+    var classes = ["lagom"];
+    var cardFrontNode = cards.addCardFront(parentNode, classes, id);
+
+    var classes = ["front-wrapper"];
+    if (cardConfig.isStarterCard) {
+      classes.push("starter");
+    }
+    var frontWrapperNode = htmlUtils.addDiv(
+      cardFrontNode,
+      classes,
+      "front-wrapper"
+    );
+    return [cardFrontNode, frontWrapperNode];
+  }
+
   // This returned object becomes the defined value of this module
   return {
     addNthSector: addNthSector,
+    addCardFrontAndWrapper: addCardFrontAndWrapper,
   };
 });

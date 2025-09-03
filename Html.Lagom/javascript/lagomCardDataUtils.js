@@ -5,6 +5,8 @@ define([
 ], function (debugLogModule, genericUtils) {
   var debugLog = debugLogModule.debugLog;
 
+  const gMaxPlayers = 8;
+
   const SymbolType_Relationships = "wc-relationships";
   const SymbolType_Wealth = "wc-wealth";
   const SymbolType_Purpose = "wc-purpose";
@@ -413,6 +415,7 @@ define([
     purposeSpriteRows: gPurposeSpriteRows,
     numPurposeSprites: gPurposeSpriteColumns * gPurposeSpriteRows,
     getRandomZeroToOne: getRandomZeroToOne,
+    maxPlayers: gMaxPlayers,
 
     makeSectorMaps: makeSectorMaps,
     addNumbersForSymbol: addNumbersForSymbol,
