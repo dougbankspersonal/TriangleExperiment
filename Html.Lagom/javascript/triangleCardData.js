@@ -58,8 +58,11 @@ define([
           },
         },
         {
+          sectorMap: {},
+        },
+        {
           sectorMap: {
-            [lagomCardDataUtils.symbolTypes.Relationship]: 1,
+            [lagomCardDataUtils.symbolTypes.Relationships]: 1,
           },
         },
       ],
