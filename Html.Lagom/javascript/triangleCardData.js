@@ -21,7 +21,31 @@ define([
   const gNumSectors = 4;
   const gMiddleSectorIndex = 2;
 
-  const gTotalCardsInDeck = 80;
+  var gCommonStarterCardConfig = {
+    isStarterCard: true,
+    sectorDescriptors: [
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+      },
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+      },
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Parent]: 1,
+        },
+      },
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+      },
+    ],
+  };
 
   // Things we frequently twiddle.
   // Keep them here in "configs", add/uncomment as needed.
@@ -29,11 +53,14 @@ define([
     numSymbolsPerCard: 6,
     maxPurposeValue: 9,
     checks: [lagomCardDataUtils.noSymbolHasMajority],
+    totalCardsInDeck: 72,
   };
   const fiveSymbolConfig = {
     numSymbolsPerCard: 5,
     maxPurposeValue: 8,
     checks: [lagomCardDataUtils.noSymbolHasMajority],
+    starterCardConfig: gCommonStarterCardConfig,
+    totalCardsInDeck: 64,
   };
 
   const threeSymbolConfig = {
@@ -44,38 +71,17 @@ define([
       lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
       lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
     ],
-    starterCardConfig: {
-      isStarterCard: true,
-      sectorDescriptors: [
-        {
-          sectorMap: {
-            [lagomCardDataUtils.symbolTypes.Wealth]: 1,
-          },
-        },
-        {
-          sectorMap: {
-            [lagomCardDataUtils.symbolTypes.Wealth]: 1,
-          },
-        },
-        {
-          sectorMap: {},
-        },
-        {
-          sectorMap: {
-            [lagomCardDataUtils.symbolTypes.Relationships]: 1,
-          },
-        },
-      ],
-    },
+    starterCardConfig: gCommonStarterCardConfig,
+    totalCardsInDeck: 80,
   };
 
   // This is it. where we set confgs.
   const gCardConfig = threeSymbolConfig;
+  const gTotalCardsInDeck = gCardConfig.totalCardsInDeck;
 
   const gNumSymbolsPerCard = gCardConfig.numSymbolsPerCard;
   const gMaxPurposeValue = gCardConfig.maxPurposeValue;
   const gChecks = gCardConfig.checks;
-  const gStarterCardConfig = gCardConfig.starterCardConfig;
 
   // How many times we try to get a card that doesn't have too many of one symbol.
   const gMaxTriesToGenerateAValidRandomCardConfig = 20;
@@ -142,6 +148,12 @@ define([
     debugLog("generateCardConfigs", "gNumSymbolsPerCard =", gNumSymbolsPerCard);
     debugLog("generateCardConfigs", "gMaxPurposeValue =", gMaxPurposeValue);
 
+    debugLog(
+      "generateCardConfigs",
+      "gNumInstancesEachPurposeValue =",
+      gNumInstancesEachPurposeValue
+    );
+
     console.assert(
       gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
       "gMaxPurposeValue is greater than numPurposeSprites"
@@ -161,9 +173,9 @@ define([
       gChecks
     );
 
-    if (gStarterCardConfig) {
+    if (gCommonStarterCardConfig) {
       for (var i = 0; i < lagomCardDataUtils.maxPlayers; i++) {
-        gCardConfigs.unshift(gStarterCardConfig);
+        gCardConfigs.unshift(gCommonStarterCardConfig);
       }
     }
   }

@@ -66,11 +66,13 @@ define([
         },
       },
       {
-        sectorMap: {},
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
       },
       {
         sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Relationships]: 1,
+          [lagomCardDataUtils.symbolTypes.Parent]: 1,
         },
       },
       {

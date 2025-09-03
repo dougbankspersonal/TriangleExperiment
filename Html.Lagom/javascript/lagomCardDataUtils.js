@@ -5,18 +5,20 @@ define([
 ], function (debugLogModule, genericUtils) {
   var debugLog = debugLogModule.debugLog;
 
-  const gMaxPlayers = 8;
+  const gMaxPlayers = 4;
 
   const SymbolType_Relationships = "wc-relationships";
   const SymbolType_Wealth = "wc-wealth";
   const SymbolType_Purpose = "wc-purpose";
   const SymbolType_Accomplishment = "wc-accomplishment";
+  const SymbolType_Parent = "wc-parent  ";
 
   const gSymbolTypes = {
     Relationships: SymbolType_Relationships,
     Wealth: SymbolType_Wealth,
     Purpose: SymbolType_Purpose,
     Accomplishment: SymbolType_Accomplishment,
+    Parent: SymbolType_Parent,
   };
 
   const gSymbolTypesArray = [

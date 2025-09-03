@@ -10,6 +10,10 @@ div.pseudo-image.wc-accomplishment {
   background-image: url("../images/LagomCards/wc-accomplishment.png");
 }
 
+div.pseudo-image.wc-parent {
+  background-image: url("../images/LagomCards/wc-parent.png");
+}
+
 div.pseudo-image.wc-leisure {
   background-image: url("../images/LagomCards/wc-leisure.png");
 }
