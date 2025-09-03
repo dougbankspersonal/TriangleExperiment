@@ -76,7 +76,7 @@ define([
   };
 
   // This is it. where we set confgs.
-  const gCardConfig = threeSymbolConfig;
+  const gCardConfig = fiveSymbolConfig;
   const gTotalCardsInDeck = gCardConfig.totalCardsInDeck;
 
   const gNumSymbolsPerCard = gCardConfig.numSymbolsPerCard;
