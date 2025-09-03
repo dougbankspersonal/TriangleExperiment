@@ -57,6 +57,30 @@ define([
       gMaxPurposeValue
   );
 
+  const gStarterCardConfig = {
+    isStarterCard: true,
+    sectorDescriptors: [
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+      },
+      {
+        sectorMap: {},
+      },
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Relationship]: 1,
+        },
+      },
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+      },
+    ],
+  };
+
   function getCardConfigAtIndex(index) {
     return cards.getCardConfigAtIndex(gCardConfigs, index);
   }
@@ -64,8 +88,10 @@ define([
   function generateCardConfigs() {
     debugLog("CardConfigs", "calling generateCardConfigs");
 
-    deb8gLog("generteCardCpfog", "gTotalSymbolsInDeck = gTotalSymbolsInDeck);
-    const gTotalSymbolsInDeck = gTotalCardsInDeck * gNumSymbolsPerCard;
+    debugLog(
+      "generateCardConfigs",
+      "gTotalSymbolsInDeck = gTotalSymbolsInDeck"
+    );
 
     lagomCardDataUtils.setNumberingDetailsForSymbol(
       lagomCardDataUtils.symbolTypes.Purpose,
@@ -80,6 +106,12 @@ define([
       gValidDistributions,
       gChecks
     );
+
+    if (gStarterCardConfig) {
+      for (var i = 0; i < lagomCardDataUtils.maxPlayers; i++) {
+        gCardConfigs.unshift(gStarterCardConfig);
+      }
+    }
 
     console.assert(
       gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
