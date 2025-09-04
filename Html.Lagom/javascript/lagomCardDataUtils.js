@@ -5,6 +5,9 @@ define([
 ], function (debugLogModule, genericUtils) {
   var debugLog = debugLogModule.debugLog;
 
+  // How many times we try to get a card that doesn't have too many of one symbol.
+  const gMaxTriesToGenerateAValidRandomCardConfig = 20;
+
   const gMaxPlayers = 4;
 
   const SymbolType_Relationships = "wc-relationships";
@@ -48,13 +51,7 @@ define([
   // Global functions
   //
   //-----------------------------------
-  var gSymbolToNumberingDetailsMap = {
-    [gSymbolTypes.Purpose]: {
-      minValue: 1,
-      maxValue: 8,
-      history: {},
-    },
-  };
+  var gSymbolToNumberingDetailsMap = {};
 
   // This should be a number with a sane value.
   function assertIsNumber(value) {
@@ -67,6 +64,7 @@ define([
   }
 
   function setNumberingDetailsForSymbol(
+    symbolToDetailsNumberingMap,
     symbol,
     minValue,
     maxValue,
@@ -77,10 +75,14 @@ define([
     assertIsNumber(numInstancesEachValue);
     console.assert(minValue < maxValue, "minValue >= maxNumber");
 
-    gSymbolToNumberingDetailsMap[symbol].minValue = minValue;
-    gSymbolToNumberingDetailsMap[symbol].maxValue = maxValue;
-    gSymbolToNumberingDetailsMap[symbol].numInstancesEachValue =
+    symbolToDetailsNumberingMap[symbol].minValue = minValue;
+    symbolToDetailsNumberingMap[symbol].maxValue = maxValue;
+    symbolToDetailsNumberingMap[symbol].numInstancesEachValue =
       numInstancesEachValue;
+    debugLog(
+      "setNumberingDetailsForSymbol: symbolToDetailsNumberingMap = " +
+        JSON.stringify(symbolToDetailsNumberingMap[symbol])
+    );
   }
 
   // sectorIndexToNumSymbols is an array, each value tells how many
@@ -116,6 +118,12 @@ define([
     symbolHistory, // Symbol to count histogram: how many times have we already used this symbol.
     distribution // N element array for n = number of sectors.  Each element says how many symbols in that sector.
   ) {
+    debugLog(
+      "testRandom",
+      "  makeSectorMaps: distribution = ",
+      JSON.stringify(distribution)
+    );
+
     // build the card description: an array of sector maps.
     var sectorMaps = [];
 
@@ -128,7 +136,13 @@ define([
     ) {
       var sectorMap = {};
       var symbolCount = distribution[sectorIndex];
-      for (var j = 0; j < symbolCount; j++) {
+      for (var symbolIndex = 0; symbolIndex < symbolCount; symbolIndex++) {
+        debugLog(
+          "testRandom",
+          "  makeSectorMaps sectorIndex = ",
+          sectorIndex,
+          "; symbolIndex = " + symbolIndex
+        );
         var symbolType = genericUtils.getRandomFromArrayWithRails(
           gSymbolTypesArray,
           symbolHistory,
@@ -205,6 +219,7 @@ define([
           numInstancesEachValue,
           getRandomZeroToOne
         );
+        console.assert(number !== null, "number is null");
         debugLog(
           "addNumbersForSymbol",
           "getRandomFromArrayWithRails returned number = ",
@@ -223,24 +238,10 @@ define([
     }
   }
 
-  function generateNCountArray(values, countPerValue) {
-    var retVal = [];
-    for (var valueIndex = 0; valueIndex < values.length; valueIndex++) {
-      var value = values[valueIndex];
-      for (var valueCount = 0; valueCount < countPerValue; valueCount++) {
-        retVal.push(value);
-      }
-    }
-    debugLog(
-      "LagomCardData",
-      "generateNCountArray retVal = " + JSON.stringify(retVal)
-    );
-    return retVal;
-  }
-
   function makeCardConfig(
     countPerSymbolInDeck, // For any symbol, max times it can appear.
     symbolHistory, // Record of previous choices.
+    symbolToDetailsNumberingMap, // Who needs numbering, what numbers were used, etc.
     distribution // The number of symbols in each sector.
   ) {
     var sectorMaps = makeSectorMaps(
@@ -251,7 +252,7 @@ define([
     );
 
     debugLog(
-      "LagomCardData",
+      "makeCardConfig",
       "makeCardConfig: sectorMaps = " + JSON.stringify(sectorMaps)
     );
 
@@ -266,13 +267,13 @@ define([
 
       // For any symbol that needs numbers, add those numbers.
       debugLog(
-        "LagomCardData",
-        "makeCardConfig: gNumberedSymbolDetailsMap = " +
-          JSON.stringify(gSymbolToNumberingDetailsMap)
+        "makeCardConfig",
+        "makeCardConfig: symbolToDetailsNumberingMap = " +
+          JSON.stringify(symbolToDetailsNumberingMap)
       );
 
-      for (var symbolType in gSymbolToNumberingDetailsMap) {
-        var numberedSymbolDetails = gSymbolToNumberingDetailsMap[symbolType];
+      for (var symbolType in symbolToDetailsNumberingMap) {
+        var numberedSymbolDetails = symbolToDetailsNumberingMap[symbolType];
         var minValue = numberedSymbolDetails.minValue;
         var maxValue = numberedSymbolDetails.maxValue;
         var numInstancesEachValue = numberedSymbolDetails.numInstancesEachValue;
@@ -288,7 +289,7 @@ define([
           history,
           numInstancesEachValue
         );
-        gSymbolToNumberingDetailsMap[symbolType].history = history;
+        symbolToDetailsNumberingMap[symbolType].history = history;
       }
 
       cardConfig.sectorDescriptors.push(sectorDescriptor);
@@ -335,10 +336,12 @@ define([
   }
 
   // Is this a good card config?  Caller passes in zero or more things to test.
-  function checkCardConfig(checks) {
+  function checkCardConfig(cardConfig, checks) {
+    debugLog("checkCardConfig", "running checks = ", checks);
     // Run the card config through each check.
     for (var i = 0; i < checks.length; i++) {
       if (!checks[i](cardConfig)) {
+        debugLog("checkCardConfig", "Nth check failed, n = ", i);
         return false;
       }
     }
@@ -365,7 +368,29 @@ define([
 
     var symbolHistory = {};
 
+    debugLog(
+      "testRandom",
+      "generateCardConfigs: symbolHistory = ",
+      JSON.stringify(symbolHistory)
+    );
+    debugLog(
+      "testRandom",
+      "generateCardConfigs: validDistributions = ",
+      JSON.stringify(validDistributions)
+    );
+
+    debugLog("generateCardConfigs", "starting generateCardConfigs");
     for (var cardIndex = 0; cardIndex < totalCardsInDeck; cardIndex++) {
+      debugLog("generateCardConfigs", "cardIndex = ", cardIndex);
+
+      debugLog(
+        "testRandom",
+        "  generateCardConfigs: cardIndex = " +
+          cardIndex +
+          ": symbolHistory = ",
+        JSON.stringify(symbolHistory)
+      );
+
       var distributionIndex = cardIndex % validDistributions.length;
 
       var distribution = validDistributions[distributionIndex];
@@ -374,16 +399,58 @@ define([
       var triesToGenerateAValidRandomCardConfig = 0;
       var cardConfig;
       while (true) {
+        // Every time thru here we need a fresh copy of any history stuff.
+        var symbolHistoryCopy = structuredClone(symbolHistory);
+        var symbolToDetailsNumberingMapCopy = structuredClone(
+          gSymbolToNumberingDetailsMap
+        );
+
+        // Let this get updated.
         cardConfig = makeCardConfig(
           numInstancesEachSymbol, // For any symbol, max times it can appear.
-          symbolHistory, // Record of previous choices.
+          symbolHistoryCopy, // Record of previous choices.
+          symbolToDetailsNumberingMapCopy, // Record of details on symbols that need numbering, including a history of what's been used.
           distribution // The number of symbols in each sector.
         );
+        debugLog(
+          "generateCardConfigs",
+          "cardConfig = ",
+          JSON.stringify(cardConfig)
+        );
+
         triesToGenerateAValidRandomCardConfig++;
 
-        // If good, bail.
-        if (checkCardConfig(cardConfig, checks)) {
-          break;
+        // Only proceed if non-null:
+        if (cardConfig) {
+          // Run checks.
+          debugLog("generateCardConfigs", "cardConfig is non-null");
+
+          // FIXME(dbanks)
+          // We may get unlucky and last card just has a mix of symbols not allowed: for now I don't care.
+          if (
+            cardIndex === totalCardsInDeck - 1 ||
+            checkCardConfig(cardConfig, checks)
+          ) {
+            debugLog("generateCardConfigs", "cardConfig passes checks");
+            // Checks all pass.  Update history and bounce.
+            // Update the history.
+            symbolHistory = structuredClone(symbolHistoryCopy);
+            gSymbolToNumberingDetailsMap = structuredClone(
+              symbolToDetailsNumberingMapCopy
+            );
+
+            debugLog(
+              "testRandom",
+              "  found a good config: cardConfig = ",
+              JSON.stringify(cardConfig)
+            );
+            debugLog(
+              "testRandom",
+              "  symbolHistory now = ",
+              JSON.stringify(symbolHistory)
+            );
+            break;
+          }
         }
 
         // Too many tries: assert and bail.
@@ -397,11 +464,21 @@ define([
               gMaxTriesToGenerateAValidRandomCardConfig +
               " tries."
           );
+          cardConfig = null;
           break;
         }
-        // Try again.
       }
 
+      if (!cardConfig) {
+        // Something is wrong, give up.
+        debugLog(
+          "generateCardConfigs",
+          "failed to make a cardConfig at cardIndex = ",
+          cardIndex
+        );
+
+        break;
+      }
       cardConfigsAccumulator.push(cardConfig);
     } // One card.
 
@@ -419,17 +496,11 @@ define([
     getRandomZeroToOne: getRandomZeroToOne,
     maxPlayers: gMaxPlayers,
 
-    makeSectorMaps: makeSectorMaps,
-    addNumbersForSymbol: addNumbersForSymbol,
-    generateNCountArray: generateNCountArray,
-    makeCardConfig: makeCardConfig,
     sumDistribution: sumDistribution,
     setNumberingDetailsForSymbol: setNumberingDetailsForSymbol,
-    getColorForSymbol: getColorForSymbol,
     countSymbolsInSector: countSymbolsInSector,
     noSymbolHasMajority: noSymbolHasMajority,
     hasAtLeastTwoSymbolTypes: hasAtLeastTwoSymbolTypes,
-    checkCardConfig: checkCardConfig,
     generateCardConfigs: generateCardConfigs,
   };
 });

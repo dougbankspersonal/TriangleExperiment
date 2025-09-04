@@ -21,7 +21,7 @@ define([
   const gNumSectors = 4;
   const gMiddleSectorIndex = 2;
 
-  var gCommonStarterCardConfig = {
+  var gThreeWealthStarterConfig = {
     isStarterCard: true,
     sectorDescriptors: [
       {
@@ -47,20 +47,46 @@ define([
     ],
   };
 
+  var gTwoWealthOneRelationshipStarterConfig = {
+    isStarterCard: true,
+    sectorDescriptors: [
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+      },
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
+        },
+      },
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Parent]: 1,
+        },
+      },
+      {
+        sectorMap: {
+          [lagomCardDataUtils.symbolTypes.Relationships]: 1,
+        },
+      },
+    ],
+  };
+
   // Things we frequently twiddle.
   // Keep them here in "configs", add/uncomment as needed.
   const sixSymbolConfig = {
     numSymbolsPerCard: 6,
     maxPurposeValue: 9,
     checks: [lagomCardDataUtils.noSymbolHasMajority],
-    totalCardsInDeck: 72,
+    numNonStarterCardsInDeck: 72,
   };
   const fiveSymbolConfig = {
     numSymbolsPerCard: 5,
     maxPurposeValue: 8,
     checks: [lagomCardDataUtils.noSymbolHasMajority],
-    starterCardConfig: gCommonStarterCardConfig,
-    totalCardsInDeck: 64,
+    starterCardConfig: gThreeWealthStarterConfig,
+    numNonStarterCardsInDeck: 64,
   };
 
   const threeSymbolConfig = {
@@ -69,30 +95,31 @@ define([
     checks: [
       lagomCardDataUtils.noSymbolHasMajority,
       lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
-      lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
     ],
-    starterCardConfig: gCommonStarterCardConfig,
-    totalCardsInDeck: 80,
+    starterCardConfig: gTwoWealthOneRelationshipStarterConfig,
+    numNonStarterCardsInDeck: 80,
+    checkDistribution: function (distibution) {
+      // Middle cannot be blank.
+      return distibution[gMiddleSectorIndex] > 0;
+    },
   };
 
   // This is it. where we set confgs.
-  const gCardConfig = fiveSymbolConfig;
-  const gTotalCardsInDeck = gCardConfig.totalCardsInDeck;
+  const gCardConfig = threeSymbolConfig;
+  const gNumNonStarterCardsInDeck = gCardConfig.numNonStarterCardsInDeck;
 
   const gNumSymbolsPerCard = gCardConfig.numSymbolsPerCard;
   const gMaxPurposeValue = gCardConfig.maxPurposeValue;
   const gChecks = gCardConfig.checks;
 
-  // How many times we try to get a card that doesn't have too many of one symbol.
-  const gMaxTriesToGenerateAValidRandomCardConfig = 20;
-
   const gValidDistributions = distributions.generateAllValidSymbolDistributions(
     gNumSectors,
-    gNumSymbolsPerCard
+    gNumSymbolsPerCard,
+    gCardConfig.checkDistribution
   );
 
   // How many symbols in the whole deck?
-  const gTotalSymbolsInDeck = gTotalCardsInDeck * gNumSymbolsPerCard;
+  const gTotalSymbolsInDeck = gNumNonStarterCardsInDeck * gNumSymbolsPerCard;
 
   // Should divide evenly: each symbol has equal likelihood of showing up.
   console.assert(
@@ -134,24 +161,34 @@ define([
   }
 
   function generateCardConfigs() {
-    debugLog("triangleCardData", "gTotalCardsInDeck = " + gTotalCardsInDeck);
-    debugLog("triangleCardData", "gNumSymbolsPerCard = " + gNumSymbolsPerCard);
-    debugLog(
-      "triangleCardData",
-      "gTotalSymbolsInDeck = " + gTotalSymbolsInDeck
-    );
-    debugLog(
-      "triangleCardData",
-      "gNumInstancesEachSymbol = " + gNumInstancesEachSymbol
-    );
-
-    debugLog("generateCardConfigs", "gNumSymbolsPerCard =", gNumSymbolsPerCard);
-    debugLog("generateCardConfigs", "gMaxPurposeValue =", gMaxPurposeValue);
-
     debugLog(
       "generateCardConfigs",
-      "gNumInstancesEachPurposeValue =",
-      gNumInstancesEachPurposeValue
+      "Globals: gNumNonStarterCardsInDeck = " + gNumNonStarterCardsInDeck
+    );
+    debugLog(
+      "generateCardConfigs",
+      "Globals: gNumSymbolsPerCard = " + gNumSymbolsPerCard
+    );
+    debugLog(
+      "generateCardConfigs",
+      "Globals: gTotalSymbolsInDeck = " + gTotalSymbolsInDeck
+    );
+    debugLog(
+      "generateCardConfigs",
+      "Globals: gNumInstancesEachSymbol = " + gNumInstancesEachSymbol
+    );
+    debugLog(
+      "generateCardConfigs",
+      "Globals: gNumSymbolsPerCard = " + gNumSymbolsPerCard
+    );
+    debugLog(
+      "generateCardConfigs",
+      "Globals: gMaxPurposeValue = " + gMaxPurposeValue
+    );
+    debugLog(
+      "generateCardConfigs",
+      "Globals: gNumInstancesEachPurposeValue = " +
+        gNumInstancesEachPurposeValue
     );
 
     console.assert(
@@ -167,15 +204,15 @@ define([
     );
 
     gCardConfigs = lagomCardDataUtils.generateCardConfigs(
-      gTotalCardsInDeck,
+      gNumNonStarterCardsInDeck,
       gNumInstancesEachSymbol,
       gValidDistributions,
       gChecks
     );
 
-    if (gCommonStarterCardConfig) {
+    if (gCardConfig.starterCardConfig) {
       for (var i = 0; i < lagomCardDataUtils.maxPlayers; i++) {
-        gCardConfigs.unshift(gCommonStarterCardConfig);
+        gCardConfigs.unshift(gCardConfig.starterCardConfig);
       }
     }
   }

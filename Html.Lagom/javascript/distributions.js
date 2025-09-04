@@ -47,17 +47,20 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     return retVal;
   }
 
-  function isValidSymbolDistribution(distrbution, numSymbolsPerCard) {
+  // Distribution maps sector number to the number of symbols in the sector
+  // Does not say what the symbols are.
+  // This identifies and rejects invalid distributions.
+  function isValidSymbolDistribution(distribution, numSymbolsPerCard) {
     var symbolMax = numSymbolsPerCard / 2;
     var blankSectorCount = 0;
 
-    for (var i = 0; i < distrbution.length; i++) {
+    for (var i = 0; i < distribution.length; i++) {
       // Never allowed to have one sector with more than half the symbols.
-      if (distrbution[i] > symbolMax) {
+      if (distribution[i] > symbolMax) {
         return false;
       }
       // Never allowed to have more than one blank sector.
-      if (distrbution[i] == 0) {
+      if (distribution[i] == 0) {
         blankSectorCount++;
         if (blankSectorCount > 1) {
           return false;
@@ -67,7 +70,11 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     return true;
   }
 
-  function generateAllValidSymbolDistributions(numSectors, numSymbolsPerCard) {
+  function generateAllValidSymbolDistributions(
+    numSectors,
+    numSymbolsPerCard,
+    opt_extraCheck
+  ) {
     var possibleDistrubutions = generatePossibleSymbolDistributions(
       numSymbolsPerCard,
       numSectors
@@ -82,9 +89,16 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     var validDistributions = [];
     for (var i = 0; i < possibleDistrubutions.length; i++) {
       var possibleDistribution = possibleDistrubutions[i];
-      if (isValidSymbolDistribution(possibleDistribution, numSymbolsPerCard)) {
-        validDistributions.push(possibleDistribution);
+
+      // Caller may have extra checks.
+      if (opt_extraCheck && !opt_extraCheck(possibleDistribution)) {
+        continue;
       }
+
+      if (!isValidSymbolDistribution(possibleDistribution, numSymbolsPerCard)) {
+        continue;
+      }
+      validDistributions.push(possibleDistribution);
     }
     debugLog(
       "Distributions",
