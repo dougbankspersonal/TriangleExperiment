@@ -2,9 +2,9 @@ define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
-  "javascript/lagomCardDataUtils",
+  "javascript/lagomConstants",
   "dojo/domReady!",
-], function (cards, debugLogModule, genericUtils, lagomCardDataUtils) {
+], function (cards, debugLogModule, genericUtils, lagomConstants) {
   var debugLog = debugLogModule.debugLog;
 
   //-----------------------------------
@@ -212,7 +212,7 @@ define([
         gBadOptionsKeysHistory,
         gGoodOptionsKeys.length / 2,
         gGoodOptionInstanceCount,
-        lagoCardDataUtils.getRandomZeroToOne,
+        lagomConstants.getRandomZeroToOne,
         function (option) {
           return optionValidationCallback(option, optionsThisCard);
         }
@@ -226,7 +226,7 @@ define([
         gBadOptionsKeysHistory,
         gBadOptionsKeys.length / 2,
         gBadOptionInstanceCount,
-        lagoCardDataUtils.getRandomZeroToOne,
+        lagomConstants.getRandomZeroToOne,
         function (option) {
           return optionValidationCallback(option, optionsThisCard);
         }

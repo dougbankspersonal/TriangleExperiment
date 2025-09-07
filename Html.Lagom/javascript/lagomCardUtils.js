@@ -6,16 +6,15 @@ define([
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
   "sharedJavascript/htmlUtils",
-  "javascript/lagomCardDataUtils",
   "dojo/domReady!",
 ], function (domStyle, cards, debugLogModule, genericUtils, htmlUtils) {
   var debugLog = debugLogModule.debugLog;
 
   const gSymbolToSpriteSheetGridSize = {
-    //   [lagomCardDataUtils.symbolTypes.Relationships]: [4, 5],
-    /* [lagomCardDataUtils.symbolTypes.Purpose]: [
-      lagomCardDataUtils.purposeSpriteColumns,
-      lagomCardDataUtils.purposeSpriteRows,
+    //   [lagomConstants.symbolTypes.Relationships]: [4, 5],
+    /* [lagomConstants.symbolTypes.Purpose]: [
+      lagomConstants.purposeSpriteColumns,
+      lagomConstants.purposeSpriteRows,
     ],*/
   };
 
@@ -203,7 +202,6 @@ define([
         if (numbersForSymbol) {
           var symbolSizePx =
             configs.symbolSizePxBySymbolCount[totalSymbolsInThisSector];
-
           addNumberForSymbol(symbolNode, i, numbersForSymbol, symbolSizePx);
         }
       }

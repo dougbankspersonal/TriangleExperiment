@@ -1,7 +1,10 @@
-define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
-  debugLogModule
-) {
+define([
+  "sharedJavascript/debugLog",
+  "sharedJavascript/genericUtils",
+  "dojo/domReady!",
+], function (debugLogModule, genericUtils) {
   var debugLog = debugLogModule.debugLog;
+
   // Recursive.
   // Returns an array of arrays.
   // All the possible distributions of numSymbols symbols across numSlots slots.
@@ -47,9 +50,16 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     return retVal;
   }
 
-  // Distribution maps sector number to the number of symbols in the sector
+  function middleIsNotBlankDistributionCheck(distribution) {
+    // Middle cannot be blank.
+    return distribution[lagomConstants.triangleMiddleSectorIndex] > 0;
+  }
+
+  // Distribution maps sector number to the number of symbols in the sector.
   // Does not say what the symbols are.
   // This identifies and rejects invalid distributions.
+  // * One sector can't have more than half the symbols.
+  // * Never allowed to have more than one blank sector.
   function isValidSymbolDistribution(distribution, numSymbolsPerCard) {
     var symbolMax = numSymbolsPerCard / 2;
     var blankSectorCount = 0;
@@ -68,6 +78,24 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
       }
     }
     return true;
+  }
+
+  // distribution maps sector index to number of symbols in sector.
+  // Sum total symbols in distribution.
+  function sumDistribution(distribution) {
+    var retVal = 0;
+    for (
+      var sectorIndex = 0;
+      sectorIndex < distribution.length;
+      sectorIndex++
+    ) {
+      genericUtils.assertIsNumber(
+        distribution[sectorIndex],
+        "distribution[" + sectorIndex + "]"
+      );
+      retVal += distribution[sectorIndex];
+    }
+    return retVal;
   }
 
   function generateAllValidSymbolDistributions(
@@ -90,7 +118,7 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
     for (var i = 0; i < possibleDistrubutions.length; i++) {
       var possibleDistribution = possibleDistrubutions[i];
 
-      // Caller may have extra checks.
+      // Caller may have extra distribution checks.
       if (opt_extraCheck && !opt_extraCheck(possibleDistribution)) {
         continue;
       }
@@ -111,6 +139,9 @@ define(["sharedJavascript/debugLog", "dojo/domReady!"], function (
 
   // This returned object becomes the defined value of this module
   return {
+    sumDistribution: sumDistribution,
     generateAllValidSymbolDistributions: generateAllValidSymbolDistributions,
+    middleIsNotBlankDistributionCheck: middleIsNotBlankDistributionCheck,
+    isValidSymbolDistribution: isValidSymbolDistribution,
   };
 });

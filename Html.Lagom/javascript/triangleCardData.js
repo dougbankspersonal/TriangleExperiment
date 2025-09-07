@@ -1,10 +1,19 @@
 define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
+  "javascript/deckConfigUtils",
   "javascript/distributions",
-  "javascript/lagomCardDataUtils",
+  "javascript/cardConfigConstruction",
+  "javascript/lagomConstants",
   "dojo/domReady!",
-], function (cards, debugLogModule, distributions, lagomCardDataUtils) {
+], function (
+  cards,
+  debugLogModule,
+  deckConfigUtils,
+  distributions,
+  cardConfigConstruction,
+  lagomConstants
+) {
   var debugLog = debugLogModule.debugLog;
 
   //-----------------------------------
@@ -13,138 +22,6 @@ define([
   //
   //-----------------------------------
   var gCardConfigs = [];
-
-  // Triangle sectors are indexed like so:
-  //                 0
-  //                 2
-  //               1    3
-  const gNumSectors = 4;
-  const gMiddleSectorIndex = 2;
-
-  var gThreeWealthStarterConfig = {
-    isStarterCard: true,
-    sectorDescriptors: [
-      {
-        sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Parent]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
-        },
-      },
-    ],
-  };
-
-  var gTwoWealthOneRelationshipStarterConfig = {
-    isStarterCard: true,
-    sectorDescriptors: [
-      {
-        sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Wealth]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Parent]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomCardDataUtils.symbolTypes.Relationships]: 1,
-        },
-      },
-    ],
-  };
-
-  // Things we frequently twiddle.
-  // Keep them here in "configs", add/uncomment as needed.
-  const sixSymbolConfig = {
-    numSymbolsPerCard: 6,
-    maxPurposeValue: 9,
-    checks: [lagomCardDataUtils.noSymbolHasMajority],
-    numNonStarterCardsInDeck: 72,
-  };
-  const fiveSymbolConfig = {
-    numSymbolsPerCard: 5,
-    maxPurposeValue: 8,
-    checks: [lagomCardDataUtils.noSymbolHasMajority],
-    starterCardConfig: gThreeWealthStarterConfig,
-    numNonStarterCardsInDeck: 64,
-  };
-
-  const threeSymbolConfig = {
-    numSymbolsPerCard: 3,
-    maxPurposeValue: 4,
-    checks: [
-      lagomCardDataUtils.noSymbolHasMajority,
-      lagomCardDataUtils.hasAtLeastTwoSymbolTypes,
-    ],
-    starterCardConfig: gTwoWealthOneRelationshipStarterConfig,
-    numNonStarterCardsInDeck: 80,
-    checkDistribution: function (distibution) {
-      // Middle cannot be blank.
-      return distibution[gMiddleSectorIndex] > 0;
-    },
-  };
-
-  // This is it. where we set confgs.
-  const gCardConfig = threeSymbolConfig;
-  const gNumNonStarterCardsInDeck = gCardConfig.numNonStarterCardsInDeck;
-
-  const gNumSymbolsPerCard = gCardConfig.numSymbolsPerCard;
-  const gMaxPurposeValue = gCardConfig.maxPurposeValue;
-  const gChecks = gCardConfig.checks;
-
-  const gValidDistributions = distributions.generateAllValidSymbolDistributions(
-    gNumSectors,
-    gNumSymbolsPerCard,
-    gCardConfig.checkDistribution
-  );
-
-  // How many symbols in the whole deck?
-  const gTotalSymbolsInDeck = gNumNonStarterCardsInDeck * gNumSymbolsPerCard;
-
-  // Should divide evenly: each symbol has equal likelihood of showing up.
-  console.assert(
-    gTotalSymbolsInDeck % lagomCardDataUtils.numSymbols == 0,
-    "gTotalSymbolsInDeck = " +
-      gTotalSymbolsInDeck +
-      ": lagomCardDataUtils.numSymbols = " +
-      lagomCardDataUtils.numSymbols
-  );
-  const gNumInstancesEachSymbol =
-    gTotalSymbolsInDeck / lagomCardDataUtils.numSymbols;
-
-  // This should slice up evenly so all purpose numbers have same likelihood of showing up.
-  // There are gNumInstancesEachSymbol purpose symbols in the deck.
-  const gNumInstancesEachPurposeValue =
-    gNumInstancesEachSymbol / gMaxPurposeValue;
-  console.assert(
-    gNumInstancesEachPurposeValue == Math.floor(gNumInstancesEachPurposeValue),
-    "gNumInstancesEachPurposeValue is not an int: gNumInstancesEachPurposeValue = " +
-      gNumInstancesEachPurposeValue +
-      ", gNumInstancesEachSymbol = " +
-      gNumInstancesEachSymbol +
-      ", gMaxPurpose = " +
-      gMaxPurposeValue
-  );
 
   //-----------------------------------
   //
@@ -161,60 +38,85 @@ define([
   }
 
   function generateCardConfigs() {
-    debugLog(
-      "generateCardConfigs",
-      "Globals: gNumNonStarterCardsInDeck = " + gNumNonStarterCardsInDeck
-    );
-    debugLog(
-      "generateCardConfigs",
-      "Globals: gNumSymbolsPerCard = " + gNumSymbolsPerCard
-    );
-    debugLog(
-      "generateCardConfigs",
-      "Globals: gTotalSymbolsInDeck = " + gTotalSymbolsInDeck
-    );
-    debugLog(
-      "generateCardConfigs",
-      "Globals: gNumInstancesEachSymbol = " + gNumInstancesEachSymbol
-    );
-    debugLog(
-      "generateCardConfigs",
-      "Globals: gNumSymbolsPerCard = " + gNumSymbolsPerCard
-    );
-    debugLog(
-      "generateCardConfigs",
-      "Globals: gMaxPurposeValue = " + gMaxPurposeValue
-    );
-    debugLog(
-      "generateCardConfigs",
-      "Globals: gNumInstancesEachPurposeValue = " +
-        gNumInstancesEachPurposeValue
+    // A bit about the math on num cards in deck:
+    // 4 possible symbols.
+    // N symbols per card.
+    // Then totalNumSymbols = 4 * N * numCardsInDeck.
+    // Then total appearances of any one symbol = (N * numCardsInDeck)/4
+    // So, for this to divide nicely, N * numCardsInDeck should be divisible by 4.
+    // It's easy enough to just make sure numCardsInDeck is divisible by 4.
+    //
+    // One symbol is purpose, 1 to MaxPurpose.
+    // Num appearances of each purpose number = (N * numCardsInDeck) / (4 * MaxPurpose)
+    // This should also divide nicely.
+    //
+    // So, in short, make sure numCardsInDeck divides evenly by (4 * MaxPurpose)
+
+    // This sets the config for the whole deck.
+    // Comment in/out as you see fit.
+
+    // 3 symbol, 4 purpose.
+    const gCardsInThreeSymbolDeck = 64;
+    const g3_4_DeckConfig = deckConfigUtils.generateDeckConfig(
+      gCardsInThreeSymbolDeck,
+      3,
+      4,
+      {
+        [lagomConstants.symbolTypes.Accomplishment]: 2,
+        [lagomConstants.symbolTypes.Purpose]: 2,
+        [lagomConstants.symbolTypes.Relationships]: 2,
+        [lagomConstants.symbolTypes.Wealth]: 2,
+      },
+      cardConfigConstruction.twoWealthOneRelationshipStarterConfig,
+      {},
+      distributions.middleIsNotBlankDistributionCheck
     );
 
-    console.assert(
-      gMaxPurposeValue <= lagomCardDataUtils.numPurposeSprites,
-      "gMaxPurposeValue is greater than numPurposeSprites"
-    );
-
-    lagomCardDataUtils.setNumberingDetailsForSymbol(
-      lagomCardDataUtils.symbolTypes.Purpose,
-      1,
-      gMaxPurposeValue,
-      gNumInstancesEachPurposeValue
-    );
-
-    gCardConfigs = lagomCardDataUtils.generateCardConfigs(
-      gNumNonStarterCardsInDeck,
-      gNumInstancesEachSymbol,
-      gValidDistributions,
-      gChecks
-    );
-
-    if (gCardConfig.starterCardConfig) {
-      for (var i = 0; i < lagomCardDataUtils.maxPlayers; i++) {
-        gCardConfigs.unshift(gCardConfig.starterCardConfig);
+    // 5 symbol, 8 purpose, 1 coin max per card.
+    const gCardsInFiveSymbolDeck = 64;
+    const g5_8_WealthCap_DeckConfig = deckConfigUtils.generateDeckConfig(
+      gCardsInFiveSymbolDeck,
+      5,
+      8,
+      {
+        [lagomConstants.symbolTypes.Accomplishment]: 2,
+        [lagomConstants.symbolTypes.Purpose]: 2,
+        [lagomConstants.symbolTypes.Relationships]: 2,
+        [lagomConstants.symbolTypes.Wealth]: 1,
+      },
+      cardConfigConstruction.threeWealthStarterConfig,
+      {
+        // Usually symbols are equally represented: here we say there's
+        // only so many wealth symbols, fewer than normal.
+        [lagomConstants.symbolTypes.Wealth]: Math.ceil(
+          gCardsInFiveSymbolDeck * 0.75
+        ),
       }
-    }
+    );
+
+    const g5_4_WealthCap_DeckConfig = deckConfigUtils.generateDeckConfig(
+      gCardsInFiveSymbolDeck,
+      5,
+      4,
+      {
+        [lagomConstants.symbolTypes.Accomplishment]: 2,
+        [lagomConstants.symbolTypes.Purpose]: 2,
+        [lagomConstants.symbolTypes.Relationships]: 2,
+        [lagomConstants.symbolTypes.Wealth]: 1,
+      },
+      cardConfigConstruction.threeWealthStarterConfig,
+      {
+        // Usually symbols are equally represented: here we say there's
+        // only so many wealth symbols, fewer than normal.
+        [lagomConstants.symbolTypes.Wealth]: Math.ceil(
+          gCardsInFiveSymbolDeck * 0.75
+        ),
+      }
+    );
+
+    var deckConfig = g5_8_WealthCap_DeckConfig;
+
+    gCardConfigs = cardConfigConstruction.generateCardConfigs(deckConfig);
   }
 
   function getNumCards() {
