@@ -67,5 +67,21 @@ html {
   background-repeat: no-repeat;
   background-position: center;
 }
+.card.back.lagom .season-indicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid white;
+  background-color: rgba(0, 0, 0, 0.5);
+}
 
 /*# sourceMappingURL=lagom_cards.css.map */

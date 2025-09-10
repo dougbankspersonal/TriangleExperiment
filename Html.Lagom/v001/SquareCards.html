@@ -53,8 +53,8 @@
         "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "javascript/rectangleCardData",
-        "javascript/rectangleCards",
+        "javaScript/cardConfigConstruction",
+        "javascript/squareCards",
       ], function (
         cards,
         debugLogModule,
@@ -62,8 +62,8 @@
         genericUtils,
         htmlUtils,
         systemConfigs,
-        rectangleCardData,
-        rectangleCards
+        cardConfigConstruction,
+        squareCards
       ) {
         var debugLog = debugLogModule.debugLog;
         var sc = systemConfigs.getCardSystemConfigs({
@@ -74,19 +74,19 @@
         systemConfigs;
         debugLog("CardConfigs", "cardsPerRow = " + sc.cardsPerRow);
 
-        rectangleCardData.generateCardConfigs();
+        cardConfigConstruction.generateCardConfigs();
 
-        var numCards = rectangleCardData.getNumCards();
+        var numCards = cardConfigConstruction.getNumCards();
 
         debugLog("CardConfigs", "numCards = " + numCards);
 
         var backConfig = {
-          callback: rectangleCards.addCardBack,
+          callback: squareCards.addCardBack,
           classes: ["lagom"],
         };
 
         function fudgedAddCardFront(parentNode, index) {
-          return rectangleCards.addCardFront(parentNode, index, {
+          return squareCards.addCardFront(parentNode, index, {
             isSquare: true,
           });
         }

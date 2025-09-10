@@ -298,6 +298,9 @@ define([
     if (cardConfig.isStarterCard) {
       classes.push("starter");
     }
+    if (cardConfig.season) {
+      classes.push("season-" + cardConfig.season);
+    }
     var frontWrapperNode = htmlUtils.addDiv(
       cardFrontNode,
       classes,
@@ -306,9 +309,16 @@ define([
     return [cardFrontNode, frontWrapperNode];
   }
 
+  var seasonNames = [null, "Spring", "Summer", "Autumn", "Winter"];
+  function getSeasonName(season) {
+    console.assert(seasonNames[season] !== null, "Invalid season " + season);
+    return seasonNames[season];
+  }
+
   // This returned object becomes the defined value of this module
   return {
     addNthSector: addNthSector,
     addCardFrontAndWrapper: addCardFrontAndWrapper,
+    getSeasonName: getSeasonName,
   };
 });

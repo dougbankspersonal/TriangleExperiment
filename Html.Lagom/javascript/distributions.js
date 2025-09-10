@@ -1,8 +1,9 @@
 define([
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
+  "javascript/lagomConstants",
   "dojo/domReady!",
-], function (debugLogModule, genericUtils) {
+], function (debugLogModule, genericUtils, lagomConstants) {
   var debugLog = debugLogModule.debugLog;
 
   // Recursive.
@@ -50,7 +51,7 @@ define([
     return retVal;
   }
 
-  function middleIsNotBlankDistributionCheck(distribution) {
+  function middleIsNotBlank(distribution) {
     // Middle cannot be blank.
     return distribution[lagomConstants.triangleMiddleSectorIndex] > 0;
   }
@@ -101,7 +102,7 @@ define([
   function generateAllValidSymbolDistributions(
     numSectors,
     numSymbolsPerCard,
-    opt_extraCheck
+    opt_distributionFilter
   ) {
     var possibleDistrubutions = generatePossibleSymbolDistributions(
       numSymbolsPerCard,
@@ -119,7 +120,10 @@ define([
       var possibleDistribution = possibleDistrubutions[i];
 
       // Caller may have extra distribution checks.
-      if (opt_extraCheck && !opt_extraCheck(possibleDistribution)) {
+      if (
+        opt_distributionFilter &&
+        !opt_distributionFilter(possibleDistribution)
+      ) {
         continue;
       }
 
@@ -141,7 +145,6 @@ define([
   return {
     sumDistribution: sumDistribution,
     generateAllValidSymbolDistributions: generateAllValidSymbolDistributions,
-    middleIsNotBlankDistributionCheck: middleIsNotBlankDistributionCheck,
-    isValidSymbolDistribution: isValidSymbolDistribution,
+    middleIsNotBlank: middleIsNotBlank,
   };
 });

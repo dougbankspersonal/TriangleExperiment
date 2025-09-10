@@ -6,8 +6,8 @@ define([
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
   "sharedJavascript/htmlUtils",
+  "javascript/cardConfigConstruction",
   "javascript/lagomCardUtils",
-  "javascript/triangleCardData",
   "dojo/domReady!",
 ], function (
   domStyle,
@@ -15,8 +15,8 @@ define([
   debugLogModule,
   genericMeasurements,
   htmlUtils,
-  lagomCardUtils,
-  triangleCardData
+  cardConfigConstruction,
+  lagomCardUtils
 ) {
   var debugLog = debugLogModule.debugLog;
 
@@ -79,7 +79,7 @@ define([
   //
   //-----------------------------------
   function addCardFront(parentNode, index) {
-    var cardConfig = triangleCardData.getCardConfigAtIndex(index);
+    var cardConfig = cardConfigConstruction.getCardConfigAtIndex(index);
 
     var [cardFrontNode, frontWrapperNode] =
       lagomCardUtils.addCardFrontAndWrapper(parentNode, cardConfig, index);
@@ -122,15 +122,37 @@ define([
   }
 
   function addCardBack(parent, index) {
-    var config = triangleCardData.getCardConfigAtIndex(index);
+    var config = cardConfigConstruction.getCardConfigAtIndex(index);
     var classes = ["lagom"];
 
     if (config.isStarterCard) {
       classes.push("starter");
     }
+    if (config.season) {
+      classes.push("season-" + config.season);
+    }
+
     var cardBackNode = cards.addCardBack(parent, index, {
       classes: classes,
     });
+
+    var cardBackLogoNode = htmlUtils.addImage(
+      cardBackNode,
+      ["lagom-title"],
+      "lagom-title"
+    );
+
+    var cardConfig = cardConfigConstruction.getCardConfigAtIndex(index);
+    if (cardConfig.season) {
+      var seasonName = lagomCardUtils.getSeasonName(cardConfig.season);
+      var seasonNode = htmlUtils.addDiv(
+        cardBackNode,
+        ["season-name"],
+        "season-name"
+      );
+      seasonNode.innerHTML = seasonName;
+    }
+
     return cardBackNode;
   }
 

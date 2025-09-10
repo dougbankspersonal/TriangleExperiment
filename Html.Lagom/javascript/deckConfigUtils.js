@@ -3,7 +3,7 @@
       numNonStarterCardsInDeck: count of non starter cards,
       numSymbolsPerCard: number of symbols on each card,
       maxPurposeValue: purpose goes 1 to this,
-      maxInstancesInCardBySymbol: a series of functions to apply to collected card configurations to make sure they obey certain rules.
+      maxInstancesInCardBySymbol: map from symbol type to max instances of that symbol you can have on one card.
       starterCardConfig: card config describing starter card.,
       maxInstancesInDeckBySymbol: table mapping symbol type to max instances of that symbol in deck,
       distributionFilter: optional filter to reject certain distributions of symbols (distribution maps sector index to count of all symbols in sector),
@@ -23,99 +23,13 @@ define([
   // functions
   //
   //------------------------------------------
-  // We are given num cards, num symbols on each card, and possibly a breakdown of maxes per
-  // symbol (possibly incomplete, like "this symbol can have no more than n" with no mention of other symbols).
-  // Return a map from symbol name to max-instances-of-that-symbol.
-  // If there are no restrictions, we can just return a uniform distribution.
-  function calculateMaxInstancesBySymbol(
-    numCardsInDeck,
-    numSymbolsPerCard,
-    opt_maxesBySymbol
-  ) {
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "numCardsInDeck = " +
-        numCardsInDeck +
-        ", numSymbolsPerCard = " +
-        numSymbolsPerCard
-    );
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "opt_maxesBySymbol = " + JSON.stringify(opt_maxesBySymbol)
-    );
-    var totalNumSymbols = numCardsInDeck * numSymbolsPerCard;
-
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "totalNumSymbols = " + JSON.stringify(totalNumSymbols)
-    );
-
-    var retVal;
-    if (opt_maxesBySymbol) {
-      retVal = structuredClone(opt_maxesBySymbol);
-    } else {
-      retVal = {};
+  // Normally, how many times can any given symbol appear on a card?
+  function calculateMaxInstancesBySymbol(numSymbolsPerCard) {
+    // Not much more than half.
+    var retVal = {};
+    for (var symbolType of lagomConstants.symbolTypesSet) {
+      retVal[symbolType] = Math.ceil(numSymbolsPerCard / 2);
     }
-
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "initial retVal = " + JSON.stringify(retVal)
-    );
-
-    // 1. Adjust total, subtracting off the customs.
-    var totalRestrictedSymbols = 0;
-    var countRestrictedSymbolTypes = 0;
-    for (var i = 0; i < lagomConstants.symbolTypesArray.length; i++) {
-      var symbolType = lagomConstants.symbolTypesArray[i];
-      if (retVal[symbolType]) {
-        countRestrictedSymbolTypes++;
-        totalRestrictedSymbols += retVal[symbolType];
-      }
-    }
-
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "totalRestrictedSymbols = " + totalRestrictedSymbols
-    );
-
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "countRestrictedSymbolTypes = " + countRestrictedSymbolTypes
-    );
-
-    // 2. Split total and allocate among everyone who doesn't have a custom.
-    var totalLeftover = totalNumSymbols - totalRestrictedSymbols;
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "totalLeftover = " + totalLeftover
-    );
-    var countUnrestrictedSymbolTypes =
-      lagomConstants.symbolTypesArray.length - countRestrictedSymbolTypes;
-    var countPerUnmaxedSymbol = Math.ceil(
-      totalLeftover / countUnrestrictedSymbolTypes
-    );
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "countPerUnmaxedSymbol = " + countPerUnmaxedSymbol
-    );
-    for (var i = 0; i < lagomConstants.symbolTypesArray.length; i++) {
-      var symbolType = lagomConstants.symbolTypesArray[i];
-      var count = retVal[symbolType] ? retVal[symbolType] : 0;
-      if (count == 0) {
-        // FIXME(dbanks)
-        // I still can't get the final few cards to generate with the right number of symbols:
-        // Once you make a bunch that follow the rules it's easy to wind up where you can't
-        // make the last few still following the rules and still have a balanced deck.
-        // Don't care, it's late, I'm tired, can come up with something clever later.
-        // So just lie and allow an extra few symbols.
-
-        retVal[symbolType] = countPerUnmaxedSymbol + gSymbolExtraFudge;
-      }
-    }
-    debugLog(
-      "calculateMaxInstancesBySymbol",
-      "final retVal = " + JSON.stringify(retVal)
-    );
     return retVal;
   }
 
@@ -135,35 +49,60 @@ define([
     }
   }
 
-  function generateDeckConfig(
-    numNonStarterCardsInDeck,
-    numSymbolsPerCard,
-    maxPurposeValue,
-    maxInstancesInCardBySymbol,
-    starterCardConfig,
-    opt_maxInstancesInDeckBySymbol,
-    opt_distributionFilter
-  ) {
-    var maxInstancesInDeckBySymbol = calculateMaxInstancesBySymbol(
+  function generateDeckConfig(options) {
+    debugLog("generateDeckConfig", "options = " + JSON.stringify(options));
+
+    // Required...
+    var numNonStarterCardsInDeck = options.numNonStarterCardsInDeck;
+    var numSymbolsPerCard = options.numSymbolsPerCard;
+    var maxPurposeValue = options.maxPurposeValue;
+
+    console.assert(
       numNonStarterCardsInDeck,
-      numSymbolsPerCard,
-      opt_maxInstancesInDeckBySymbol
+      "numNonStarterCardsInDeck is required"
     );
+    console.assert(numSymbolsPerCard, "numSymbolsPerCard is required");
+    console.assert(maxPurposeValue, "maxPurposeValue is required");
+
+    var maxInstancesInCardBySymbol;
+    if (options.maxInstancesInCardBySymbol) {
+      maxInstancesInCardBySymbol = structuredClone(
+        options.maxInstancesInCardBySymbol
+      );
+    } else {
+      maxInstancesInCardBySymbol =
+        calculateMaxInstancesBySymbol(numSymbolsPerCard);
+    }
 
     debugLog(
-      "deckConfigUtils",
-      "maxInstancesInDeckBySymbol = " +
-        JSON.stringify(maxInstancesInDeckBySymbol)
+      "generateDeckConfig",
+      "maxInstancesInCardBySymbol = " +
+        JSON.stringify(maxInstancesInCardBySymbol)
     );
+
+    var maxInstancesInDeckBySymbol;
+    if (options.maxInstancesInDeckBySymbol) {
+      maxInstancesInDeckBySymbol = structuredClone(
+        options.maxInstancesInDeckBySymbol
+      );
+    } else {
+      maxInstancesInDeckBySymbol = {};
+      for (var symbolType of lagomConstants.symbolTypesSet) {
+        maxInstancesInDeckBySymbol[symbolType] =
+          (numNonStarterCardsInDeck * numSymbolsPerCard) /
+          lagomConstants.numSymbols;
+      }
+    }
 
     const deckConfig = {
       numNonStarterCardsInDeck: numNonStarterCardsInDeck,
       numSymbolsPerCard: numSymbolsPerCard,
       maxPurposeValue: maxPurposeValue,
       maxInstancesInCardBySymbol: maxInstancesInCardBySymbol,
-      starterCardConfig: starterCardConfig,
+      starterCardConfig: options.starterCardConfig,
       maxInstancesInDeckBySymbol: maxInstancesInDeckBySymbol,
-      distributionFilter: opt_distributionFilter,
+      distributionFilter: options.distributionFilter,
+      season: options.season,
     };
 
     debugLog(

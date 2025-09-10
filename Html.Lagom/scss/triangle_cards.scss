@@ -4,7 +4,7 @@
   border-style: initial;
 
   .front-wrapper {
-    background-image: url("../images/LagomCards/triangle-parchment-final.png");
+    background-image: url("../images/LagomCards/faces/card-face-background.png");
     background-position: 0px 0px;
     background-size: 100% auto;
 
@@ -25,19 +25,71 @@
   }
 
   .front-wrapper.starter {
-    background-image: url("../images/LagomCards/starter-triangle-parchment-final.png");
+    background-image: url("../images/LagomCards/faces/card-face-background-starter.png");
   }
 
+  .front-wrapper.season-1 {
+    background-image: url("../images/LagomCards/faces/card-face-background-spring.png");
+  }
+
+  .front-wrapper.season-2 {
+    background-image: url("../images/LagomCards/faces/card-face-background-summer.png");
+  }
+
+  .front-wrapper.season-3 {
+    background-image: url("../images/LagomCards/faces/card-face-background-autumn.png");
+  }
+
+  .front-wrapper.season-4 {
+    background-image: url("../images/LagomCards/faces/card-face-background-winter.png");
+  }
 }
 
 .card.back.lagom {
-  background-image: url("../images/LagomCards/triangle-card-back.png");
-  border-width: initial;
+  background-image: url("../images/LagomCards/backs/card-back-background.png");
   border-style: initial;
   border: initial;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .lagom-title {
+    height: 60%;
+    width: 100%;
+    margin-top: 20%;
+  }
+
+  .season-name {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    left: 0px;
+    font-size: 20px;
+    text-align: center;
+    color: #333;
+    text-shadow: initial;
+  }
 }
 
 .card.back.lagom.starter {
-  background-image: url("../images/LagomCards/starter-triangle-card-back.png");
+  background-image: url("../images/LagomCards/backs/card-back-background-starter.png");
 
+}
+
+.card.back.lagom.season-1 {
+  background-image: url("../images/LagomCards/backs/card-back-background-spring.png");
+}
+
+.card.back.lagom.season-2 {
+  background-image: url("../images/LagomCards/backs/card-back-background-summer.png");
+}
+
+.card.back.lagom.season-3 {
+  background-image: url("../images/LagomCards/backs/card-back-background-autumn.png");
+}
+
+.card.back.lagom.season-4 {
+  background-image: url("../images/LagomCards/backs/card-back-background-winter.png");
 }

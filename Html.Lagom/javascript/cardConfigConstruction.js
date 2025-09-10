@@ -5,15 +5,19 @@ See candConfigUtils for description of a cardConfig.
 */
 
 define([
+  "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericUtils",
+  "javascript/deckConfigConstruction",
   "javascript/distributions",
   "javascript/lagomConstants",
   "javascript/numberingUtils",
   "dojo/domReady!",
 ], function (
+  cards,
   debugLogModule,
   genericUtils,
+  deckConfigConstruction,
   distributions,
   lagomConstants,
   numberingUtils
@@ -28,63 +32,6 @@ define([
   // How many times we try to get a card that doesn't have too many of one symbol.
   const gMaxTriesToGenerateAValidRandomCardConfig = 20;
 
-  //----------------------------------------
-  //
-  // Starter card configs.
-  //
-  //----------------------------------------
-  var gThreeWealthStarterConfig = {
-    isStarterCard: true,
-    sectorDescriptors: [
-      {
-        sectorMap: {
-          [lagomConstants.symbolTypes.Wealth]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomConstants.symbolTypes.Wealth]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomConstants.symbolTypes.Parent]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomConstants.symbolTypes.Wealth]: 1,
-        },
-      },
-    ],
-  };
-
-  var gTwoWealthOneRelationshipStarterConfig = {
-    isStarterCard: true,
-    sectorDescriptors: [
-      {
-        sectorMap: {
-          [lagomConstants.symbolTypes.Wealth]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomConstants.symbolTypes.Wealth]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomConstants.symbolTypes.Parent]: 1,
-        },
-      },
-      {
-        sectorMap: {
-          [lagomConstants.symbolTypes.Relationships]: 1,
-        },
-      },
-    ],
-  };
-
   //------------------------------------------
   //
   // Global Storage
@@ -92,6 +39,7 @@ define([
   //------------------------------------------
   var gSymbolToNumberingDetailsMap = {};
   var gUseCountBySymbol = {};
+  var gCardConfigs = [];
 
   //------------------------------------------
   //
@@ -169,6 +117,12 @@ define([
     symbolToNumberingDetailsMap, // Who needs numbering, what numbers were used, etc.
     distribution // The number of symbols in each sector.
   ) {
+    debugLog(
+      "generateRandomCardConfig",
+      "  generateRandomCardConfig: maxInstancesInCardBySymbol = ",
+      JSON.stringify(maxInstancesInCardBySymbol)
+    );
+
     // An array: sector index maps to a sector map (mapping symbol type to count in sector)
     var sectorMaps = generateSectorMaps(
       maxInstancesInCardBySymbol,
@@ -212,6 +166,12 @@ define([
   }
 
   function generateCardConfig(deckConfig, validDistributions, cardIndex) {
+    debugLog(
+      "generateCardConfig",
+      "  generateCardConfig: deckConfig = ",
+      JSON.stringify(deckConfig)
+    );
+
     debugLog("generateCardConfig", "cardIndex = ", cardIndex);
 
     var distributionIndex = cardIndex % validDistributions.length;
@@ -272,6 +232,11 @@ define([
           symbolToNumberingDetailsMapCopy
         );
 
+        // Add the season is there is one.
+        if (deckConfig.season) {
+          cardConfig.season = deckConfig.season;
+        }
+
         return cardConfig;
       }
 
@@ -303,10 +268,10 @@ define([
     }
   }
 
-  function generateCardConfigs(deckConfig) {
+  function generateCardConfigsFromDeckConfig(deckConfig) {
     debugLog(
-      "generateCardConfigs",
-      "called generateCardConfigs with deckConfig = ",
+      "generateCardConfigsFromDeckConfig",
+      "called generateCardConfigsFromDeckConfig with deckConfig = ",
       JSON.stringify(deckConfig)
     );
 
@@ -327,14 +292,17 @@ define([
       distributions.generateAllValidSymbolDistributions(
         lagomConstants.numSectorsPerCard,
         deckConfig.numSymbolsPerCard,
-        deckConfig.checkDistribution
+        deckConfig.distributionFilter
       );
 
-    for (
-      var cardIndex = 0;
-      cardIndex < deckConfig.numNonStarterCardsInDeck;
-      cardIndex++
-    ) {
+    // FIXME(dbanks)
+    // symbol random distribution code often breaks on last card because we've used too many of one
+    // and all that's left is an invalid card.
+    // Tired of fighting.
+    // Hackery: we make one fewer card than asked.
+    var numberToGenerate = deckConfig.numNonStarterCardsInDeck - 1;
+
+    for (var cardIndex = 0; cardIndex < numberToGenerate; cardIndex++) {
       var cardConfig = generateCardConfig(
         deckConfig,
         validDistributions,
@@ -343,7 +311,7 @@ define([
       // Maybe failed.
       if (!cardConfig) {
         debugLog(
-          "generateCardConfigs",
+          "generateCardConfigsFromDeckConfig",
           "failed to generate card config for cardIndex = ",
           cardIndex
         );
@@ -356,13 +324,27 @@ define([
     return cardConfigsAccumulator;
   }
 
+  function generateCardConfigs() {
+    var deckConfig = deckConfigConstruction.getDeckConfig();
+    gCardConfigs = generateCardConfigsFromDeckConfig(deckConfig);
+  }
+
+  function getCardConfigAtIndex(index) {
+    return cards.getCardConfigAtIndex(gCardConfigs, index);
+  }
+
+  function getNumCards() {
+    debugLog(
+      "getNumCards",
+      "getNumCards: _cardConfigs = " + JSON.stringify(gCardConfigs)
+    );
+    return cards.getNumCardsFromConfigs(gCardConfigs);
+  }
+
   // This returned object becomes the defined value of this module
   return {
-    threeWealthStarterConfig: gThreeWealthStarterConfig,
-    twoWealthOneRelationshipStarterConfig:
-      gTwoWealthOneRelationshipStarterConfig,
-
-    generateCardConfig: generateCardConfig,
     generateCardConfigs: generateCardConfigs,
+    getCardConfigAtIndex: getCardConfigAtIndex,
+    getNumCards: getNumCards,
   };
 });

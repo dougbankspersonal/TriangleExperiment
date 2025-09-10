@@ -29,12 +29,20 @@ define([
     Parent: SymbolType_Parent,
   };
 
+  const gSymbolTypesSet = new Set([
+    SymbolType_Relationships,
+    SymbolType_Wealth,
+    SymbolType_Purpose,
+    SymbolType_Accomplishment,
+  ]);
+
   const gSymbolTypesArray = [
     gSymbolTypes.Relationships,
     gSymbolTypes.Wealth,
     gSymbolTypes.Purpose,
     gSymbolTypes.Accomplishment,
   ];
+
   const transparencyForColors = 0.2;
   const gSymbolToColorMap = {
     [gSymbolTypes.Relationships]: `rgba(128, 255, 128, ${transparencyForColors})`,
@@ -62,5 +70,6 @@ define([
     getRandomZeroToOne: getRandomZeroToOne,
     maxPlayers: gMaxPlayers,
     triangleMiddleSectorIndex: gTriangleMiddleSectorIndex,
+    symbolTypesSet: gSymbolTypesSet,
   };
 });

@@ -2,6 +2,7 @@
 Generic functions for reading/digesting card configs.
 
 A cardConfig is:
+  season: int, indicates season of card, used to style.
   isStarterCard: opt bool, if true this is a starter.
   sectorDescriptors: array of sector descriptors, array index -> sector index.
 
