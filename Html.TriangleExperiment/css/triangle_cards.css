@@ -1,0 +1,55 @@
+.card.front.te {
+  border: initial;
+  border-width: initial;
+  border-style: initial;
+}
+.card.front.te .front-wrapper {
+  background-position: 0px 0px;
+  background-size: 100% auto;
+}
+.card.front.te .front-wrapper .sectors-row .sector {
+  align-items: flex-end;
+  position: absolute;
+  z-index: 1;
+}
+.card.front.te .front-wrapper .sectors-row .sector .sector-color-block {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 2;
+}
+.card.front.te .front-wrapper .sectors-row .sector .sector-wall {
+  position: absolute;
+  z-index: 3;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  transform-origin: 50% 66.66%;
+}
+.card.front.te .front-wrapper .sectors-row .sector .sector-wall.wall-1 {
+  transform: rotate(120deg);
+}
+.card.front.te .front-wrapper .sectors-row .sector .sector-wall.wall-2 {
+  transform: rotate(240deg);
+}
+
+.card.back.te {
+  background-image: url("../images/Cards/backs/card-back-background.png");
+  border-style: initial;
+  border: initial;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.card.back.te .te-title {
+  height: 60%;
+  width: 100%;
+  margin-top: 20%;
+}
+
+/*# sourceMappingURL=triangle_cards.css.map */

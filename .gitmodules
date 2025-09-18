@@ -1,3 +1,6 @@
-[submodule "Html.Lagom/SharedWebBoardgame"]
-	path = Html.Lagom/SharedWebBoardgame
+[submodule "SharedWebBoardgame"]
+	path = Html.TriangleExperiment/SharedWebBoardgame
+	url = https://github.com/dougbankspersonal/SharedWebBoardgame.git
+[submodule "Html.TriangleExperiment/SharedWebBoardgame"]
+	path = Html.TriangleExperiment/SharedWebBoardgame
 	url = https://github.com/dougbankspersonal/SharedWebBoardgame.git
