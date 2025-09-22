@@ -1,27 +1,28 @@
-/* Deprecated */
-
 define([
+  "dojo/dom-class",
   "dojo/dom-style",
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/genericMeasurements",
   "sharedJavascript/htmlUtils",
-  "javascript/cardConfigConstruction",
+  "javascript/triangleCardConfigConstruction",
   "javascript/teCardUtils",
+  "javascript/teConstants",
   "dojo/domReady!",
 ], function (
+  domClass,
   domStyle,
   cards,
   debugLogModule,
   genericMeasurements,
   htmlUtils,
-  cardConfigConstruction,
-  teCardUtils
+  triangleCardConfigConstruction,
+  teCardUtils,
+  teConstants
 ) {
   var debugLog = debugLogModule.debugLog;
-
   //-----------------------------------
-  //
+
   // Constants
   //
   //-----------------------------------
@@ -30,38 +31,8 @@ define([
   // This seems to need fudging a bit: hence the +2.
   const gTriangleHeightPx = genericMeasurements.triangleCardHeightPx;
   const gSectorWidthPx = genericMeasurements.standardCardWidthPx / 2;
-  const gSectorHeightPx = genericMeasurements.triangleCardHeightPx / 2;
-  const gSymbolSizePxBySymbolCount = {
-    1: gSectorHeightPx * 0.48,
-    2: gSectorHeightPx * 0.28,
-    3: gSectorHeightPx * 0.28,
-  };
 
-  // Euquilateral triangle: centeregTriangleHeightPx
-  const gSymbolXPxBySymbolCountAndIndex = {
-    1: [0],
-    2: [0, 0],
-    3: [-0.18 * gSectorWidthPx, 0, 0.18 * gSectorWidthPx],
-  };
-
-  const gLargeImageSizePx = gSymbolSizePxBySymbolCount[1];
-  const gSmallImageSizePx = gSymbolSizePxBySymbolCount[2];
-
-  // Go down 1/2 the height of image, then up 1/3 of height of row.
-  const oneItemYPx = gLargeImageSizePx * 0.5 - gSectorHeightPx * 0.33;
-
-  const oneOfTwoItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.53;
-  const twoOfTwoItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.19;
-
-  const oneOfThreeItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.25;
-  const twoOfThreeItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.6;
-  const threeOfThreeItemYPx = gSmallImageSizePx * 0.5 - gSectorHeightPx * 0.25;
-  const gSymbolYPxBySymbolCountAndIndex = {
-    1: [oneItemYPx],
-    // Two items in a stack spaced around center
-    2: [oneOfTwoItemYPx, twoOfTwoItemYPx],
-    3: [oneOfThreeItemYPx, twoOfThreeItemYPx, threeOfThreeItemYPx],
-  };
+  const gSectorRotationBySectorIndexDeg = [0, 0, 180, 0];
 
   const gSectorXBySectorIndexPx = [
     0,
@@ -70,16 +41,85 @@ define([
     gSectorWidthPx / 2,
   ];
   const gSectorYBySectorIndexPx = [0, 0, 0, 0];
-  const gSectorRotationBySectorIndexDeg = [0, 0, 180, 0];
-  const gSymbolRotationBySectorIndexDeg = [0, 0, -180, 0];
 
   //-----------------------------------
   //
   // Functions
   //
   //-----------------------------------
+  function addRow(parentNode, rowIndex) {
+    var rowNode = htmlUtils.addDiv(
+      parentNode,
+      ["sectors-row", "sectors-row-" + rowIndex],
+      "sectors-row-" + rowIndex
+    );
+    domStyle.set(rowNode, {
+      height: gTriangleHeightPx + "px",
+    });
+    return rowNode;
+  }
+
+  function addExtras(parentNode, sectorDescriptor) {
+    debugLog(
+      "addExtras",
+      "sectorDescriptor = ",
+      JSON.stringify(sectorDescriptor)
+    );
+
+    for (var extraType in sectorDescriptor.extras) {
+      var extrasForType = sectorDescriptor.extras[extraType];
+      for (var i = 0; i < extrasForType.length; i++) {
+        if (!extrasForType[i]) {
+          continue;
+        }
+        var extraVariant = extrasForType[i];
+        var extraClass = "extra-" + i;
+        var extraImageNode = htmlUtils.addImage(
+          parentNode,
+          ["sector-extra", extraClass, extraVariant],
+          "sector-extra-" + extraType + "-" + i
+        );
+      }
+    }
+  }
+
+  function addSector(parentNode, sectorIndex, sectorDescriptor) {
+    var contentsClassSuffix =
+      sectorDescriptor.type == teConstants.sectorTypes.Buffer
+        ? teConstants.sectorTypes.Buffer
+        : sectorDescriptor.color;
+    var contentsClass = "node-" + contentsClassSuffix;
+
+    var translateX = gSectorXBySectorIndexPx[sectorIndex];
+    var translateY = gSectorYBySectorIndexPx[sectorIndex];
+    var rotationDeg = gSectorRotationBySectorIndexDeg[sectorIndex];
+    debugLog("addSector", "sectorIndex = ", JSON.stringify(sectorIndex));
+    debugLog("addSector", "translateX = ", JSON.stringify(translateX));
+    debugLog("addSector", "translateY = ", JSON.stringify(translateY));
+    debugLog("addSector", "rotationDeg = ", JSON.stringify(rotationDeg));
+
+    var sectorNode = teCardUtils.addNthSector(parentNode, sectorIndex, {
+      height: gTriangleHeightPx / 2 + "px",
+      width: gSectorWidthPx + "px",
+      transform: `translate(${gSectorXBySectorIndexPx[sectorIndex]}px, ${gSectorYBySectorIndexPx[sectorIndex]}px) rotate(${gSectorRotationBySectorIndexDeg[sectorIndex]}deg)`,
+    });
+
+    // add the contents of the  sector.
+    var sectorContentsNode = htmlUtils.addImage(
+      sectorNode,
+      ["sector-contents", contentsClass],
+      "sector-contents-" + sectorIndex
+    );
+
+    // add any extras.
+    addExtras(sectorNode, sectorDescriptor);
+
+    return sectorNode;
+  }
+
   function addCardFront(parentNode, index) {
-    var cardConfig = cardConfigConstruction.getCardConfigAtIndex(index);
+    var cardConfigs = triangleCardConfigConstruction.getCardConfigs();
+    var cardConfig = cards.getCardConfigAtIndex(cardConfigs, index);
 
     var [cardFrontNode, frontWrapperNode] = teCardUtils.addCardFrontAndWrapper(
       parentNode,
@@ -87,85 +127,59 @@ define([
       index
     );
 
+    domClass.add(cardFrontNode, cardConfig.metaClass);
+
     debugLog("addCardFront", "cardConfig = ", JSON.stringify(cardConfig));
 
-    var sectorToColor = cardConfig.sectorToColor;
-    var wallsBySector = cardConfig.wallsBySector;
+    var sectorDescriptors = cardConfig.sectorDescriptors;
 
     // 2 rows.  Top has 1 sector, bottom 3.
     var columnCountByRow = [1, 3];
+    var sectorNodes = [];
     var sectorIndex = 0;
     for (var rowIndex = 0; rowIndex < 2; rowIndex++) {
-      var rowNode = htmlUtils.addDiv(
-        frontWrapperNode,
-        ["sectors-row", "sectors-row-" + rowIndex],
-        "sectors-row-" + rowIndex
-      );
-      domStyle.set(rowNode, {
-        height: gTriangleHeightPx + "px",
-      });
+      var rowNode = addRow(frontWrapperNode, rowIndex);
 
       var columnCount = columnCountByRow[rowIndex];
       for (var columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-        var colorIndex = sectorToColor[sectorIndex];
-        var wallsThisSector = wallsBySector[sectorIndex];
-
-        debugLog(
-          "addCardFront",
-          "rowIndex = ",
-          rowIndex,
-          ": columnIndex = ",
-          columnIndex,
-          ": wallsThisSector = " + JSON.stringify(wallsThisSector)
+        var sectorNode = addSector(
+          rowNode,
+          sectorIndex,
+          sectorDescriptors[sectorIndex]
         );
-
-        teCardUtils.addNthSector(rowNode, sectorIndex, {
-          colorIndex: colorIndex,
-          wallsThisSector: wallsThisSector,
-          sectorStyling: {
-            height: gTriangleHeightPx / 2 + "px",
-            width: gSectorWidthPx + "px",
-            transform: `translate(${gSectorXBySectorIndexPx[sectorIndex]}px, ${gSectorYBySectorIndexPx[sectorIndex]}px) rotate(${gSectorRotationBySectorIndexDeg[sectorIndex]}deg)`,
-          },
-        });
+        sectorNodes.push(sectorNode);
         sectorIndex++;
       }
+    }
+
+    // If there's customSectorConfiguration function call that.
+    debugLog(
+      "addCardFront",
+      "cardConfig.customSectorConfiguration = ",
+      JSON.stringify(cardConfig.customSectorConfiguration)
+    );
+    if (cardConfig.customSectorConfiguration) {
+      cardConfig.customSectorConfiguration(sectorNodes, cardConfig);
     }
 
     return cardFrontNode;
   }
 
   function addCardBack(parent, index) {
-    var config = cardConfigConstruction.getCardConfigAtIndex(index);
-    var classes = ["te"];
+    var cardConfigs = triangleCardConfigConstruction.getCardConfigs();
+    var cardConfig = cards.getCardConfigAtIndex(cardConfigs, index);
 
-    if (config.isStarterCard) {
-      classes.push("starter");
-    }
-    if (config.season) {
-      classes.push("season-" + config.season);
-    }
+    var classes = ["te", cardConfig.metaClass];
 
     var cardBackNode = cards.addCardBack(parent, index, {
       classes: classes,
     });
 
-    var cardBackLogoNode = htmlUtils.addImage(
+    var cardBackIconNode = htmlUtils.addImage(
       cardBackNode,
-      ["te-title"],
-      "te-title"
+      ["te-icon"],
+      "te-icon"
     );
-
-    var cardConfig = cardConfigConstruction.getCardConfigAtIndex(index);
-    if (cardConfig.season) {
-      var seasonName = teCardUtils.getSeasonName(cardConfig.season);
-      var seasonNode = htmlUtils.addDiv(
-        cardBackNode,
-        ["season-name"],
-        "season-name"
-      );
-      seasonNode.innerHTML = seasonName;
-    }
 
     return cardBackNode;
   }

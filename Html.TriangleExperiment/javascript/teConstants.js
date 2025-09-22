@@ -15,45 +15,66 @@ define([
 
   const gMaxPlayers = 4;
 
-  const gColorType_Red = "red";
-  const gColorType_Green = "green";
-  const gColorType_Blue = "blue";
-  const gColorType_Yellow = "yellow";
-  const gColorType_Purple = "purple";
-  const gColorType_Orange = "orange";
-  const gColorType_Cyan = "cyan";
+  const gSectorType_Colored = "colored";
+  const gSectorType_Buffer = "buffer";
 
-  const gColorTypes = {
-    Red: gColorType_Red,
-    Green: gColorType_Green,
-    Blue: gColorType_Blue,
-    Yellow: gColorType_Yellow,
-    Purple: gColorType_Purple,
-    Orange: gColorType_Orange,
-    Cyan: gColorType_Cyan,
+  const gSectorTypes = {
+    Colored: gSectorType_Colored,
+    Buffer: gSectorType_Buffer,
   };
 
-  const gColorTypesArray = [
-    gColorTypes.Red,
-    gColorTypes.Green,
-    gColorTypes.Blue,
-    gColorTypes.Yellow,
-    gColorTypes.Purple,
-    gColorTypes.Orange,
-    gColorTypes.Cyan,
+  const gSectorTypesArray = [gSectorTypes.Colored, gSectorTypes.Buffer];
+  const gNumSectorTypes = gSectorTypesArray.length;
+
+  const gSectorColor_Red = "red";
+  const gSectorColor_Green = "green";
+  const gSectorColor_Blue = "blue";
+  const gSectorColor_Yellow = "yellow";
+  const gSectorColor_Purple = "purple";
+  const gSectorColor_Orange = "orange";
+  const gSectorColor_Cyan = "cyan";
+
+  const gSectorColors = {
+    Red: gSectorColor_Red,
+    Green: gSectorColor_Green,
+    Blue: gSectorColor_Blue,
+    Yellow: gSectorColor_Yellow,
+    Purple: gSectorColor_Purple,
+    Orange: gSectorColor_Orange,
+    Cyan: gSectorColor_Cyan,
+  };
+
+  // Add or remove colors as needed.
+  const gSectorColorsArray = [
+    gSectorColors.Red,
+    gSectorColors.Green,
+    gSectorColors.Blue,
+    gSectorColors.Yellow,
+    gSectorColors.Purple,
+    gSectorColors.Orange,
+    gSectorColors.Cyan,
   ];
 
-  const gNumColorTypes = gColorTypesArray.length;
+  const gNumSectorColors = gSectorColorsArray.length;
 
   var getRandommZeroToOne =
     genericUtils.createSeededGetZeroToOneRandomFunction(83743874);
 
+  const gTriangleSides = [0, 1, 2];
+
   return {
     numSectorsPerCard: gNumSectorsPerCard,
     triangleMiddleSectorIndex: gTriangleMiddleSectorIndex,
-    colorTypes: gColorTypes,
-    numColorTypes: gNumColorTypes,
-    colorTypesArray: gColorTypesArray,
+
+    sectorTypes: gSectorTypes,
+    sectorTypesArray: gSectorTypesArray,
+    numSectorTypes: gNumSectorTypes,
+
+    sectorColors: gSectorColors,
+    sectorColorsArray: gSectorColorsArray,
+    numSectorColors: gNumSectorColors,
+
     getRandommZeroToOne: getRandommZeroToOne,
+    triangleSides: gTriangleSides,
   };
 });

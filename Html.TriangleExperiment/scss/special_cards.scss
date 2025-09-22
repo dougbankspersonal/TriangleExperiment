@@ -1,0 +1,96 @@
+.card.front.te {
+  border: 8px solid black;
+
+  .front-wrapper {
+    justify-content: space-around;
+
+
+    .text-section {
+      width: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+
+      flex-direction: column;
+
+      .text-subsection {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .text-section.instance-0 {
+      color: #503;
+    }
+
+    .text-section.instance-1 {
+      color: #305;
+    }
+  }
+}
+
+.mh.card.front.te {
+  .front-wrapper {
+    .text-section {
+      .text-subsection {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+.cgc.card.front.te {
+  .front-wrapper {
+    .text-section {
+      .text-subsection.instance-0 {
+        font-size: 12px;
+        font-style: italic;
+        color: black;
+        padding-bottom: 10px;
+      }
+
+      .text-subsection.instance-1 {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.card.back.te {
+  border-style: initial;
+  border: initial;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .te-icon {
+    height: 60%;
+    width: 100%;
+    margin-top: 20%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+.card.back.te.cgc {
+  background-color: pink;
+  border: 10px solid lavender;
+
+  .te-icon {
+    background-image: url("../images/Cards/backs/card-back-icon-cgc.png");
+  }
+}
+
+.card.back.te.mh {
+  background-color: midnightblue;
+  border: 10px solid gold;
+
+  .te-icon {
+    background-image: url("../images/Cards/backs/card-back-icon-mh.png");
+  }
+}

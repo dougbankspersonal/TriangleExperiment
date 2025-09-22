@@ -12,7 +12,14 @@
   position: absolute;
   z-index: 1;
 }
-.card.front.te .front-wrapper .sectors-row .sector .sector-color-block {
+.card.front.te .front-wrapper .sectors-row .sector .sector-index-1,
+.card.front.te .front-wrapper .sectors-row .sector .sector-index-3 {
+  transform-origin: 50% 66.6%;
+}
+.card.front.te .front-wrapper .sectors-row .sector .sector-index-2 {
+  transform-origin: 50% 50%;
+}
+.card.front.te .front-wrapper .sectors-row .sector .sector-contents {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -20,7 +27,7 @@
   left: 0px;
   z-index: 2;
 }
-.card.front.te .front-wrapper .sectors-row .sector .sector-wall {
+.card.front.te .front-wrapper .sectors-row .sector .sector-extra {
   position: absolute;
   z-index: 3;
   height: 100%;
@@ -28,16 +35,18 @@
   top: 0px;
   left: 0px;
   transform-origin: 50% 66.66%;
+  z-index: 3;
 }
-.card.front.te .front-wrapper .sectors-row .sector .sector-wall.wall-1 {
+.card.front.te .front-wrapper .sectors-row .sector .extra-1 {
   transform: rotate(120deg);
+  z-index: 6;
 }
-.card.front.te .front-wrapper .sectors-row .sector .sector-wall.wall-2 {
+.card.front.te .front-wrapper .sectors-row .sector .extra-2 {
   transform: rotate(240deg);
+  z-index: 9;
 }
 
 .card.back.te {
-  background-image: url("../images/Cards/backs/card-back-background.png");
   border-style: initial;
   border: initial;
   display: flex;
@@ -46,10 +55,27 @@
   justify-content: center;
   align-items: center;
 }
-.card.back.te .te-title {
+.card.back.te .te-icon {
   height: 60%;
   width: 100%;
   margin-top: 20%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.card.back.te.cgc {
+  background-image: url("../images/Cards/backs/card-back-background-cgc.png");
+}
+.card.back.te.cgc .te-icon {
+  background-image: url("../images/Cards/backs/card-back-icon-cgc.png");
+}
+
+.card.back.te.mh {
+  background-image: url("../images/Cards/backs/card-back-background-mh.png");
+}
+.card.back.te.mh .te-icon {
+  background-image: url("../images/Cards/backs/card-back-icon-mh.png");
 }
 
 /*# sourceMappingURL=triangle_cards.css.map */

@@ -16,9 +16,16 @@ html {
 }
 
 .card.te {
-  font-family: "Quintessential", serif;
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
   font-weight: bold;
+}
+
+.card.te.mh {
+  font-family: "Boogaloo", serif;
+}
+
+.card.te.cgc {
+  font-family: "PlayfairDisplay", serif;
 }
 
 .card.front.te {

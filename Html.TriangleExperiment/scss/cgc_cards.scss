@@ -1,0 +1,20 @@
+.card.front.te {
+  .front-wrapper {
+    .sectors-row {
+      .sector {
+        .sector-path {
+          z-index: 10;
+          transform-origin: 50% 66.7%;
+        }
+
+        .sector-path.rotation-1 {
+          transform: rotate(120deg);
+        }
+
+        .sector-path.rotation-2 {
+          transform: rotate(240deg);
+        }
+      }
+    }
+  }
+}

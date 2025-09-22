@@ -1,0 +1,3 @@
+<Panel id="mainPanel" position="0 0" width="400" height="200" rectAlignment="UpperLeft">
+    <Button id="fooButton" onClick="foo" text="Click Me" />
+</Panel>

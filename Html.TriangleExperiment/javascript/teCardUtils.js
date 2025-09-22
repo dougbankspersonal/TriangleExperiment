@@ -1,5 +1,3 @@
-/* Deprecated */
-
 define([
   "dojo/dom-style",
   "sharedJavascript/cards",
@@ -214,17 +212,9 @@ define([
     }
   }
 
-  function addNthSector(parentNode, sectorIndex, opt_configs) {
-    var configs = opt_configs ? opt_configs : {};
-
+  function addNthSector(parentNode, sectorIndex, opt_styling) {
     debugLog("addNthSector", "parentNode = ", parentNode);
     debugLog("addNthSector", "sectorIndex = ", sectorIndex);
-    debugLog("addNthSector", "configs = ", JSON.stringify(configs));
-
-    var wallsThisSector = configs.wallsThisSector;
-    var colorIndex = configs.colorIndex;
-    console.assert(wallsThisSector, "wallsThisSector is null");
-    console.assert(colorIndex !== undefined, "colorIndex is null");
 
     var sectorNode = htmlUtils.addDiv(
       parentNode,
@@ -232,27 +222,8 @@ define([
       "sector"
     );
 
-    if (configs.sectorStyling) {
-      domStyle.set(sectorNode, configs.sectorStyling);
-    }
-
-    // Add color block.
-    var colorName = teConstants.colorTypesArray[colorIndex];
-    var colorBlockNode = htmlUtils.addImage(
-      sectorNode,
-      ["sector-color-block", "color-" + colorName],
-      "sector-color-block"
-    );
-
-    // Add walls.
-    for (var i = 0; i < wallsThisSector.length; i++) {
-      if (wallsThisSector[i]) {
-        var wallNode = htmlUtils.addImage(
-          sectorNode,
-          ["sector-wall", "wall-" + i],
-          "sector-wall-" + i
-        );
-      }
+    if (opt_styling) {
+      domStyle.set(sectorNode, opt_styling);
     }
 
     return sectorNode;
