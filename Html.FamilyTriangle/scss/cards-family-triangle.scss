@@ -1,0 +1,33 @@
+.card.front.triangle.family-triangle {
+  font-family: Special Elite, monospace;
+
+  .front-wrapper {
+    z-index: 0;
+
+    .sectors-row {
+      .sector {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      // Terrains
+      .sector.water {
+        background-image: url("../images/Cards/water.png");
+      }
+
+      .sector.grass {
+        background-image: url("../images/Cards/grass.png");
+      }
+
+      .sector.path {
+        background-image: url("../images/Cards/path.png");
+      }
+
+      .sector.water-path {
+        background-image: url("../images/Cards/water-path.png");
+      }
+
+    }
+  }
+}

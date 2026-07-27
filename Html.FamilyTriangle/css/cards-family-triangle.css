@@ -1,0 +1,25 @@
+.card.front.triangle.family-triangle {
+  font-family: Special Elite, monospace;
+}
+.card.front.triangle.family-triangle .front-wrapper {
+  z-index: 0;
+}
+.card.front.triangle.family-triangle .front-wrapper .sectors-row .sector {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.card.front.triangle.family-triangle .front-wrapper .sectors-row .sector.water {
+  background-image: url("../images/Cards/water.png");
+}
+.card.front.triangle.family-triangle .front-wrapper .sectors-row .sector.grass {
+  background-image: url("../images/Cards/grass.png");
+}
+.card.front.triangle.family-triangle .front-wrapper .sectors-row .sector.path {
+  background-image: url("../images/Cards/path.png");
+}
+.card.front.triangle.family-triangle .front-wrapper .sectors-row .sector.water-path {
+  background-image: url("../images/Cards/water-path.png");
+}
+
+/*# sourceMappingURL=cards-family-triangle.css.map */

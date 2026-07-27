@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+
+    "noImplicitAny": false,
+    "strict": false,
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+
+  "exclude": [
+    "node_modules"
+  ]
+}
