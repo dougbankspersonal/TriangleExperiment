@@ -1,5 +1,29 @@
-.pseudo-image.flower {
-  background-image: url("../images/Cards/flower.png");
+.pseudo-image.flower-0 {
+  background-image: url("../images/cards/flower-0.png");
+}
+
+.pseudo-image.flower-1 {
+  background-image: url("../images/cards/flower-1.png");
+}
+
+.pseudo-image.flower-2 {
+  background-image: url("../images/cards/flower-2.png");
+}
+
+.pseudo-image.player-0 {
+  background-image: url("../images/cards/player-0.png");
+}
+
+.pseudo-image.player-1 {
+  background-image: url("../images/cards/player-1.png");
+}
+
+.pseudo-image.player-2 {
+  background-image: url("../images/cards/player-2.png");
+}
+
+.pseudo-image.player-3 {
+  background-image: url("../images/cards/player-3.png");
 }
 
 /*# sourceMappingURL=images.css.map */

@@ -1,33 +1,50 @@
 .card.front.triangle.family-triangle {
   font-family: Special Elite, monospace;
 
+  .overlay {
+    background-image: url("../SharedWebBoardgame/images/triangle-frame.png");
+  }
+
   .front-wrapper {
     z-index: 0;
 
     .sectors-row {
-      .sector {
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
 
       // Terrains
-      .sector.water {
-        background-image: url("../images/Cards/water.png");
+      .sector.tri-red {
+        background-image: url("../images/cards/tri-red.png");
       }
 
-      .sector.grass {
-        background-image: url("../images/Cards/grass.png");
+      .sector.tri-blue {
+        background-image: url("../images/cards/tri-blue.png");
       }
 
-      .sector.path {
-        background-image: url("../images/Cards/path.png");
+      .sector.tri-green {
+        background-image: url("../images/cards/tri-green.png");
       }
 
-      .sector.water-path {
-        background-image: url("../images/Cards/water-path.png");
+      .sector.tri-yellow {
+        background-image: url("../images/cards/tri-yellow.png");
       }
 
+      .sector {
+        .player {
+          position: absolute;
+          transform: translate(-50%, -50%);
+          left: 50%;
+          top: 66.6%;
+          width: 45%;
+          height: 45%;
+          filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+      }
     }
+  }
+}
+
+
+.card.back.family-triangle.triangle {
+  .back-wrapper {
+    background-image: url("../images/cards/card-back.png");
   }
 }

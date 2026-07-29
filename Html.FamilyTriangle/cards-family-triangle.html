@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="SharedWebBoardGame/css/card.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/main.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/image.css" />
-    <link rel="stylesheet" href="SharedWebBoardGame/css/triangle_cards.css" />
+    <link rel="stylesheet" href="SharedWebBoardGame/css/triangle-cards.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -65,8 +65,8 @@
         cardsFamilyTriangleData,
       ) {
         var debugLog = debugLogModule.debugLog;
-
-        var cardHeightPx = genericMeasurements.triangleCardTTSActualHeightPx;
+        var cardHeightPx =
+          genericMeasurements.triangleCardScreentopActualHeightPx;
 
         var sc = systemConfigs.getCardSystemConfigs({
           cardHeightPx: cardHeightPx,
@@ -74,33 +74,35 @@
 
         systemConfigs.setSystemConfigs(sc);
 
+        debugLog(
+          "html",
+          "genericMeasurements.triangleCardScreentopActualHeightPx = ",
+          genericMeasurements.triangleCardScreentopActualHeightPx,
+        );
+
         cardsFamilyTriangleData.generateCardConfigs();
         var numCards = cardsFamilyTriangleData.getNumCards();
 
-        var backConfig = {
-          callback: function (parentNode, index) {
-            var cardBack = triangleCards.addCardBack(
-              parentNode,
-              cardConfigs,
-              index,
-            );
-
-            htmlUtils.addDiv(
-              cardBack,
-              ["deck-label"],
-              "deckLabel",
-              deckConfig.deckLabel,
-            );
-          },
-          classes: ["hoa"],
-        };
+        var cardConfigs = cardsFamilyTriangleData.getCardConfigs();
 
         var backConfigs = [];
-        var configs = cardsFamilyTriangleData.getCardConfigs();
+        for (var i = 0; i < cardsFamilyTriangleData.numPlayers; i++) {
+          var backConfig = {
+            callback: function (parentNode, index) {
+              var cardBackNode = cardsFamilyTriangle.addPlayerCardBack(
+                parentNode,
+                index,
+                i,
+              );
+            },
+          };
+          backConfigs.push(backConfig);
+        }
+
         cards.addCards(
           numCards,
           function (parentNode, index) {
-            return triangleCards.addCardFront(parentNode, configs, index);
+            return triangleCards.addCardFront(parentNode, cardConfigs, index);
           },
           backConfigs,
         );
