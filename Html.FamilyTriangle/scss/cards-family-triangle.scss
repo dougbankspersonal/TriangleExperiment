@@ -42,9 +42,13 @@
   }
 }
 
-
 .card.back.family-triangle.triangle {
   .back-wrapper {
-    background-image: url("../images/cards/card-back.png");
+    background-image: url("../images/cards/tri-boring-card-back.png");
+
+    .single-sector-insert.player.pseudo-image {
+      width: 50%;
+      height: 50%;
+    }
   }
 }

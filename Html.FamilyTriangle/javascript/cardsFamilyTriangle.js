@@ -23,19 +23,34 @@ define([
   triangleCardUtils,
   triangleCards,
 ) {
+  var debugLog = debugLogModule.debugLog;
   function addPlayerCardBack(parentNode, cardIndex, playerIndex) {
-    var classes = ["player-" + playerIndex.toString(), "family-triangle-card"];
-    var cardBackNode = triangleCards.addCardBack(
+    debugLog("addPlayerCardBack", "cardIndex = ", cardIndex);
+    debugLog("addPlayerCardBack", "playerIndex = ", playerIndex);
+    var classes = ["player-" + playerIndex.toString(), "family-triangle"];
+    var cardBackNode = triangleCards.addTriangleCardBack(
       parentNode,
       cardIndex,
       classes,
+      function (wrapperNode) {
+        // Insert the player's image.
+        var imageNode = htmlUtils.addImage(wrapperNode, [
+          "player",
+          "player-" + playerIndex.toString(),
+          "single-sector-insert",
+        ]);
+        console.assert(
+          cardBackNode,
+          "addPlayerCardBack failed to create imageNode",
+        );
+        return imageNode;
+      },
     );
 
-    var imageNode = htmlUtils.addImage(cardBackNode, [
-      "player",
-      "player-" + playerIndex.toString(),
-    ]);
-
+    console.assert(
+      cardBackNode,
+      "addPlayerCardBack failed to create cardBackNode",
+    );
     return cardBackNode;
   }
 

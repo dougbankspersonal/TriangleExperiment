@@ -290,6 +290,8 @@ define([
   return {
     terrainTypes: gTerrainTypes,
     terrainTypesArray: gTerrainTypesArray,
+    numPlayers: gNumPlayers,
+
     generateCardConfigs: generateCardConfigs,
     getCardConfigs: getCardConfigs,
     getNumCards: getNumCards,

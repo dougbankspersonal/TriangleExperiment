@@ -54,6 +54,7 @@
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
         "sharedJavascript/triangleCards",
+        "javascript/cardsFamilyTriangle",
         "javascript/cardsFamilyTriangleData",
       ], function (
         cards,
@@ -62,6 +63,7 @@
         htmlUtils,
         systemConfigs,
         triangleCards,
+        cardsFamilyTriangle,
         cardsFamilyTriangleData,
       ) {
         var debugLog = debugLogModule.debugLog;
@@ -70,6 +72,7 @@
 
         var sc = systemConfigs.getCardSystemConfigs({
           cardHeightPx: cardHeightPx,
+          cardsPerRow: 16,
         });
 
         systemConfigs.setSystemConfigs(sc);
@@ -86,18 +89,36 @@
         var cardConfigs = cardsFamilyTriangleData.getCardConfigs();
 
         var backConfigs = [];
-        for (var i = 0; i < cardsFamilyTriangleData.numPlayers; i++) {
+        for (
+          let playerIndex = 0;
+          playerIndex < cardsFamilyTriangleData.numPlayers;
+          playerIndex++
+        ) {
           var backConfig = {
-            callback: function (parentNode, index) {
-              var cardBackNode = cardsFamilyTriangle.addPlayerCardBack(
+            callback: function (parentNode, cardIndex) {
+              debugLog(
+                "html",
+                "calling cardsFamilyTriangle.addPlayerCardBack",
+                "cardIndex = ",
+                playerIndex,
+              );
+              debugLog(
+                "html",
+                "calling cardsFamilyTriangle.addPlayerCardBack",
+                "cardIndex = ",
+                playerIndex,
+              );
+              return cardsFamilyTriangle.addPlayerCardBack(
                 parentNode,
-                index,
-                i,
+                cardIndex,
+                playerIndex,
               );
             },
           };
           backConfigs.push(backConfig);
         }
+
+        console.log("html", "backConfigs = ", JSON.stringify(backConfigs));
 
         cards.addCards(
           numCards,
