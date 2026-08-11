@@ -44,11 +44,25 @@
 
 .card.back.family-triangle.triangle {
   .back-wrapper {
-    background-image: url("../images/cards/tri-boring-card-back.png");
-
     .single-sector-insert.player.pseudo-image {
       width: 50%;
       height: 50%;
     }
+  }
+
+  .back-wrapper.player-0 {
+    background-image: url("../images/cards/tri-back-player-0.png");
+  }
+
+  .back-wrapper.player-1 {
+    background-image: url("../images/cards/tri-back-player-1.png");
+  }
+
+  .back-wrapper.player-2 {
+    background-image: url("../images/cards/tri-back-player-2.png");
+  }
+
+  .back-wrapper.player-3 {
+    background-image: url("../images/cards/tri-back-player-3.png");
   }
 }

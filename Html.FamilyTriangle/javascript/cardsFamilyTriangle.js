@@ -40,7 +40,7 @@ define([
           "single-sector-insert",
         ]);
         console.assert(
-          cardBackNode,
+          imageNode,
           "addPlayerCardBack failed to create imageNode",
         );
         return imageNode;

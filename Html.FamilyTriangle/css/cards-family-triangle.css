@@ -29,12 +29,21 @@
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
-.card.back.family-triangle.triangle .back-wrapper {
-  background-image: url("../images/cards/tri-boring-card-back.png");
-}
 .card.back.family-triangle.triangle .back-wrapper .single-sector-insert.player.pseudo-image {
   width: 50%;
   height: 50%;
+}
+.card.back.family-triangle.triangle .back-wrapper.player-0 {
+  background-image: url("../images/cards/tri-back-player-0.png");
+}
+.card.back.family-triangle.triangle .back-wrapper.player-1 {
+  background-image: url("../images/cards/tri-back-player-1.png");
+}
+.card.back.family-triangle.triangle .back-wrapper.player-2 {
+  background-image: url("../images/cards/tri-back-player-2.png");
+}
+.card.back.family-triangle.triangle .back-wrapper.player-3 {
+  background-image: url("../images/cards/tri-back-player-3.png");
 }
 
 /*# sourceMappingURL=cards-family-triangle.css.map */
