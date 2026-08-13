@@ -1,0 +1,49 @@
+.card.front.triangle.katami {
+  font-family: Special Elite, monospace;
+}
+.card.front.triangle.katami .overlay {
+  background-image: url("../SharedWebBoardgame/images/triangle-frame.png");
+}
+.card.front.triangle.katami .front-wrapper {
+  z-index: 0;
+}
+.card.front.triangle.katami .front-wrapper .sectors-row .sector.kat-path {
+  background-image: url("../images/cards/kat-path.png");
+}
+.card.front.triangle.katami .front-wrapper .sectors-row .sector.kat-water {
+  background-image: url("../images/cards/kat-water.png");
+}
+.card.front.triangle.katami .front-wrapper .sectors-row .sector.kat-grass {
+  background-image: url("../images/cards/kat-grass.png");
+}
+.card.front.triangle.katami .front-wrapper .sectors-row .sector.kat-water-path {
+  background-image: url("../images/cards/kat-water-path.png");
+}
+.card.front.triangle.katami .front-wrapper .sectors-row .sector .player {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 66.6%;
+  width: 39%;
+  height: 30%;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.card.back.katami.triangle .back-wrapper .single-sector-insert.player.pseudo-image {
+  width: 50%;
+  height: 50%;
+}
+.card.back.katami.triangle .back-wrapper.player-0 {
+  background-image: url("../images/cards/tri-back-player-0.png");
+}
+.card.back.katami.triangle .back-wrapper.player-1 {
+  background-image: url("../images/cards/tri-back-player-1.png");
+}
+.card.back.katami.triangle .back-wrapper.player-2 {
+  background-image: url("../images/cards/tri-back-player-2.png");
+}
+.card.back.katami.triangle .back-wrapper.player-3 {
+  background-image: url("../images/cards/tri-back-player-3.png");
+}
+
+/*# sourceMappingURL=cards-katami.css.map */

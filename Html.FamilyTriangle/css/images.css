@@ -10,19 +10,19 @@
   background-image: url("../images/cards/flower-2.png");
 }
 
-.pseudo-image.player-0 {
+.pseudo-image.player-icon-0 {
   background-image: url("../images/cards/player-0.png");
 }
 
-.pseudo-image.player-1 {
+.pseudo-image.player-icon-1 {
   background-image: url("../images/cards/player-1.png");
 }
 
-.pseudo-image.player-2 {
+.pseudo-image.player-icon-2 {
   background-image: url("../images/cards/player-2.png");
 }
 
-.pseudo-image.player-3 {
+.pseudo-image.player-icon-3 {
   background-image: url("../images/cards/player-3.png");
 }
 
