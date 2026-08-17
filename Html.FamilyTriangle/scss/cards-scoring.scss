@@ -1,0 +1,57 @@
+.card.scoring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  border: 10px solid #000;
+}
+
+.card.scoring.back {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 50px;
+  background-image: url("../images/cards/parchment.png");
+
+  .text {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .pseudo-image.scoring-symbol {
+    width: 50%;
+    height: 50%;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  }
+}
+
+.card.scoring.front {
+  background-image: url("../images/cards/parchment.png");
+
+  .text {
+    padding: 10px;
+    font-family: "Lora", serif;
+    font-size: 35px;
+  }
+
+  .pseudo-image.scoring-symbol {
+    width: 30%;
+    height: 30%;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  }
+}
+
+.card.scoring.player-0 {
+  border-color: #58060d;
+}
+
+.card.scoring.player-1 {
+  border-color: #0e420e;
+}
+
+.card.scoring.player-2 {
+  border-color: #3f300d;
+}
+
+.card.scoring.player-3 {
+  border-color: #081020;
+}

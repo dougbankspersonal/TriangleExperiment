@@ -11,19 +11,19 @@
 }
 
 .pseudo-image.player-icon-0 {
-  background-image: url("../images/cards/player-0.png");
+  background-image: url("../images/cards/player-icon-0.png");
 }
 
 .pseudo-image.player-icon-1 {
-  background-image: url("../images/cards/player-1.png");
+  background-image: url("../images/cards/player-icon-1.png");
 }
 
 .pseudo-image.player-icon-2 {
-  background-image: url("../images/cards/player-2.png");
+  background-image: url("../images/cards/player-icon-2.png");
 }
 
 .pseudo-image.player-icon-3 {
-  background-image: url("../images/cards/player-3.png");
+  background-image: url("../images/cards/player-icon-3.png");
 }
 
 /*# sourceMappingURL=images.css.map */

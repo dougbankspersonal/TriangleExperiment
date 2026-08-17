@@ -1,0 +1,17 @@
+/* ===========================================================
+   BRONZE
+   =========================================================== */
+.die.tokens .face.token {
+  border-width: 7px;
+  border-radius: 50%;
+  border-style: solid;
+  box-sizing: border-box;
+  background-image: url("../images/cards/parchment.png");
+}
+.die.tokens .face.token .pseudo-image {
+  width: 60%;
+  height: 60%;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/*# sourceMappingURL=tokens.css.map */

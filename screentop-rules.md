@@ -1,10 +1,12 @@
-# Acquired Taste
+# Pyramid of Influence
 
-_You gotta taste this!_
+# Setup
+
+All Players draw a tile from their deck.
 
 # Player Turn
 
-Draw and play a tile.
+Play a tile, then draw a new tile. Optionally, spend tokens to trigger a round of scoring.
 
 ## Rules for Placement
 
@@ -16,23 +18,32 @@ Draw and play a tile.
   - Any sector can cover a blue sector.
   - Otherwise, the covered sector must match the color or symbol of the covering sector.
 
-## Sector counting
+## Token Collection and Allocation.
 
-When a new tile is played, update the sector counter to reflect the total number of sectors visible in the play area.
+When a tile is played _under_ other tiles, the active player collects one token for each of his symbols on the tile which is covered by the existing tiles.
+
+When a tile is played _over_ other tiles, for each player symbol covered by the new tile, that player collects a token.
+
+When a player collects a token they must immediately place it on one of their active scoring cards.
 
 # Scoring
 
-When the sector counter goes up to or through a multiple of 20, do a round of scoring.
+When tokens are added to a scoring card, check to see if the card is triggered:
 
-Score each contiguous region of same-colored sectors.
+- If the player has 3 active scoring cards, a card is triggered by having 4 tokens
+- If the player has 2 active scoring cards, a card is triggered by having 6 tokens.
+- If the player has 1 active scoring card, a card is triggered by having 8 tokens.
 
-- A player is "dominant" if no other player has more symbols in the region (more than one player can be dominant)
-- Each dominant player scores one point for each non-dominant symbol in the region.
-- Examples:
-  - A region has 3 sushi. Sushi is dominant, but there are no non-dominant symbols. Sushi scores 0.
-  - A region has 2 sushi and 2 pizza. Both are dominant. But again there are no non-dominant symbols so neither scores anything.
-  - A region has 3 sushi, 2 pizza, and 2 dumpling. Sushi is dominant and scores 4 points, one for each non-dominant symbol.
+When a scoring card is triggered: remove all tokens, score regions according to the rules on the card, and flip the card: it is not inactive.
+
+## Scoring a region
+
+Determine which player(s) are dominant: a player is dominant if no player has more symbols in the rgion.
+Each Dominant player scores one point for every opposing symbol in the region.
+Region scores should be kept separate by type: a desert region generates desert points, etc.
 
 # Game End
 
-The game ends after the 3rd scoring.
+The game ends when either all players have used all of their scoring cards, or all tiles have been played.
+
+A player's final score is the _lowest_ of the 3 different land type scores.

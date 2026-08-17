@@ -1,31 +1,10 @@
 define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
-  "sharedJavascript/triangleCardUtils",
+  "javascript/gameInfo",
   "dojo/domReady!",
-], function (cards, debugLogModule, triangleCardUtils) {
+], function (cards, debugLogModule, gameInfo) {
   var debugLog = debugLogModule.debugLog;
-  //-----------------------------------
-  //
-  // Constants
-  //
-  //-----------------------------------
-  const gNumPlayers = 4;
-
-  const gTerrainTypeRed = "tri-red";
-  const gTerrainTypeBlue = "tri-blue";
-  const gTerrainTypeGreen = "tri-green";
-  const gTerrainTypeYellow = "tri-yellow";
-
-  const gTerrainTypes = {
-    Red: gTerrainTypeRed,
-    Blue: gTerrainTypeBlue,
-    Green: gTerrainTypeGreen,
-    Yellow: gTerrainTypeYellow,
-  };
-
-  const gTerrainTypesArray = Object.values(gTerrainTypes);
-
   //-----------------------------------
   //
   // Global state.
@@ -71,7 +50,7 @@ define([
       for (var j = 0; j < copiedCardConfig.sectorDescriptors.length; j++) {
         var sectorDescriptor = copiedCardConfig.sectorDescriptors[j];
         // Nobody can own blue...
-        if (!sectorDescriptor.classes.includes(gTerrainTypeBlue)) {
+        if (!sectorDescriptor.classes.includes(gameInfo.terrainTypes.Blue)) {
           sectorDescriptor.overlaysByType = {
             player: ["player-icon-" + playerIndex],
           };
@@ -117,113 +96,139 @@ define([
     // Keep in mind that the 3rd item (index 2) is in the middle of the triangle.
     var retVal = [
       // Middle & one corner match, other two are blue.
-      [gTerrainTypeRed, gTerrainTypeBlue, gTerrainTypeRed, gTerrainTypeBlue],
       [
-        gTerrainTypeYellow,
-        gTerrainTypeBlue,
-        gTerrainTypeYellow,
-        gTerrainTypeBlue,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Blue,
       ],
       [
-        gTerrainTypeGreen,
-        gTerrainTypeBlue,
-        gTerrainTypeGreen,
-        gTerrainTypeBlue,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
+      ],
+      [
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Blue,
       ],
 
       // Middle & one corner blue, other two match.
-      [gTerrainTypeBlue, gTerrainTypeRed, gTerrainTypeBlue, gTerrainTypeRed],
       [
-        gTerrainTypeBlue,
-        gTerrainTypeYellow,
-        gTerrainTypeBlue,
-        gTerrainTypeYellow,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Red,
       ],
       [
-        gTerrainTypeBlue,
-        gTerrainTypeGreen,
-        gTerrainTypeBlue,
-        gTerrainTypeGreen,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Yellow,
+      ],
+      [
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Green,
       ],
 
       // Middle & one corner match, other two also match, non-blue.
       [
-        gTerrainTypeRed,
-        gTerrainTypeYellow,
-        gTerrainTypeRed,
-        gTerrainTypeYellow,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Yellow,
       ],
-      [gTerrainTypeGreen, gTerrainTypeRed, gTerrainTypeGreen, gTerrainTypeRed],
       [
-        gTerrainTypeYellow,
-        gTerrainTypeGreen,
-        gTerrainTypeYellow,
-        gTerrainTypeGreen,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Red,
+      ],
+      [
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Green,
       ],
 
       // Middle & one corner match, other one non-blue one blue.
-      [gTerrainTypeRed, gTerrainTypeGreen, gTerrainTypeRed, gTerrainTypeBlue],
       [
-        gTerrainTypeGreen,
-        gTerrainTypeYellow,
-        gTerrainTypeGreen,
-        gTerrainTypeBlue,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Blue,
       ],
       [
-        gTerrainTypeYellow,
-        gTerrainTypeRed,
-        gTerrainTypeYellow,
-        gTerrainTypeBlue,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Blue,
+      ],
+      [
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
       ],
 
       // All 4 in different perms.
       [
-        gTerrainTypeRed,
-        gTerrainTypeGreen,
-        gTerrainTypeYellow,
-        gTerrainTypeBlue,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
       ],
       [
-        gTerrainTypeGreen,
-        gTerrainTypeYellow,
-        gTerrainTypeBlue,
-        gTerrainTypeRed,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Red,
       ],
       [
-        gTerrainTypeYellow,
-        gTerrainTypeBlue,
-        gTerrainTypeRed,
-        gTerrainTypeGreen,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Green,
       ],
       [
-        gTerrainTypeBlue,
-        gTerrainTypeRed,
-        gTerrainTypeGreen,
-        gTerrainTypeYellow,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Yellow,
       ],
 
       // Middle and one don't match, others do, non-blue.
       [
-        gTerrainTypeRed,
-        gTerrainTypeYellow,
-        gTerrainTypeGreen,
-        gTerrainTypeYellow,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Yellow,
       ],
       [
-        gTerrainTypeYellow,
-        gTerrainTypeGreen,
-        gTerrainTypeRed,
-        gTerrainTypeGreen,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Green,
       ],
-      [gTerrainTypeGreen, gTerrainTypeRed, gTerrainTypeYellow, gTerrainTypeRed],
+      [
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Red,
+      ],
     ];
 
     return retVal;
-    gTerrainTypeGreen;
   }
 
   function generateCardConfigs() {
-    console.assert(gCardConfigs === null, "generateCardConfigs called twice");
+    if (gCardConfigs !== null) {
+      return gCardConfigs;
+    }
     gCardConfigs = [];
 
     // Just worrying about sectors here.
@@ -243,7 +248,7 @@ define([
       convertTerrainTypeArraysToCardConfigs(terrainTypeArrays);
 
     // One copy for each player.
-    for (var i = 0; i < gNumPlayers; i++) {
+    for (var i = 0; i < gameInfo.numPlayers; i++) {
       var playerCardConfigs = structuredClone(tmpCardConfigs);
       playerCardConfigs = decorateWithPlayerOverlay(playerCardConfigs, i);
       gCardConfigs = gCardConfigs.concat(playerCardConfigs);
@@ -259,6 +264,8 @@ define([
   }
 
   function getCardConfigs() {
+    generateCardConfigs();
+
     console.assert(
       gCardConfigs,
       "getNumCards called before generateCardConfigs",
@@ -268,6 +275,7 @@ define([
   }
 
   function getNumCards() {
+    generateCardConfigs();
     console.assert(
       gCardConfigs,
       "getNumCards called before generateCardConfigs",
@@ -277,11 +285,6 @@ define([
 
   // This returned object becomes the defined value of this module
   return {
-    terrainTypes: gTerrainTypes,
-    terrainTypesArray: gTerrainTypesArray,
-    numPlayers: gNumPlayers,
-
-    generateCardConfigs: generateCardConfigs,
     getCardConfigs: getCardConfigs,
     getNumCards: getNumCards,
   };

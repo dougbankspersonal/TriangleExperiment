@@ -1,5 +1,7 @@
 .card.front.triangle.color {
-  font-family: Special Elite, monospace;
+  font-family:
+    Special Elite,
+    monospace;
 }
 .card.front.triangle.color .overlay {
   background-image: url("../SharedWebBoardgame/images/triangle-frame.png");
@@ -29,7 +31,9 @@
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
-.card.back.color.triangle .back-wrapper .single-sector-insert.player.pseudo-image {
+.card.back.color.triangle
+  .back-wrapper
+  .single-sector-insert.player.pseudo-image {
   width: 50%;
   height: 50%;
 }
