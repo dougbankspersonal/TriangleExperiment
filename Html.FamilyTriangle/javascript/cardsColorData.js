@@ -112,6 +112,116 @@ define([
   }
     */
 
+  function generateTerrainTypeArrays() {
+    // Just gonna do this by hand.
+    // Keep in mind that the 3rd item (index 2) is in the middle of the triangle.
+    var retVal = [
+      // Middle & one corner match, other two are blue.
+      [gTerrainTypeRed, gTerrainTypeBlue, gTerrainTypeRed, gTerrainTypeBlue],
+      [
+        gTerrainTypeYellow,
+        gTerrainTypeBlue,
+        gTerrainTypeYellow,
+        gTerrainTypeBlue,
+      ],
+      [
+        gTerrainTypeGreen,
+        gTerrainTypeBlue,
+        gTerrainTypeGreen,
+        gTerrainTypeBlue,
+      ],
+
+      // Middle & one corner blue, other two match.
+      [gTerrainTypeBlue, gTerrainTypeRed, gTerrainTypeBlue, gTerrainTypeRed],
+      [
+        gTerrainTypeBlue,
+        gTerrainTypeYellow,
+        gTerrainTypeBlue,
+        gTerrainTypeYellow,
+      ],
+      [
+        gTerrainTypeBlue,
+        gTerrainTypeGreen,
+        gTerrainTypeBlue,
+        gTerrainTypeGreen,
+      ],
+
+      // Middle & one corner match, other two also match, non-blue.
+      [
+        gTerrainTypeRed,
+        gTerrainTypeYellow,
+        gTerrainTypeRed,
+        gTerrainTypeYellow,
+      ],
+      [gTerrainTypeGreen, gTerrainTypeRed, gTerrainTypeGreen, gTerrainTypeRed],
+      [
+        gTerrainTypeYellow,
+        gTerrainTypeGreen,
+        gTerrainTypeYellow,
+        gTerrainTypeGreen,
+      ],
+
+      // Middle & one corner match, other one non-blue one blue.
+      [gTerrainTypeRed, gTerrainTypeGreen, gTerrainTypeRed, gTerrainTypeBlue],
+      [
+        gTerrainTypeGreen,
+        gTerrainTypeYellow,
+        gTerrainTypeGreen,
+        gTerrainTypeBlue,
+      ],
+      [
+        gTerrainTypeYellow,
+        gTerrainTypeRed,
+        gTerrainTypeYellow,
+        gTerrainTypeBlue,
+      ],
+
+      // All 4 in different perms.
+      [
+        gTerrainTypeRed,
+        gTerrainTypeGreen,
+        gTerrainTypeYellow,
+        gTerrainTypeBlue,
+      ],
+      [
+        gTerrainTypeGreen,
+        gTerrainTypeYellow,
+        gTerrainTypeBlue,
+        gTerrainTypeRed,
+      ],
+      [
+        gTerrainTypeYellow,
+        gTerrainTypeBlue,
+        gTerrainTypeRed,
+        gTerrainTypeGreen,
+      ],
+      [
+        gTerrainTypeBlue,
+        gTerrainTypeRed,
+        gTerrainTypeGreen,
+        gTerrainTypeYellow,
+      ],
+
+      // Middle and one don't match, others do, non-blue.
+      [
+        gTerrainTypeRed,
+        gTerrainTypeYellow,
+        gTerrainTypeGreen,
+        gTerrainTypeYellow,
+      ],
+      [
+        gTerrainTypeYellow,
+        gTerrainTypeGreen,
+        gTerrainTypeRed,
+        gTerrainTypeGreen,
+      ],
+      [gTerrainTypeGreen, gTerrainTypeRed, gTerrainTypeYellow, gTerrainTypeRed],
+    ];
+
+    return retVal;
+    gTerrainTypeGreen;
+  }
+
   function generateCardConfigs() {
     console.assert(gCardConfigs === null, "generateCardConfigs called twice");
     gCardConfigs = [];
@@ -120,8 +230,7 @@ define([
     // This algorithm:
     // A piece always has 2 water and 2 of something else.  Other things may match or not.
     // Some fraction of the water is actually water-path.
-    var terrainTypeArrays =
-      triangleCardUtils.getLegalUniqueCombos(gTerrainTypesArray);
+    var terrainTypeArrays = generateTerrainTypeArrays();
 
     debugLog(
       "generateCardConfigs",

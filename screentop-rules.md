@@ -1,3 +1,7 @@
+# Acquired Taste
+
+_You gotta taste this!_
+
 # Player Turn
 
 Draw and play a tile.
@@ -16,16 +20,19 @@ Draw and play a tile.
 
 When a new tile is played, update the sector counter to reflect the total number of sectors visible in the play area.
 
-## Scoring
+# Scoring
 
-When the sector counter goes up to or through a multiple of 10, do a round of scoring.
+When the sector counter goes up to or through a multiple of 20, do a round of scoring.
 
 Score each contiguous region of same-colored sectors.
 
-- Any symbol which is not outnumbered by any other symbol is "dominant" (if there are ties, more than one symbol can be dominant).
-- Dominant symbols score one point for each sector in the contiguous region.
-- If a region is has only one symbol, that symbol is "unopposed": unopposed regions score 2 points per sector for the dominant symbol.
+- A player is "dominant" if no other player has more symbols in the region (more than one player can be dominant)
+- Each dominant player scores one point for each non-dominant symbol in the region.
+- Examples:
+  - A region has 3 sushi. Sushi is dominant, but there are no non-dominant symbols. Sushi scores 0.
+  - A region has 2 sushi and 2 pizza. Both are dominant. But again there are no non-dominant symbols so neither scores anything.
+  - A region has 3 sushi, 2 pizza, and 2 dumpling. Sushi is dominant and scores 4 points, one for each non-dominant symbol.
 
-## Game End
+# Game End
 
-The game ends after the 4th scoring.
+The game ends after the 3rd scoring.
