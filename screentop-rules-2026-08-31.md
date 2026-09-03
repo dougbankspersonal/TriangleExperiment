@@ -107,11 +107,8 @@ The Supervisor moves all drafted Resolutions to some central location and orders
 
 Frmo left to right, the supervisor runs a vote for For each Resolution.
 
-Starting with the Supervisor and proceeding clockwise, players may spend one or more of their Vote tokens for or against the Resolution.
-
-A player a may pass.
-
-Once all players have passed, count the yay and nay votes. A Resolution needs a majority of yay votes to pass.
+Players secretly select how many Votes they want to cast.
+Starting with Supervisor and going clockwise, players reveal votes and whether they are for or against.
 
 If the Resolution passes, add a "Passed" token and move it to some central location with all the other Passed Resolutions.
 
@@ -126,12 +123,12 @@ Once all Resolutions are voted on, discard any unused Votes.
 
 ## Score
 
-After the Referendum is complete, do a round of scoring. Only newly passed Resolutions score.
+After the Referendum is complete, score each newly passed Resolution.
 
 To score a resolution: for each Faction Symbol that appears on the Resolution:
 
-- Count opposing Faction symbols in neighorhoods matching Resolution neighborhood type(s).
-- Multiply by the number of that Faction Symbol on the Resolution.
+- Award one point per opposing Faction symbols in neighorhoods matching Resolution neighborhood type(s).
+- Note that if a Faction Symbol appears Nx on the Resolution, these points are awarded Nx.
 
 Add this number to the Faction's total score.
 
@@ -148,5 +145,9 @@ This may go around several times until everyone has collected all the Bonus card
 
 # Game End
 
-- 9 or more Passed or Failed Resolutions (at least one of which is Passsed)
-- A player is unable to play a tile.
+At the end of a player's turn, the game ends if:
+
+- 2 Resolutions per player (or more) have been voted on and at least one has passed.
+- Any player is out of Tiles.
+
+Highest score wins. In case of a tie, player with fewest Faction symbols on the board wins.
