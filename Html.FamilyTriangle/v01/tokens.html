@@ -45,14 +45,16 @@
         "dojo/dom",
         "sharedJavascript/systemConfigs",
         "sharedJavascript/dieUtils",
-        "javascript/tokens",
-      ], function (dom, systemConfigs, dieUtils, tokens) {
+        "javascript/tokensData",
+      ], function (dom, systemConfigs, dieUtils, tokensData) {
         systemConfigs.setSystemConfigs({});
 
         // Make the body node.
         var bodyNode = dom.byId("body");
 
-        dieUtils.addDiceNode(bodyNode, tokens.getTokenDiceConfigs());
+        dieUtils.addDiceNode(bodyNode, tokensData.getTokenDiceConfigs(), [
+          "tokens",
+        ]);
         return bodyNode;
       });
     </script>

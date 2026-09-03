@@ -1,41 +1,35 @@
-.card.front.triangle.color {
-  font-family:
-    Special Elite,
-    monospace;
-}
 .card.front.triangle.color .overlay {
   background-image: url("../SharedWebBoardgame/images/triangle-frame.png");
 }
 .card.front.triangle.color .front-wrapper {
   z-index: 0;
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-red {
-  background-image: url("../images/cards/tri-red.png");
+.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-city {
+  background-image: url("../images/cards/tri-city.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-blue {
-  background-image: url("../images/cards/tri-blue.png");
+.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-swamp {
+  background-image: url("../images/cards/tri-swamp.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-green {
-  background-image: url("../images/cards/tri-green.png");
+.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-farm {
+  background-image: url("../images/cards/tri-farm.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-yellow {
-  background-image: url("../images/cards/tri-yellow.png");
+.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-suburb {
+  background-image: url("../images/cards/tri-suburb.png");
 }
 .card.front.triangle.color .front-wrapper .sectors-row .sector .player {
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
   top: 66.6%;
-  width: 33%;
-  height: 33%;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  width: 40%;
+  height: 40%;
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
 }
 
-.card.back.color.triangle
-  .back-wrapper
-  .single-sector-insert.player.pseudo-image {
-  width: 50%;
-  height: 50%;
+.card.back.color.triangle .back-wrapper .single-sector-insert.player.pseudo-image {
+  width: 45%;
+  height: 45%;
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
 }
 .card.back.color.triangle .back-wrapper.player-0 {
   background-image: url("../images/cards/tri-back-player-0.png");

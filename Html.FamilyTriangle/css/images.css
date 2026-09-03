@@ -26,4 +26,40 @@
   background-image: url("../images/cards/player-icon-3.png");
 }
 
+.pseudo-image.square-city {
+  background-image: url("../images/cards/square-city.png");
+}
+
+.pseudo-image.square-farm {
+  background-image: url("../images/cards/square-farm.png");
+}
+
+.pseudo-image.square-suburb {
+  background-image: url("../images/cards/square-suburb.png");
+}
+
+.pseudo-image.green-check {
+  background-image: url("../images/cards/green-check.png");
+}
+
+.pseudo-image.red-x {
+  background-image: url("../images/cards/red-x.png");
+}
+
+.pseudo-image.vote {
+  background-image: url("../images/cards/vote.png");
+}
+
+.pseudo-image.hybrid-city-suburb {
+  background-image: url("../images/cards/hybrid-city-suburb.png");
+}
+
+.pseudo-image.hybrid-farm-city {
+  background-image: url("../images/cards/hybrid-farm-city.png");
+}
+
+.pseudo-image.hybrid-suburb-farm {
+  background-image: url("../images/cards/hybrid-suburb-farm.png");
+}
+
 /*# sourceMappingURL=images.css.map */

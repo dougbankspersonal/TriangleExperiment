@@ -11,32 +11,61 @@ define([
   //
   //-----------------------------------
   var gCardConfigs = null;
+  const gAllBlueCount = 2;
 
   //-----------------------------------
   //
   // Functions
   //
   //-----------------------------------
+  function terrainTypeToSectorClass(terrainType) {
+    return "tri-" + terrainType;
+  }
+
+  function terrrainTypeArrayToSectorDescriptors(terrainTypeArray) {
+    var sectorDescriptors = [];
+    console.assert(
+      terrainTypeArray.length === 4,
+      "terrainTypeArray.length !== 4",
+    );
+    for (var i = 0; i < terrainTypeArray.length; i++) {
+      var triangleTerrainType = terrainTypeToSectorClass(terrainTypeArray[i]);
+      var sectorDescriptor = { classes: [triangleTerrainType] };
+      sectorDescriptors.push(sectorDescriptor);
+    }
+    return sectorDescriptors;
+  }
+
+  function terrainTypeArrayToCardConfig(terrainTypeArray) {
+    var sectorDescriptors =
+      terrrainTypeArrayToSectorDescriptors(terrainTypeArray);
+    var cardConfig = {
+      sectorDescriptors: sectorDescriptors,
+      classes: ["color"],
+      overlayClass: "color-overlay",
+    };
+    return cardConfig;
+  }
+
+  function generateAllBlueCardConfig() {
+    var allBlueTerrainTypeArray = [
+      gameInfo.terrainTypes.Blue,
+      gameInfo.terrainTypes.Blue,
+      gameInfo.terrainTypes.Blue,
+      gameInfo.terrainTypes.Blue,
+    ];
+
+    var allBlueCardConfig = terrainTypeArrayToCardConfig(
+      allBlueTerrainTypeArray,
+    );
+    return allBlueCardConfig;
+  }
+
   function convertTerrainTypeArraysToCardConfigs(terrainTypeArrays) {
     var cardConfigs = [];
 
     for (var terrainTypeArray of terrainTypeArrays) {
-      var sectorDescriptors = [];
-      console.assert(
-        terrainTypeArray.length === 4,
-        "terrainTypeArray.length !== 4",
-      );
-      for (var i = 0; i < terrainTypeArray.length; i++) {
-        var terrainType = terrainTypeArray[i];
-        var sectorDescriptor = { classes: [terrainType] };
-        sectorDescriptors.push(sectorDescriptor);
-      }
-
-      var cardConfig = {
-        sectorDescriptors: sectorDescriptors,
-        classes: ["color"],
-        overlayClass: "color-overlay",
-      };
+      var cardConfig = terrainTypeArrayToCardConfig(terrainTypeArray);
       cardConfigs.push(cardConfig);
     }
 
@@ -45,12 +74,16 @@ define([
 
   function decorateWithPlayerOverlay(cardConfigs, playerIndex) {
     var retVal = [];
+    const blueSectorClass = terrainTypeToSectorClass(
+      gameInfo.terrainTypes.Blue,
+    );
+
     for (var i = 0; i < cardConfigs.length; i++) {
       var copiedCardConfig = structuredClone(cardConfigs[i]);
       for (var j = 0; j < copiedCardConfig.sectorDescriptors.length; j++) {
         var sectorDescriptor = copiedCardConfig.sectorDescriptors[j];
         // Nobody can own blue...
-        if (!sectorDescriptor.classes.includes(gameInfo.terrainTypes.Blue)) {
+        if (!sectorDescriptor.classes.includes(blueSectorClass)) {
           sectorDescriptor.overlaysByType = {
             player: ["player-icon-" + playerIndex],
           };
@@ -259,6 +292,12 @@ define([
       "cardConfigs = ",
       JSON.stringify(gCardConfigs),
     );
+
+    // Add some all-swamps.
+    for (var i = 0; i < gAllBlueCount; i++) {
+      var allBlueCardConfig = generateAllBlueCardConfig();
+      gCardConfigs.push(allBlueCardConfig);
+    }
 
     return gCardConfigs;
   }

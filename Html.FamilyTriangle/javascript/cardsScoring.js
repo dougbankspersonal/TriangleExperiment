@@ -1,11 +1,21 @@
 define([
+  "dojo/dom-style",
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
   "sharedJavascript/htmlUtils",
+  "sharedJavascript/screentop/seatColors",
   "javascript/gameInfo",
   "javascript/cardsScoringData",
   "dojo/domReady!",
-], function (cards, debugLogModule, htmlUtils, gameInfo, cardsScoringData) {
+], function (
+  domStyle,
+  cards,
+  debugLogModule,
+  htmlUtils,
+  seatColors,
+  gameInfo,
+  cardsScoringData,
+) {
   var debugLog = debugLogModule.debugLog;
 
   function addCardFront(parent, index) {
@@ -24,11 +34,25 @@ define([
       cardConfig.text,
     );
 
-    var symbolNode = htmlUtils.addImage(
-      cardFrontNode,
-      ["player-icon-" + cardConfig.playerIndex, "scoring-symbol"],
-      "scoring-symbol",
+    var colorFamily = seatColors.getLightColorFamilyForSeat(
+      cardConfig.playerIndex,
     );
+
+    debugLog(
+      "addCardFront",
+      "Color family for player " + cardConfig.playerIndex + ": ",
+      colorFamily,
+    );
+
+    domStyle.set(cardFrontNode, {
+      "border-color": colorFamily.border,
+      background:
+        "linear-gradient(to bottom, " +
+        "#ffffff" +
+        " 0%, " +
+        colorFamily.gradient2 +
+        " 100%)",
+    });
 
     return cardFrontNode;
   }
@@ -53,6 +77,18 @@ define([
       ["player-icon-" + index, "scoring-symbol"],
       "scoring-symbol",
     );
+
+    var colorFamily = seatColors.getLightColorFamilyForSeat(index);
+
+    debugLog(
+      "addCardFront",
+      "Color family for player " + index + ": ",
+      colorFamily,
+    );
+
+    domStyle.set(cardBackNode, {
+      "border-color": colorFamily.border,
+    });
 
     return cardBackNode;
   }

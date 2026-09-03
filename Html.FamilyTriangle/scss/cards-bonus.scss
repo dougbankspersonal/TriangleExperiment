@@ -1,0 +1,46 @@
+.card.bonus.front,
+.card.bonus.back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+
+  border: 12px solid #D4AF37;
+  color: #440088;
+}
+
+.card.bonus.back {
+  justify-content: center;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 70px;
+  background-image: url("../images/cards/marble-pink.png");
+
+  .text {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.card.bonus.front {
+  justify-content: start;
+  background: linear-gradient(135deg,
+      #fffdf5 0%,
+      #f5edcf 100%);
+
+  .title {
+    padding-top: 25px;
+    text-decoration: underline;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 28px;
+  }
+
+  .text {
+    padding: 10px;
+    font-family: "Lora", serif;
+    font-size: 22px;
+
+    .mini {
+      font-size: 18px;
+      line-height: 1.2;
+    }
+  }
+}

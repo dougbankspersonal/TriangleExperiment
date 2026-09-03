@@ -1,19 +1,77 @@
-/* ===========================================================
-   BRONZE
-   =========================================================== */
+.dice.tokens {
+  align-items: start;
 
-.die.tokens {
-  .face.token {
-    border-width: 7px;
-    border-radius: 50%;
-    border-style: solid;
-    box-sizing: border-box;
-    background-image: url("../images/cards/parchment.png");
+  .die.tokens {
+    display: flex;
+    align-items: start;
+  }
 
-    .pseudo-image {
-      width: 60%;
-      height: 60%;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  .die.tokens {
+    .face {
+      border-width: 7px;
+      border-style: solid;
+      box-sizing: border-box;
+    }
+  }
+
+  .die.tokens.player {
+    .face.token {
+      border-radius: 50%;
+      background-image: url("../images/cards/marble-pale.png");
+
+      .pseudo-image {
+        width: 60%;
+        height: 60%;
+        filter: drop-shadow(0 4px 8px rg8a(0, 0, 0, 0.3));
+      }
+    }
+  }
+
+  .die.tokens.terrain,
+  .die.tokens.voting-tools {
+    .face.token {
+      border-radius: 7%;
+    }
+  }
+
+  .die.tokens.voting-tools {
+    .face {
+      position: relative;
+
+      .pseudo-image {
+        width: 60%;
+        height: 60%;
+        filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
+        position: absolute;
+        top: 10px;
+      }
+
+
+      .text {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 24px;
+        bottom: 10px;
+        position: absolute;
+        color: #111;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-shadow:
+          1px 1px 2px rgba(255, 255, 255, 0.95),
+          -1px -1px 2px rgba(255, 255, 255, 0.95),
+          0 0 5px rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    .face.pass {
+      background: linear-gradient(to bottom, #ffffff, #def7e5);
+    }
+
+    .face.fail {
+      background: linear-gradient(to bottom, #ffffff, #ffe3e0);
+    }
+
+    .face.vote {
+      background: linear-gradient(to bottom, #ffffff, #bebebe);
     }
   }
 }

@@ -4,13 +4,13 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 10px solid #000;
+  border: 12px solid #000;
 }
 
 .card.scoring.back {
   font-family: "Bebas Neue", sans-serif;
   font-size: 50px;
-  background-image: url("../images/cards/parchment.png");
+  background-image: url("../images/cards/marble.png");
 }
 .card.scoring.back .text {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
@@ -18,37 +18,13 @@
 .card.scoring.back .pseudo-image.scoring-symbol {
   width: 50%;
   height: 50%;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
 }
 
-.card.scoring.front {
-  background-image: url("../images/cards/parchment.png");
-}
 .card.scoring.front .text {
   padding: 10px;
   font-family: "Lora", serif;
   font-size: 35px;
-}
-.card.scoring.front .pseudo-image.scoring-symbol {
-  width: 30%;
-  height: 30%;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-}
-
-.card.scoring.player-0 {
-  border-color: #58060d;
-}
-
-.card.scoring.player-1 {
-  border-color: #0e420e;
-}
-
-.card.scoring.player-2 {
-  border-color: #3f300d;
-}
-
-.card.scoring.player-3 {
-  border-color: #081020;
 }
 
 /*# sourceMappingURL=cards-scoring.css.map */

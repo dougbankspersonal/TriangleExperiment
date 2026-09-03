@@ -26,11 +26,15 @@ define([
       });
       gCardConfigs.push({
         playerIndex: i,
-        text: "Score any two region types",
+        text: "Score any two neighborhood <b>types</b>",
       });
       gCardConfigs.push({
         playerIndex: i,
         text: "Score up to 3 different regions",
+      });
+      gCardConfigs.push({
+        playerIndex: i,
+        text: "Score 1 region <b>type</b>, <b>twice</b>.",
       });
     }
 
