@@ -11,6 +11,12 @@ define([
   //-----------------------------------
   var gCardConfigs = null;
 
+  // Just a reminder:
+  // 0: Clowns
+  // 1: Veggies
+  // 2: Cats
+  // 3. Education
+
   function generateCardConfigs() {
     if (gCardConfigs !== null) {
       return gCardConfigs;
@@ -24,7 +30,31 @@ define([
         "player-icon-0": 2,
         "player-icon-1": 1,
       },
-      text: "Clowns may not serve kale to children.",
+      text: "Subsidies to help clowns buy parsnips.",
+    });
+    gCardConfigs.push({
+      terrainCount: 1,
+      playerIconCounts: {
+        "player-icon-0": 2,
+        "player-icon-2": 1,
+      },
+      text: "Bi-weekly clown visits to cat shelters.",
+    });
+    gCardConfigs.push({
+      terrainCount: 1,
+      playerIconCounts: {
+        "player-icon-0": 2,
+        "player-icon-3": 1,
+      },
+      text: 'Eliminate tariffs on imports of "How to Clown".',
+    });
+    gCardConfigs.push({
+      terrainCount: 1,
+      playerIconCounts: {
+        "player-icon-1": 2,
+        "player-icon-0": 1,
+      },
+      text: '<b>"Clown Salad Appreciation Day."</b>',
     });
     gCardConfigs.push({
       terrainCount: 1,
@@ -32,7 +62,31 @@ define([
         "player-icon-1": 2,
         "player-icon-2": 1,
       },
-      text: "It is illegal to sell chard to kittens.",
+      text: "Fund research on celery's contribution to kitty litter.",
+    });
+    gCardConfigs.push({
+      terrainCount: 1,
+      playerIconCounts: {
+        "player-icon-1": 2,
+        "player-icon-3": 1,
+      },
+      text: "Introduce Artichokes-for-A's program in local elementary schools.",
+    });
+    gCardConfigs.push({
+      terrainCount: 1,
+      playerIconCounts: {
+        "player-icon-2": 2,
+        "player-icon-0": 1,
+      },
+      text: "Cats wearing clown wigs may run for local offices.",
+    });
+    gCardConfigs.push({
+      terrainCount: 1,
+      playerIconCounts: {
+        "player-icon-2": 2,
+        "player-icon-1": 1,
+      },
+      text: "Crack down on illegal kitten/potato cage matches.",
     });
     gCardConfigs.push({
       terrainCount: 1,
@@ -40,7 +94,7 @@ define([
         "player-icon-2": 2,
         "player-icon-3": 1,
       },
-      text: "Eliminate subsidies to teach French to housecats",
+      text: "Every classroom must have 3 books highlighting the feline lifestyle.",
     });
     gCardConfigs.push({
       terrainCount: 1,
@@ -48,7 +102,23 @@ define([
         "player-icon-3": 2,
         "player-icon-0": 1,
       },
-      text: "Remove all references to the Clowning Lifestyle from children's textbooks",
+      text: "Clowns may be hired as substitute teachers.",
+    });
+    gCardConfigs.push({
+      terrainCount: 1,
+      playerIconCounts: {
+        "player-icon-3": 2,
+        "player-icon-1": 1,
+      },
+      text: "Qualified Jalapeno Peppers may enroll in the local junior college.",
+    });
+    gCardConfigs.push({
+      terrainCount: 1,
+      playerIconCounts: {
+        "player-icon-3": 2,
+        "player-icon-2": 1,
+      },
+      text: "Reduce taxes on school plays featuring cats in lead roles.",
     });
 
     // 2-terrain:
@@ -58,7 +128,7 @@ define([
         "player-icon-0": 1,
         "player-icon-1": 1,
       },
-      text: "10% tax on carrots to fund anti-Clown initiatives.",
+      text: "Lift the ban on lettuce-affirming japery in clown acts.",
     });
     gCardConfigs.push({
       terrainCount: 2,
@@ -66,7 +136,7 @@ define([
         "player-icon-0": 1,
         "player-icon-2": 1,
       },
-      text: "Cats may not dress as Clowns for Halloween.",
+      text: "Children dressed as cat-clowns are entitled to double candy on Halloween.",
     });
     gCardConfigs.push({
       terrainCount: 2,
@@ -74,7 +144,7 @@ define([
         "player-icon-0": 1,
         "player-icon-3": 1,
       },
-      text: "25% hike in City Clown College tuition.",
+      text: "Widen the highway leading to Nicky's Clown College.",
     });
     gCardConfigs.push({
       terrainCount: 2,
@@ -82,7 +152,7 @@ define([
         "player-icon-1": 1,
         "player-icon-2": 1,
       },
-      text: "Catfood and leeks must be sold at different stores.",
+      text: "Allow Helen Anderson to merge <b>Helen's Catfood Emporium</b> and <b>Helen's Spinach Boutique</b>.",
     });
     gCardConfigs.push({
       terrainCount: 2,
@@ -90,7 +160,7 @@ define([
         "player-icon-1": 1,
         "player-icon-3": 1,
       },
-      text: "Turnips need special permission to take higher math classes.",
+      text: "Expand vegetarian options for school lunches.",
     });
     gCardConfigs.push({
       terrainCount: 2,
@@ -98,7 +168,7 @@ define([
         "player-icon-2": 1,
         "player-icon-3": 1,
       },
-      text: "30% emergency cat food supplies diverted to school lunches.",
+      text: "Dedicate salmon surplus to local schools and cat shelters.",
     });
 
     // 3 terrain.
@@ -107,28 +177,28 @@ define([
       playerIconCounts: {
         "player-icon-0": 1,
       },
-      text: "Max 3 clowns per car.",
+      text: "Relax seatbelt laws for Clown Cars.",
     });
     gCardConfigs.push({
       terrainCount: 3,
       playerIconCounts: {
         "player-icon-1": 1,
       },
-      text: "5% hike on brussels sprouts tariffs.",
+      text: 'Coordinate a yearly <br><b>"Fun with Fennel Fair"</b>.',
     });
     gCardConfigs.push({
       terrainCount: 3,
       playerIconCounts: {
         "player-icon-2": 1,
       },
-      text: "Catnip is a <b>Schedule 1</b> drug.",
+      text: "Ban on rocking chairs.",
     });
     gCardConfigs.push({
       terrainCount: 3,
       playerIconCounts: {
         "player-icon-3": 1,
       },
-      text: "Hoboes may be hired as substitute teachers.",
+      text: "Certified teachers may share food at buffets.",
     });
 
     return gCardConfigs;

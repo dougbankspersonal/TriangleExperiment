@@ -11,7 +11,7 @@ define([
   //
   //-----------------------------------
   var gCardConfigs = null;
-  const gAllBlueCount = 2;
+  const gAllBlueCount = 1;
 
   //-----------------------------------
   //
@@ -59,6 +59,20 @@ define([
       allBlueTerrainTypeArray,
     );
     return allBlueCardConfig;
+  }
+
+  function generateStartingTileCardConfig() {
+    var startingTileTerrainTypeArray = [
+      gameInfo.terrainTypes.Blue,
+      gameInfo.terrainTypes.Red,
+      gameInfo.terrainTypes.Green,
+      gameInfo.terrainTypes.Yellow,
+    ];
+
+    var startingTileCardConfig = terrainTypeArrayToCardConfig(
+      startingTileTerrainTypeArray,
+    );
+    return startingTileCardConfig;
   }
 
   function convertTerrainTypeArraysToCardConfigs(terrainTypeArrays) {
@@ -293,11 +307,15 @@ define([
       JSON.stringify(gCardConfigs),
     );
 
-    // Add some all-swamps.
+    // Add all-swamps.
     for (var i = 0; i < gAllBlueCount; i++) {
       var allBlueCardConfig = generateAllBlueCardConfig();
       gCardConfigs.push(allBlueCardConfig);
     }
+
+    // Add starting tile:
+    var startingTileCardConfig = generateStartingTileCardConfig();
+    gCardConfigs.push(startingTileCardConfig);
 
     return gCardConfigs;
   }

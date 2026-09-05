@@ -71,7 +71,16 @@
     }
 
     .face.vote {
-      background: linear-gradient(to bottom, #ffffff, #bebebe);
+      border-radius: 50%;
+      background: linear-gradient(135deg,
+          #c5bb91,
+          #e2dcc0 20%,
+          #f1eddb 35%,
+          #d3c99f 50%,
+          #bdb28a 55%,
+          #e5dfc5 72%,
+          #f2eedc 85%,
+          #c2b78d);
     }
   }
 }
