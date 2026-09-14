@@ -11,13 +11,11 @@
   box-sizing: border-box;
 }
 .dice.tokens .die.tokens.player .face.token {
-  border-radius: 50%;
-  background-image: url("../images/cards/marble-pale.png");
+  border: none;
 }
 .dice.tokens .die.tokens.player .face.token .pseudo-image {
-  width: 60%;
-  height: 60%;
-  filter: drop-shadow(0 4px 8px rg8a(0, 0, 0, 0.3));
+  width: 100%;
+  height: 100%;
 }
 .dice.tokens .die.tokens.terrain .face.token,
 .dice.tokens .die.tokens.voting-tools .face.token {
@@ -45,13 +43,39 @@
 }
 .dice.tokens .die.tokens.voting-tools .face.pass {
   background: linear-gradient(to bottom, #ffffff, #def7e5);
+  border-color: #0e6319;
 }
 .dice.tokens .die.tokens.voting-tools .face.fail {
   background: linear-gradient(to bottom, #ffffff, #ffe3e0);
+  border-color: #581111;
 }
-.dice.tokens .die.tokens.voting-tools .face.vote {
+.dice.tokens .die.tokens.income .face {
+  position: relative;
   border-radius: 50%;
   background: linear-gradient(135deg, #c5bb91, #e2dcc0 20%, #f1eddb 35%, #d3c99f 50%, #bdb28a 55%, #e5dfc5 72%, #f2eedc 85%, #c2b78d);
+}
+.dice.tokens .die.tokens.income .face .pseudo-image {
+  width: 60%;
+  height: 60%;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
+  position: absolute;
+  z-index: 5;
+}
+.dice.tokens .die.tokens.income .face .text {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 50px;
+  z-index: 10;
+  position: absolute;
+  color: #111;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.95), -1px -1px 2px rgba(255, 255, 255, 0.95), 0 0 5px rgba(255, 255, 255, 0.8);
+}
+.dice.tokens .die.tokens.income .face.yes {
+  border-color: #0e6319;
+}
+.dice.tokens .die.tokens.income .face.no {
+  border-color: #581111;
 }
 
 /*# sourceMappingURL=tokens.css.map */

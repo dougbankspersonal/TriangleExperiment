@@ -17,6 +17,7 @@ define([
       "resolution",
     );
 
+    /*
     var terrainCountNode = htmlUtils.addDiv(
       cardFrontNode,
       ["terrain-count"],
@@ -41,6 +42,7 @@ define([
         );
       }
     }
+      */
 
     var playerIconsNode = htmlUtils.addDiv(
       cardFrontNode,

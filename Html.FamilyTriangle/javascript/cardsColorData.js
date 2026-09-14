@@ -140,135 +140,68 @@ define([
 
   function generateTerrainTypeArrays() {
     // Just gonna do this by hand.
-    // Keep in mind that the 3rd item (index 2) is in the middle of the triangle.
+    // Keep in mind that the Oth item (index 0) is in the middle of the triangle.
     var retVal = [
-      // Middle & one corner match, other two are blue.
+      // Middle & one corner match, one blue, one other color.
       [
         gameInfo.terrainTypes.Red,
         gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Yellow,
       ],
       [
         gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Green,
       ],
       [
         gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Red,
       ],
 
-      // Middle & one corner blue, other two match.
+      // Corners match middle different, one corner blue.
       [
+        gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Red,
       ],
       [
+        gameInfo.terrainTypes.Red,
         gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Yellow,
       ],
       [
+        gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Blue,
-        gameInfo.terrainTypes.Green,
-      ],
-
-      // Middle & one corner match, other two also match, non-blue.
-      [
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Yellow,
-      ],
-      [
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Red,
-      ],
-      [
-        gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Green,
       ],
 
-      // Middle & one corner match, other one non-blue one blue.
+      // Three different, corner blue.
       [
         gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Blue,
-      ],
-      [
-        gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Blue,
       ],
       [
-        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Red,
         gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Blue,
       ],
-
-      // All 4 in different perms.
       [
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Red,
         gameInfo.terrainTypes.Blue,
-      ],
-      [
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Blue,
-        gameInfo.terrainTypes.Red,
-      ],
-      [
-        gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Blue,
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Green,
-      ],
-      [
-        gameInfo.terrainTypes.Blue,
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Yellow,
-      ],
-
-      // Middle and one don't match, others do, non-blue.
-      [
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Yellow,
-      ],
-      [
-        gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Green,
-      ],
-      [
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Yellow,
-        gameInfo.terrainTypes.Red,
       ],
     ];
-
     return retVal;
   }
 
