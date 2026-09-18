@@ -50,4 +50,8 @@
   background-image: url("../images/cards/vote.png");
 }
 
+.pseudo-image.trophy {
+  background-image: url("../images/cards/trophy.png");
+}
+
 /*# sourceMappingURL=images.css.map */

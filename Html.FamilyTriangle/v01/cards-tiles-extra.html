@@ -1,18 +1,15 @@
 <html>
   <head>
     <base href="../" />
-    <title>Cards: Color</title>
-    <link rel="stylesheet" href="css/cards-resolution.css" />
+    <title>Cards: Tiles Extra</title>
+    <link rel="stylesheet" href="css/cards-tiles.css" />
     <link rel="stylesheet" href="css/images.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/cards.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/main.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/image.css" />
+    <link rel="stylesheet" href="SharedWebBoardGame/css/triangle-cards.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
-      rel="stylesheet"
-    />
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <style type="text/css"></style>
   </head>
@@ -47,47 +44,51 @@
         "sharedJavascript/cards",
         "sharedJavascript/debugLog",
         "sharedJavascript/genericMeasurements",
-        "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "javascript/cardsResolutionData",
-        "javascript/cardsResolution",
+        "sharedJavascript/triangleCards",
+        "javascript/cardsTilesExtraData",
         "javascript/gameInfo",
       ], function (
         cards,
         debugLogModule,
         genericMeasurements,
-        genericUtils,
         htmlUtils,
         systemConfigs,
-        cardsResolutionData,
-        cardsResolution,
+        triangleCards,
+        cardsTilesExtraData,
         gameInfo,
       ) {
         var debugLog = debugLogModule.debugLog;
+        var cardHeightPx =
+          genericMeasurements.triangleCardScreentopActualHeightPx;
 
-        var overrides = {
-          cardWidthPx: genericMeasurements.standardCardHeightPx,
-          cardHeightPx: genericMeasurements.standardCardWidthPx,
-          itemsPerRow: 4,
-        };
-        var sc = systemConfigs.getCardSystemConfigs(overrides);
-        debugLog("html", "sc = ", JSON.stringify(sc));
-        var queryParams = genericUtils.getCommonQueryParams();
+        var sc = systemConfigs.getCardSystemConfigs({
+          cardHeightPx: cardHeightPx,
+          itemsPerRow: 10,
+        });
 
         systemConfigs.setSystemConfigs(sc);
 
-        var numCards = cardsResolutionData.getNumCards();
+        debugLog(
+          "html",
+          "genericMeasurements.triangleCardScreentopActualHeightPx = ",
+          genericMeasurements.triangleCardScreentopActualHeightPx,
+        );
 
-        var cardConfigs = cardsResolutionData.getCardConfigs();
+        var numCards = cardsTilesExtraData.getNumCards();
 
-        var backConfigs = [];
-        var backConfig = {
-          callback: cardsResolution.addCardBack,
-        };
-        backConfigs.push(backConfig);
+        var cardConfigs = cardsTilesExtraData.getCardConfigs();
 
-        cards.addCards(numCards, cardsResolution.addCardFront, backConfigs);
+        var backConfigs = cardsTilesExtraData.getBackConfigs();
+
+        cards.addCards(
+          numCards,
+          function (parentNode, index) {
+            return triangleCards.addCardFront(parentNode, cardConfigs, index);
+          },
+          backConfigs,
+        );
       });
     </script>
   </body>

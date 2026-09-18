@@ -5,7 +5,7 @@ define([
   "sharedJavascript/htmlUtils",
   "sharedJavascript/screentop/seatColors",
   "javascript/gameInfo",
-  "javascript/cardsScoringData",
+  "javascript/cardsScoringAbstractData",
   "dojo/domReady!",
 ], function (
   domStyle,
@@ -14,12 +14,12 @@ define([
   htmlUtils,
   seatColors,
   gameInfo,
-  cardsScoringData,
+  cardsScoringAbstractData,
 ) {
   var debugLog = debugLogModule.debugLog;
 
   function addCardFront(parent, index) {
-    var cardConfigs = cardsScoringData.getCardConfigs();
+    var cardConfigs = cardsScoringAbstractData.getCardConfigs();
     var cardConfig = cards.getCardConfigAtIndex(cardConfigs, index);
     var cardFrontNode = cards.addCardFront(
       parent,
@@ -71,24 +71,7 @@ define([
       "scoring-text",
       "Score",
     );
-
-    var symbolNode = htmlUtils.addImage(
-      cardBackNode,
-      ["player-icon-" + index, "scoring-symbol"],
-      "scoring-symbol",
-    );
-
-    var colorFamily = seatColors.getLightColorFamilyForSeat(index);
-
-    debugLog(
-      "addCardFront",
-      "Color family for player " + index + ": ",
-      colorFamily,
-    );
-
-    domStyle.set(cardBackNode, {
-      "border-color": colorFamily.border,
-    });
+    var trophyNode = htmlUtils.addImage(cardBackNode, ["trophy"], "trophy");
 
     return cardBackNode;
   }

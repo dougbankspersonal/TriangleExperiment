@@ -1,9 +1,17 @@
 define([
   "sharedJavascript/cards",
   "sharedJavascript/debugLog",
+  "sharedJavascript/triangleCards",
+  "javascript/cardTileDataUtils",
   "javascript/gameInfo",
   "dojo/domReady!",
-], function (cards, debugLogModule, gameInfo) {
+], function (
+  cards,
+  debugLogModule,
+  triangleCards,
+  cardTileDataUtils,
+  gameInfo,
+) {
   var debugLog = debugLogModule.debugLog;
   //-----------------------------------
   //
@@ -11,75 +19,19 @@ define([
   //
   //-----------------------------------
   var gCardConfigs = null;
-  const gAllBlueCount = 1;
+  var gCardsPerPlayerDeck = 0;
 
   //-----------------------------------
   //
   // Functions
   //
   //-----------------------------------
-  function terrainTypeToSectorClass(terrainType) {
-    return "tri-" + terrainType;
-  }
-
-  function terrrainTypeArrayToSectorDescriptors(terrainTypeArray) {
-    var sectorDescriptors = [];
-    console.assert(
-      terrainTypeArray.length === 4,
-      "terrainTypeArray.length !== 4",
-    );
-    for (var i = 0; i < terrainTypeArray.length; i++) {
-      var triangleTerrainType = terrainTypeToSectorClass(terrainTypeArray[i]);
-      var sectorDescriptor = { classes: [triangleTerrainType] };
-      sectorDescriptors.push(sectorDescriptor);
-    }
-    return sectorDescriptors;
-  }
-
-  function terrainTypeArrayToCardConfig(terrainTypeArray) {
-    var sectorDescriptors =
-      terrrainTypeArrayToSectorDescriptors(terrainTypeArray);
-    var cardConfig = {
-      sectorDescriptors: sectorDescriptors,
-      classes: ["color"],
-      overlayClass: "color-overlay",
-    };
-    return cardConfig;
-  }
-
-  function generateAllBlueCardConfig() {
-    var allBlueTerrainTypeArray = [
-      gameInfo.terrainTypes.Blue,
-      gameInfo.terrainTypes.Blue,
-      gameInfo.terrainTypes.Blue,
-      gameInfo.terrainTypes.Blue,
-    ];
-
-    var allBlueCardConfig = terrainTypeArrayToCardConfig(
-      allBlueTerrainTypeArray,
-    );
-    return allBlueCardConfig;
-  }
-
-  function generateStartingTileCardConfig() {
-    var startingTileTerrainTypeArray = [
-      gameInfo.terrainTypes.Blue,
-      gameInfo.terrainTypes.Red,
-      gameInfo.terrainTypes.Green,
-      gameInfo.terrainTypes.Yellow,
-    ];
-
-    var startingTileCardConfig = terrainTypeArrayToCardConfig(
-      startingTileTerrainTypeArray,
-    );
-    return startingTileCardConfig;
-  }
-
   function convertTerrainTypeArraysToCardConfigs(terrainTypeArrays) {
     var cardConfigs = [];
 
     for (var terrainTypeArray of terrainTypeArrays) {
-      var cardConfig = terrainTypeArrayToCardConfig(terrainTypeArray);
+      var cardConfig =
+        cardTileDataUtils.terrainTypeArrayToCardConfig(terrainTypeArray);
       cardConfigs.push(cardConfig);
     }
 
@@ -88,7 +40,7 @@ define([
 
   function decorateWithPlayerOverlay(cardConfigs, playerIndex) {
     var retVal = [];
-    const blueSectorClass = terrainTypeToSectorClass(
+    const blueSectorClass = cardTileDataUtils.terrainTypeToSectorClass(
       gameInfo.terrainTypes.Blue,
     );
 
@@ -107,36 +59,6 @@ define([
     }
     return retVal;
   }
-
-  /*
-  function decorarteWithOverlays(cardConfigs) {
-    var retVal = [];
-
-    var grassCount = 0;
-    var flowerCount = 0;
-    for (var i = 0; i < cardConfigs.length; i++) {
-      var copiedCardConfig = structuredClone(cardConfigs[i]);
-
-      // Look for flowers.  Every other gets a different type of flower.
-      for (var j = 0; j < copiedCardConfig.sectorDescriptors.length; j++) {
-        var sectorDescriptor = copiedCardConfig.sectorDescriptors[j];
-        if (sectorDescriptor.classes.includes(gTerrainTypeGrass)) {
-          grassCount++;
-          if (grassCount % gFlowerFrequency === 0) {
-            var flowerCount = flowerCount + 1;
-            var flowerType = "flower-" + (flowerCount % gNumFlowerTypes);
-            sectorDescriptor.overlaysByType = {
-              flower: [flowerType],
-            };
-          }
-        }
-      }
-      retVal.push(copiedCardConfig);
-    }
-
-    return retVal;
-  }
-    */
 
   function generateTerrainTypeArrays() {
     // Just gonna do this by hand.
@@ -182,24 +104,24 @@ define([
         gameInfo.terrainTypes.Green,
       ],
 
-      // Three different, corner blue.
+      // Random grab bag.
       [
         gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Red,
         gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Blue,
       ],
       [
-        gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Red,
         gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
         gameInfo.terrainTypes.Blue,
       ],
       [
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Green,
-        gameInfo.terrainTypes.Red,
-        gameInfo.terrainTypes.Blue,
       ],
     ];
     return retVal;
@@ -227,6 +149,9 @@ define([
     var tmpCardConfigs =
       convertTerrainTypeArraysToCardConfigs(terrainTypeArrays);
 
+    // Note this as the num cards in each player deck.
+    gCardsPerPlayerDeck = tmpCardConfigs.length;
+
     // One copy for each player.
     for (var i = 0; i < gameInfo.numPlayers; i++) {
       var playerCardConfigs = structuredClone(tmpCardConfigs);
@@ -239,16 +164,6 @@ define([
       "cardConfigs = ",
       JSON.stringify(gCardConfigs),
     );
-
-    // Add all-swamps.
-    for (var i = 0; i < gAllBlueCount; i++) {
-      var allBlueCardConfig = generateAllBlueCardConfig();
-      gCardConfigs.push(allBlueCardConfig);
-    }
-
-    // Add starting tile:
-    var startingTileCardConfig = generateStartingTileCardConfig();
-    gCardConfigs.push(startingTileCardConfig);
 
     return gCardConfigs;
   }
@@ -273,9 +188,39 @@ define([
     return cards.getNumCardsFromConfigs(gCardConfigs);
   }
 
+  function getBackConfigs() {
+    var backConfigs = [];
+    for (
+      let playerIndex = 0;
+      playerIndex < gameInfo.numPlayers;
+      playerIndex++
+    ) {
+      var backConfig = {
+        count: gCardsPerPlayerDeck,
+        callback: function (parentNode, cardIndex) {
+          debugLog("getBackConfigs", "in backConfig: cardIndex = ", cardIndex);
+          debugLog(
+            "getBackConfigs",
+            "in backConfig: playerIndex = ",
+            playerIndex,
+          );
+          return triangleCards.addPlayerSpecificTriangleCardBack(
+            parentNode,
+            cardIndex,
+            playerIndex,
+            ["color"],
+          );
+        },
+      };
+      backConfigs.push(backConfig);
+    }
+    return backConfigs;
+  }
+
   // This returned object becomes the defined value of this module
   return {
     getCardConfigs: getCardConfigs,
     getNumCards: getNumCards,
+    getBackConfigs: getBackConfigs,
   };
 });

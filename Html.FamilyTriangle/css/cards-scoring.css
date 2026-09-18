@@ -1,30 +1,44 @@
-.card.scoring {
+.card.scoring.front,
+.card.scoring.back {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 12px solid #000;
+  border: 12px solid #503f0e;
 }
 
 .card.scoring.back {
   font-family: "Bebas Neue", sans-serif;
   font-size: 50px;
-  background-image: url("../images/cards/marble.png");
+  position: relative;
+  background: radial-gradient(circle, #ffffff 0%, #f0e68c 100%);
 }
 .card.scoring.back .text {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  position: absolute;
+  z-index: 10;
 }
-.card.scoring.back .pseudo-image.scoring-symbol {
-  width: 50%;
-  height: 50%;
+.card.scoring.back .pseudo-image.trophy {
   filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
+  position: absolute;
+  z-index: 5;
 }
 
+.card.scoring.front {
+  background-image: url("../images/cards/parchment-yellow.png");
+}
 .card.scoring.front .text {
   padding: 10px;
   font-family: "Lora", serif;
-  font-size: 35px;
+  font-size: 24px;
+}
+.card.scoring.front .text .bonus::before {
+  content: "\a\a";
+  white-space: pre;
+}
+.card.scoring.front .text .bonus {
+  font-style: italic;
 }
 
 /*# sourceMappingURL=cards-scoring.css.map */

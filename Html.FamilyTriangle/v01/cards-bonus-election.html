@@ -1,9 +1,8 @@
-`
 <html>
   <head>
     <base href="../" />
     <title>Cards: Color</title>
-    <link rel="stylesheet" href="css/cards-scoring.css" />
+    <link rel="stylesheet" href="css/cards-bonus.css" />
     <link rel="stylesheet" href="css/images.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/cards.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/main.css" />
@@ -50,8 +49,8 @@
         "sharedJavascript/genericMeasurements",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "javascript/cardsScoringData",
-        "javascript/cardsScoring",
+        "javascript/cardsBonusElectionData",
+        "javascript/cardsBonus",
         "javascript/gameInfo",
       ], function (
         cards,
@@ -59,37 +58,40 @@
         genericMeasurements,
         htmlUtils,
         systemConfigs,
-        cardsScoringData,
-        cardsScoring,
+        cardsBonusElectionData,
+        cardsBonus,
         gameInfo,
       ) {
         var debugLog = debugLogModule.debugLog;
 
-        var sc = systemConfigs.getCardSystemConfigs();
-        var tmpWidthPx = sc.cardWidthPx;
-        sc.cardWidthPx = sc.cardHeightPx;
-        sc.cardHeightPx = tmpWidthPx;
-        sc.itemsPerRow = 4;
-
+        var overrides = {
+          cardWidthPx: genericMeasurements.standardCardHeightPx,
+          cardHeightPx: genericMeasurements.standardCardWidthPx,
+        };
+        var sc = systemConfigs.getCardSystemConfigs(overrides);
         systemConfigs.setSystemConfigs(sc);
 
-        var numCards = cardsScoringData.getNumCards();
+        var numCards = cardsBonusElectionData.getNumCards();
 
-        var cardConfigs = cardsScoringData.getCardConfigs();
+        var cardConfigs = cardsBonusElectionData.getCardConfigs();
 
         var backConfigs = [];
-        for (
-          let playerIndex = 0;
-          playerIndex < gameInfo.numPlayers;
-          playerIndex++
-        ) {
-          var backConfig = {
-            callback: cardsScoring.addCardBack,
-          };
-          backConfigs.push(backConfig);
-        }
+        var backConfig = {
+          callback: cardsBonus.addCardBack,
+        };
+        backConfigs.push(backConfig);
 
-        cards.addCards(numCards, cardsScoring.addCardFront, backConfigs);
+        cards.addCards(
+          numCards,
+          function (parent, index) {
+            return cardsBonus.addCardFront(
+              parent,
+              index,
+              cardsBonusElectionData,
+            );
+          },
+          backConfigs,
+        );
       });
     </script>
   </body>

@@ -70,6 +70,16 @@
     }
   }
 
+  .die.tokens.game-end {
+    .face {
+      .text {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 50px;
+        font-weight: bold;
+      }
+    }
+  }
+
   .die.tokens.income {
     .face {
       position: relative;

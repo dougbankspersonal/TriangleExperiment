@@ -1,15 +1,19 @@
+`
 <html>
   <head>
     <base href="../" />
     <title>Cards: Color</title>
-    <link rel="stylesheet" href="css/cards-color.css" />
+    <link rel="stylesheet" href="css/cards-scoring.css" />
     <link rel="stylesheet" href="css/images.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/cards.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/main.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/image.css" />
-    <link rel="stylesheet" href="SharedWebBoardGame/css/triangle-cards.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <style type="text/css"></style>
   </head>
@@ -46,8 +50,8 @@
         "sharedJavascript/genericMeasurements",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "sharedJavascript/triangleCards",
-        "javascript/cardsColorData",
+        "javascript/cardsScoringAbstractData",
+        "javascript/cardsScoring",
         "javascript/gameInfo",
       ], function (
         cards,
@@ -55,57 +59,30 @@
         genericMeasurements,
         htmlUtils,
         systemConfigs,
-        triangleCards,
-        cardsColorData,
+        cardsScoringAbstractData,
+        cardsScoring,
         gameInfo,
       ) {
         var debugLog = debugLogModule.debugLog;
-        var cardHeightPx =
-          genericMeasurements.triangleCardScreentopActualHeightPx;
 
-        var sc = systemConfigs.getCardSystemConfigs({
-          cardHeightPx: cardHeightPx,
-          itemsPerRow: 10,
-        });
-
+        var overrides = {
+          cardWidthPx: genericMeasurements.standardCardHeightPx,
+          cardHeightPx: genericMeasurements.standardCardWidthPx,
+        };
+        var sc = systemConfigs.getCardSystemConfigs(overrides);
         systemConfigs.setSystemConfigs(sc);
 
-        debugLog(
-          "html",
-          "genericMeasurements.triangleCardScreentopActualHeightPx = ",
-          genericMeasurements.triangleCardScreentopActualHeightPx,
-        );
+        var numCards = cardsScoringAbstractData.getNumCards();
 
-        var numCards = cardsColorData.getNumCards();
-
-        var cardConfigs = cardsColorData.getCardConfigs();
+        var cardConfigs = cardsScoringAbstractData.getCardConfigs();
 
         var backConfigs = [];
-        for (
-          let playerIndex = 0;
-          playerIndex < gameInfo.numPlayers;
-          playerIndex++
-        ) {
-          var backConfig = {
-            callback: function (parentNode, cardIndex) {
-              return triangleCards.addPlayerSpecificTriangleCardBack(
-                parentNode,
-                cardIndex,
-                playerIndex,
-                ["color"],
-              );
-            },
-          };
-          backConfigs.push(backConfig);
-        }
+        var backConfig = {
+          callback: cardsScoring.addCardBack,
+        };
+        backConfigs.push(backConfig);
 
-        cards.addCards(
-          numCards,
-          function (parentNode, index) {
-            return triangleCards.addCardFront(parentNode, cardConfigs, index);
-          },
-          backConfigs,
-        );
+        cards.addCards(numCards, cardsScoring.addCardFront, backConfigs);
       });
     </script>
   </body>

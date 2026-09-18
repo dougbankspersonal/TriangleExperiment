@@ -45,7 +45,7 @@ define([
     return dieConfig;
   }
 
-  function getVotingToolsDieConfig() {
+  function getPassFailTokensConfig() {
     var dieConfig = {};
     dieConfig.classes = ["tokens", "voting-tools"];
 
@@ -70,7 +70,7 @@ define([
     return dieConfig;
   }
 
-  function getIncomeDieConfig() {
+  function getIncomeTokensConfig() {
     var dieConfig = {};
     dieConfig.classes = ["tokens", "income"];
 
@@ -95,6 +95,41 @@ define([
     return dieConfig;
   }
 
+  function getGameEndDieConfig() {
+    var dieConfig = {};
+    dieConfig.classes = ["tokens", "game-end"];
+
+    var faceConfigs = [
+      {
+        classes: ["token"],
+        text: "1",
+      },
+      {
+        classes: ["token"],
+        text: "1",
+      },
+      {
+        classes: ["token"],
+        text: "2",
+      },
+      {
+        classes: ["token"],
+        text: "2",
+      },
+      {
+        classes: ["token"],
+        text: "3",
+      },
+      {
+        classes: ["token"],
+        text: "4",
+      },
+    ];
+
+    dieConfig.faces = faceConfigs;
+    return dieConfig;
+  }
+
   function generateTokenDiceConfigs() {
     if (gTokenDiceConfigs !== null) {
       return gTokenDiceConfigs;
@@ -107,10 +142,12 @@ define([
     var singleTerrainTypeDieConfig = getSingleTerrainTypeDieConfig();
     gTokenDiceConfigs.push(singleTerrainTypeDieConfig);
     */
-    var passFailDieConfig = getVotingToolsDieConfig();
-    gTokenDiceConfigs.push(passFailDieConfig);
-    var incomneDieConfig = getIncomeDieConfig();
-    gTokenDiceConfigs.push(incomneDieConfig);
+    var passFailTokensConfig = getPassFailTokensConfig();
+    gTokenDiceConfigs.push(passFailTokensConfig);
+    var incomeTokensConfig = getIncomeTokensConfig();
+    gTokenDiceConfigs.push(incomeTokensConfig);
+    var gameEndDieConfig = getGameEndDieConfig();
+    gTokenDiceConfigs.push(gameEndDieConfig);
 
     return gTokenDiceConfigs;
   }

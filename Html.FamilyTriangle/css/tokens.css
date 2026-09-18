@@ -49,6 +49,11 @@
   background: linear-gradient(to bottom, #ffffff, #ffe3e0);
   border-color: #581111;
 }
+.dice.tokens .die.tokens.game-end .face .text {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 50px;
+  font-weight: bold;
+}
 .dice.tokens .die.tokens.income .face {
   position: relative;
   border-radius: 50%;

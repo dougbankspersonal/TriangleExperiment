@@ -18,25 +18,30 @@ define([
     }
     gCardConfigs = [];
 
-    // One set for each player.
-    for (var i = 0; i < gameInfo.numPlayers; i++) {
-      gCardConfigs.push({
-        playerIndex: i,
-        text: "Score all regions",
-      });
-      gCardConfigs.push({
-        playerIndex: i,
-        text: "Score any two neighborhood <b>types</b>",
-      });
-      gCardConfigs.push({
-        playerIndex: i,
-        text: "Score up to 3 different regions",
-      });
-      gCardConfigs.push({
-        playerIndex: i,
-        text: "Score 1 region <b>type</b>, <b>twice</b>.",
-      });
-    }
+    gCardConfigs.push({
+      count: 2,
+      text: "Score all neighborhoods.<span class=bonus>Draw a bonus card</span>",
+    });
+    gCardConfigs.push({
+      count: 2,
+      text: "Score all neighborhoods of any 2 neighborhood <b>types</b>.<span class=bonus>Draw a bonus card</span>",
+    });
+    gCardConfigs.push({
+      count: 2,
+      text: "Score all neighborhoods of any of any 1 neighborhood <b>type</b>.<span class=bonus>Draw a bonus card</span>",
+    });
+    gCardConfigs.push({
+      count: 2,
+      text: "Score any 1 neighborhood of 4 or more sectors.",
+    });
+    gCardConfigs.push({
+      count: 2,
+      text: "Score any 3 neighborhoods of 2 or fewer sectors.",
+    });
+    gCardConfigs.push({
+      count: 2,
+      text: "Score up to 3 neighborhoods where more than one player is dominant.<span class=bonus>Draw a bonus card</span>",
+    });
 
     return gCardConfigs;
   }

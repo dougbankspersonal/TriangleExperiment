@@ -49,7 +49,7 @@
         "sharedJavascript/genericMeasurements",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "javascript/cardsBonusData",
+        "javascript/cardsBonusAbstractData",
         "javascript/cardsBonus",
         "javascript/gameInfo",
       ], function (
@@ -58,23 +58,23 @@
         genericMeasurements,
         htmlUtils,
         systemConfigs,
-        cardsBonusData,
+        cardsBonusAbstractData,
         cardsBonus,
         gameInfo,
       ) {
         var debugLog = debugLogModule.debugLog;
 
-        var sc = systemConfigs.getCardSystemConfigs();
-        var tmpWidthPx = sc.cardWidthPx;
-        sc.cardWidthPx = sc.cardHeightPx;
-        sc.cardHeightPx = tmpWidthPx;
-        sc.itemsPerRow = 4;
-
+        var overrides = {
+          cardWidthPx: genericMeasurements.standardCardHeightPx,
+          cardHeightPx: genericMeasurements.standardCardWidthPx,
+          itemsPerRow: 4,
+        };
+        var sc = systemConfigs.getCardSystemConfigs(overrides);
         systemConfigs.setSystemConfigs(sc);
 
-        var numCards = cardsBonusData.getNumCards();
+        var numCards = cardsBonusAbstractData.getNumCards();
 
-        var cardConfigs = cardsBonusData.getCardConfigs();
+        var cardConfigs = cardsBonusAbstractData.getCardConfigs();
 
         var backConfigs = [];
         var backConfig = {
@@ -82,7 +82,17 @@
         };
         backConfigs.push(backConfig);
 
-        cards.addCards(numCards, cardsBonus.addCardFront, backConfigs);
+        cards.addCards(
+          numCards,
+          function (parent, index) {
+            return cardsBonus.addCardFront(
+              parent,
+              index,
+              cardsBonusAbstractData,
+            );
+          },
+          backConfigs,
+        );
       });
     </script>
   </body>

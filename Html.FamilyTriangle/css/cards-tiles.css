@@ -1,22 +1,22 @@
-.card.front.triangle.color .overlay {
+.card.front.triangle .overlay {
   background-image: url("../SharedWebBoardgame/images/triangle-frame.png");
 }
-.card.front.triangle.color .front-wrapper {
+.card.front.triangle .front-wrapper {
   z-index: 0;
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-city {
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-city {
   background-image: url("../images/cards/tri-city.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-swamp {
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-swamp {
   background-image: url("../images/cards/tri-swamp.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-farm {
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-farm {
   background-image: url("../images/cards/tri-farm.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-suburb {
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-suburb {
   background-image: url("../images/cards/tri-suburb.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector .player {
+.card.front.triangle .front-wrapper .sectors-row .sector .player {
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
@@ -26,22 +26,26 @@
   filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
 }
 
-.card.back.color.triangle .back-wrapper .single-sector-insert.player.pseudo-image {
+.card.back.triangle.extra-tile-back .back-wrapper {
+  background-image: url("../images/cards/extra-tile-back.png");
+}
+
+.card.back.triangle .back-wrapper .single-sector-insert.player.pseudo-image {
   width: 45%;
   height: 45%;
   filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
 }
-.card.back.color.triangle .back-wrapper.player-0 {
+.card.back.triangle .back-wrapper.player-0 {
   background-image: url("../images/cards/tri-back-player-0.png");
 }
-.card.back.color.triangle .back-wrapper.player-1 {
+.card.back.triangle .back-wrapper.player-1 {
   background-image: url("../images/cards/tri-back-player-1.png");
 }
-.card.back.color.triangle .back-wrapper.player-2 {
+.card.back.triangle .back-wrapper.player-2 {
   background-image: url("../images/cards/tri-back-player-2.png");
 }
-.card.back.color.triangle .back-wrapper.player-3 {
+.card.back.triangle .back-wrapper.player-3 {
   background-image: url("../images/cards/tri-back-player-3.png");
 }
 
-/*# sourceMappingURL=cards-color.css.map */
+/*# sourceMappingURL=cards-tiles.css.map */
