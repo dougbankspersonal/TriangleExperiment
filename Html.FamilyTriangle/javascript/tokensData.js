@@ -8,7 +8,7 @@ define([
 
   var gTokenDiceConfigs = null;
 
-  function getPlayerTokenDieConfig() {
+  function getPlayerTokensConfig() {
     var dieConfig = {};
     dieConfig.classes = ["tokens", "player"];
 
@@ -136,18 +136,8 @@ define([
     }
 
     gTokenDiceConfigs = [];
-    var playerTokenDieConfig = getPlayerTokenDieConfig();
+    var playerTokenDieConfig = getPlayerTokensConfig();
     gTokenDiceConfigs.push(playerTokenDieConfig);
-    /*
-    var singleTerrainTypeDieConfig = getSingleTerrainTypeDieConfig();
-    gTokenDiceConfigs.push(singleTerrainTypeDieConfig);
-    */
-    var passFailTokensConfig = getPassFailTokensConfig();
-    gTokenDiceConfigs.push(passFailTokensConfig);
-    var incomeTokensConfig = getIncomeTokensConfig();
-    gTokenDiceConfigs.push(incomeTokensConfig);
-    var gameEndDieConfig = getGameEndDieConfig();
-    gTokenDiceConfigs.push(gameEndDieConfig);
 
     return gTokenDiceConfigs;
   }

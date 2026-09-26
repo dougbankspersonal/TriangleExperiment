@@ -54,4 +54,16 @@
   background-image: url("../images/cards/trophy.png");
 }
 
+.pseudo-image.scoring-token-symbol-0 {
+  background-image: url("../images/cards/scoring-token-symbol-0.png");
+}
+
+.pseudo-image.scoring-token-symbol-1 {
+  background-image: url("../images/cards/scoring-token-symbol-1.png");
+}
+
+.pseudo-image.scoring-token-symbol-2 {
+  background-image: url("../images/cards/scoring-token-symbol-2.png");
+}
+
 /*# sourceMappingURL=images.css.map */

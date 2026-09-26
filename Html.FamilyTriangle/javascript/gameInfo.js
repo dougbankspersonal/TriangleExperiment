@@ -17,6 +17,16 @@ define([
   const gTerrainTypeGreen = "farm";
   const gTerrainTypeYellow = "city";
 
+  const gScoringTokenSymbol0 = "scoring-token-symbol-0";
+  const gScoringTokenSymbol1 = "scoring-token-symbol-1";
+  const gScoringTokenSymbol2 = "scoring-token-symbol-2";
+
+  const gScoringTokenSymbolsArray = [
+    gScoringTokenSymbol0,
+    gScoringTokenSymbol1,
+    gScoringTokenSymbol2,
+  ];
+
   const gTerrainTypes = {
     Red: gTerrainTypeRed,
     Green: gTerrainTypeGreen,
@@ -37,5 +47,6 @@ define([
     terrainTypesArray: gTerrainTypesArray,
     scoringTerrainTypesArray: gScoringTerrainTypesArray,
     numPlayers: gNumPlayers,
+    scoringTokenSymbolsArray: gScoringTokenSymbolsArray,
   };
 });

@@ -83,4 +83,26 @@
   border-color: #581111;
 }
 
+.die.tokens.victory .face {
+  border-radius: 10%;
+  box-sizing: border-box;
+  border: solid 4px black;
+}
+.die.tokens.victory .face.city {
+  background-image: url("../images/cards/s-city.png");
+  border-color: #5b0f00;
+}
+.die.tokens.victory .face.farm {
+  background-image: url("../images/cards/s-farm.png");
+  border-color: #274e13;
+}
+.die.tokens.victory .face.suburb {
+  background-image: url("../images/cards/s-suburb.png");
+  border-color: #bf9000;
+}
+.die.tokens.victory .face.front .pseudo-image {
+  width: 70%;
+  height: 70%;
+}
+
 /*# sourceMappingURL=tokens.css.map */

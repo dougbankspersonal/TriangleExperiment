@@ -126,3 +126,33 @@
     }
   }
 }
+
+.die.tokens.victory {
+  .face {
+    border-radius: 10%;
+    box-sizing: border-box;
+    border: solid 4px black;
+  }
+
+  .face.city {
+    background-image: url('../images/cards/s-city.png');
+    border-color: #5b0f00,
+  }
+
+  .face.farm {
+    background-image: url('../images/cards/s-farm.png');
+    border-color: #274e13
+  }
+
+  .face.suburb {
+    background-image: url('../images/cards/s-suburb.png');
+    border-color: #bf9000;
+  }
+
+  .face.front {
+    .pseudo-image {
+      width: 70%;
+      height: 70%;
+    }
+  }
+}
