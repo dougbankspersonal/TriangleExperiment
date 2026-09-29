@@ -20,15 +20,15 @@ define([
 
     gCardConfigs.push({
       count: 2,
-      text: "Score all neighborhoods.<span class=bonus>Draw a bonus card</span>",
+      text: "Score all neighborhoods.",
     });
     gCardConfigs.push({
       count: 2,
-      text: "Score all neighborhoods of any 2 neighborhood <b>types</b>.<span class=bonus>Draw a bonus card</span>",
+      text: "Score all neighborhoods of any 2 <b>types</b>.",
     });
     gCardConfigs.push({
       count: 2,
-      text: "Score all neighborhoods of any of any 1 neighborhood <b>type</b>.<span class=bonus>Draw a bonus card</span>",
+      text: "Score all neighborhoods of any of any 1 <b>type</b>.",
     });
     gCardConfigs.push({
       count: 2,
@@ -40,7 +40,7 @@ define([
     });
     gCardConfigs.push({
       count: 2,
-      text: "Score up to 3 neighborhoods where more than one player is dominant.<span class=bonus>Draw a bonus card</span>",
+      text: "Score up to 3 neighborhoods where more than one player is dominant.",
     });
 
     return gCardConfigs;

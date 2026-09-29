@@ -104,7 +104,7 @@ define([
         gameInfo.terrainTypes.Green,
       ],
 
-      // Random grab bag.
+      // 2/1/blue
       [
         gameInfo.terrainTypes.Red,
         gameInfo.terrainTypes.Red,
@@ -112,6 +112,20 @@ define([
         gameInfo.terrainTypes.Blue,
       ],
       [
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Blue,
+      ],
+      [
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Blue,
+      ],
+
+      // 2 and blue.
+      [
         gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Blue,
@@ -119,9 +133,35 @@ define([
       ],
       [
         gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Blue,
+      ],
+      [
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Blue,
+        gameInfo.terrainTypes.Blue,
+      ],
+
+      // no blue.
+      [
+        gameInfo.terrainTypes.Red,
         gameInfo.terrainTypes.Green,
         gameInfo.terrainTypes.Yellow,
         gameInfo.terrainTypes.Green,
+      ],
+      [
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Red,
+      ],
+      [
+        gameInfo.terrainTypes.Green,
+        gameInfo.terrainTypes.Yellow,
+        gameInfo.terrainTypes.Red,
+        gameInfo.terrainTypes.Yellow,
       ],
     ];
     return retVal;

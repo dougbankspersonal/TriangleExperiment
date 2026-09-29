@@ -2,7 +2,7 @@
 <html>
   <head>
     <base href="../" />
-    <title>Cards: Color</title>
+    <title>Cards: Scoring Abstract</title>
     <link rel="stylesheet" href="css/cards-scoring.css" />
     <link rel="stylesheet" href="css/images.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/cards.css" />
@@ -68,6 +68,7 @@
         var overrides = {
           cardWidthPx: genericMeasurements.standardCardHeightPx,
           cardHeightPx: genericMeasurements.standardCardWidthPx,
+          itemsPerRow: 4,
         };
         var sc = systemConfigs.getCardSystemConfigs(overrides);
         systemConfigs.setSystemConfigs(sc);

@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title>Tokens: Player</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -45,14 +46,14 @@
         "dojo/dom",
         "sharedJavascript/systemConfigs",
         "sharedJavascript/dieUtils",
-        "javascript/tokensData",
-      ], function (dom, systemConfigs, dieUtils, tokensData) {
+        "javascript/tokensPlayerData",
+      ], function (dom, systemConfigs, dieUtils, tokensPlayerData) {
         systemConfigs.setSystemConfigs({});
 
         // Make the body node.
         var bodyNode = dom.byId("body");
 
-        dieUtils.addDiceNode(bodyNode, tokensData.getTokenDiceConfigs(), [
+        dieUtils.addDiceNode(bodyNode, tokensPlayerData.getTokenDiceConfigs(), [
           "tokens",
         ]);
         return bodyNode;

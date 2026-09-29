@@ -15,26 +15,16 @@ define([
     return backConfig;
   }
 
-  function getVictoryTokenBacksDieConfig() {
-    var dieConfig = {};
-    dieConfig.classes = ["tokens", "victory", "back"];
-
-    var faceConfigs = [];
-    for (var i = 0; i < gameInfo.scoringTerrainTypesArray.length; i++) {
-      var terrainType = gameInfo.scoringTerrainTypesArray[i];
-      var backConfig = getVictoryTokensBackConfigForTerrain(terrainType);
-      faceConfigs.push(backConfig);
-    }
-
-    dieConfig.faces = faceConfigs;
-    return dieConfig;
-  }
-
-  function getVictoryTokenFrontDieConfigForTerrain(terrainType) {
+  function getVictoryTokenDieConfigForTerrain(terrainType) {
     var dieConfig = {};
     dieConfig.classes = ["tokens", "victory"];
 
     var faceConfigs = [];
+
+    // First the back.
+    var backConfig = getVictoryTokensBackConfigForTerrain(terrainType);
+    faceConfigs.push(backConfig);
+
     for (var j = 0; j < gameInfo.scoringTokenSymbolsArray.length; j++) {
       var scoringTokenSymbol = gameInfo.scoringTokenSymbolsArray[j];
       var frontConfig = {
@@ -54,11 +44,8 @@ define([
 
     gTokenDiceConfigs = [];
 
-    var backDieConfig = getVictoryTokenBacksDieConfig();
-    gTokenDiceConfigs.push(backDieConfig);
-
-    for (var i = 0; i < gameInfo.scoringTerrainTypesArray.length; i++) {
-      var dieConfig = getVictoryTokenFrontDieConfigForTerrain(
+    for (var i = 0; i < gameInfo.terrainTypesArray.length; i++) {
+      var dieConfig = getVictoryTokenDieConfigForTerrain(
         gameInfo.terrainTypesArray[i],
       );
       gTokenDiceConfigs.push(dieConfig);
