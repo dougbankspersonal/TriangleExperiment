@@ -26,16 +26,36 @@
   background-image: url("../images/cards/player-icon-3.png");
 }
 
-.pseudo-image.square-city {
-  background-image: url("../images/cards/square-city.png");
+.pseudo-image.square-alien-0 {
+  background-image: url("../images/cards/square-alien-0.png");
 }
 
-.pseudo-image.square-farm {
-  background-image: url("../images/cards/square-farm.png");
+.pseudo-image.square-alien-1 {
+  background-image: url("../images/cards/square-alien-1.png");
 }
 
-.pseudo-image.square-suburb {
-  background-image: url("../images/cards/square-suburb.png");
+.pseudo-image.square-alien-2 {
+  background-image: url("../images/cards/square-alien-2.png");
+}
+
+.pseudo-image.square-alien-3 {
+  background-image: url("../images/cards/square-alien-3.png");
+}
+
+.pseudo-image.shade-alien-0 {
+  background-image: url("../images/cards/shade-alien-0.png");
+}
+
+.pseudo-image.shade-alien-1 {
+  background-image: url("../images/cards/shade-alien-1.png");
+}
+
+.pseudo-image.shade-alien-2 {
+  background-image: url("../images/cards/shade-alien-2.png");
+}
+
+.pseudo-image.shade-alien-3 {
+  background-image: url("../images/cards/shade-alien-3.png");
 }
 
 .pseudo-image.green-check {

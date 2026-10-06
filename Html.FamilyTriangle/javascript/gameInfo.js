@@ -12,10 +12,10 @@ define([
   //-----------------------------------
   const gNumPlayers = 4;
 
-  const gTerrainTypeRed = "suburb";
-  const gTerrainTypeBlue = "swamp";
-  const gTerrainTypeGreen = "farm";
-  const gTerrainTypeYellow = "city";
+  const gTerrainTypeRed = "alien-0";
+  const gTerrainTypeGreen = "alien-1";
+  const gTerrainTypeYellow = "alien-2";
+  const gTerrainTypeBlue = "alien-3";
 
   const gScoringTokenSymbol0 = "scoring-token-symbol-0";
   const gScoringTokenSymbol1 = "scoring-token-symbol-1";
@@ -41,6 +41,14 @@ define([
     gTerrainTypeGreen,
     gTerrainTypeYellow,
   ];
+
+  const gTerrainTypeToStringMap = {
+    [gTerrainTypeRed]: "Mountain",
+    [gTerrainTypeGreen]: "Flora",
+    [gTerrainTypeYellow]: "Desert",
+    [gTerrainTypeBlue]: "Ocean",
+  };
+
   // This returned object becomes the defined value of this module
   return {
     terrainTypes: gTerrainTypes,
@@ -48,5 +56,6 @@ define([
     scoringTerrainTypesArray: gScoringTerrainTypesArray,
     numPlayers: gNumPlayers,
     scoringTokenSymbolsArray: gScoringTokenSymbolsArray,
+    terrainTypeToStringMap: gTerrainTypeToStringMap,
   };
 });

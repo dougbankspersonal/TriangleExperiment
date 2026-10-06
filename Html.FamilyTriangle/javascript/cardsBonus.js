@@ -1,28 +1,18 @@
 define([
   "sharedJavascript/cards",
+  "sharedJavascript/dieUtils",
   "sharedJavascript/debugLog",
   "sharedJavascript/htmlUtils",
   "dojo/domReady!",
 ], function (cards, debugLogModule, htmlUtils) {
   var debugLog = debugLogModule.debugLog;
 
-  function addCardFront(parent, index, cardsBonusData) {
-    var cardConfigs = cardsBonusData.getCardConfigs();
+  function addCardFront(parent, cardConfigs, index) {
     var cardConfig = cards.getCardConfigAtIndex(cardConfigs, index);
-    var cardFrontNode = cards.addCardFront(parent, ["bonus"], "bonus");
-
-    var titleNode = htmlUtils.addDiv(
-      cardFrontNode,
-      ["title"],
-      "bonus-title",
-      cardConfig.title,
-    );
-
-    var textNode = htmlUtils.addDiv(
-      cardFrontNode,
-      ["text"],
-      "bonus-text",
-      cardConfig.text,
+    var cardFrontNode = cards.addCardFront(
+      parent,
+      ["victory", "suprise", "tokens"],
+      "victory-surpise-token",
     );
 
     return cardFrontNode;

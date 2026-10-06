@@ -4,48 +4,46 @@
 .card.front.triangle .front-wrapper {
   z-index: 0;
 }
-.card.front.triangle .front-wrapper .sectors-row .sector.tri-city {
-  background-image: url("../images/cards/tri-city.png");
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-alien-0 {
+  background-image: url("../images/cards/tri-alien-0.png");
 }
-.card.front.triangle .front-wrapper .sectors-row .sector.tri-swamp {
-  background-image: url("../images/cards/tri-swamp.png");
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-alien-1 {
+  background-image: url("../images/cards/tri-alien-1.png");
 }
-.card.front.triangle .front-wrapper .sectors-row .sector.tri-farm {
-  background-image: url("../images/cards/tri-farm.png");
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-alien-2 {
+  background-image: url("../images/cards/tri-alien-2.png");
 }
-.card.front.triangle .front-wrapper .sectors-row .sector.tri-suburb {
-  background-image: url("../images/cards/tri-suburb.png");
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-alien-3 {
+  background-image: url("../images/cards/tri-alien-3.png");
 }
-.card.front.triangle .front-wrapper .sectors-row .sector .player {
+.card.front.triangle .front-wrapper .sectors-row .sector .pseudo-image.player {
   position: absolute;
   transform: translate(-50%, -50%);
   left: 50%;
   top: 66.6%;
-  width: 30%;
-  height: 30%;
-  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
+  width: 50%;
+  height: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
-.card.back.triangle.extra-tile-back .back-wrapper {
-  background-image: url("../images/cards/extra-tile-back.png");
+.card.back.triangle .back-wrapper {
+  position: relative;
 }
-
 .card.back.triangle .back-wrapper .single-sector-insert.player.pseudo-image {
-  width: 45%;
-  height: 45%;
-  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
+  left: 50%;
+  top: 66.6%;
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
-.card.back.triangle .back-wrapper.player-0 {
-  background-image: url("../images/cards/tri-back-player-0.png");
-}
-.card.back.triangle .back-wrapper.player-1 {
-  background-image: url("../images/cards/tri-back-player-1.png");
-}
-.card.back.triangle .back-wrapper.player-2 {
-  background-image: url("../images/cards/tri-back-player-2.png");
-}
-.card.back.triangle .back-wrapper.player-3 {
-  background-image: url("../images/cards/tri-back-player-3.png");
+
+.card.back.triangle .back-wrapper {
+  background-image: url("../images/cards/extra-tile-back.png");
 }
 
 /*# sourceMappingURL=cards-tiles.css.map */

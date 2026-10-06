@@ -4,18 +4,19 @@
 .card.front.triangle.color .front-wrapper {
   z-index: 0;
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-city {
-  background-image: url("../images/cards/tri-city.png");
+.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-alien-0 {
+  background-image: url("../images/cards/tri-alien-0.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-swamp {
-  background-image: url("../images/cards/tri-swamp.png");
+.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-alien-1 {
+  background-image: url("../images/cards/tri-alien-1.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-farm {
-  background-image: url("../images/cards/tri-farm.png");
+.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-alien-2 {
+  background-image: url("../images/cards/tri-alien-2.png");
 }
-.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-suburb {
-  background-image: url("../images/cards/tri-suburb.png");
+.card.front.triangle.color .front-wrapper .sectors-row .sector.tri-alien-3 {
+  background-image: url("../images/cards/tri-alien-3.png");
 }
+
 .card.front.triangle.color .front-wrapper .sectors-row .sector .player {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -26,7 +27,9 @@
   filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
 }
 
-.card.back.color.triangle .back-wrapper .single-sector-insert.player.pseudo-image {
+.card.back.color.triangle
+  .back-wrapper
+  .single-sector-insert.player.pseudo-image {
   width: 45%;
   height: 45%;
   filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));

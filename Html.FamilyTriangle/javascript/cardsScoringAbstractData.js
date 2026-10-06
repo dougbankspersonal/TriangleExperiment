@@ -19,28 +19,31 @@ define([
     gCardConfigs = [];
 
     gCardConfigs.push({
-      count: 2,
-      text: "Score all neighborhoods.",
+      text: "Select an Ocean region: score all regions adjacent to that region.",
     });
     gCardConfigs.push({
-      count: 2,
-      text: "Score all neighborhoods of any 2 <b>types</b>.",
+      text: "Score all regions of any of any 1 terrain type.",
     });
     gCardConfigs.push({
-      count: 2,
-      text: "Score all neighborhoods of any of any 1 <b>type</b>.",
+      text: "Score any 1 region of 4 or more sectors.",
     });
     gCardConfigs.push({
-      count: 2,
-      text: "Score any 1 neighborhood of 4 or more sectors.",
+      text: "Score any 4 regions of 2 or fewer sectors.",
     });
     gCardConfigs.push({
-      count: 2,
-      text: "Score any 3 neighborhoods of 2 or fewer sectors.",
+      text: "Score up to 3 regions where more than one player is dominant.",
     });
     gCardConfigs.push({
-      count: 2,
-      text: "Score up to 3 neighborhoods where more than one player is dominant.",
+      text: "Score all regions of 3 sectors.",
+    });
+    gCardConfigs.push({
+      text: "Score the 3 largest regions: (in case of ties, score all tied regions).",
+    });
+    gCardConfigs.push({
+      text: "Score any 3 non-adjacent regions.",
+    });
+    gCardConfigs.push({
+      text: "Score any 3 adjacent regions.",
     });
 
     return gCardConfigs;

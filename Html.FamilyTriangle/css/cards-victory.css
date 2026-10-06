@@ -1,0 +1,73 @@
+.cards .card.victory {
+  border-radius: 10%;
+  box-sizing: border-box;
+  border: solid 4px black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.cards .card.victory.square-alien-0 {
+  background-image: url("../images/cards/square-alien-0.png");
+  border-color: #5b0f00;
+}
+.cards .card.victory.square-alien-1 {
+  background-image: url("../images/cards/square-alien-1.png");
+  border-color: #274e13;
+}
+.cards .card.victory.square-alien-2 {
+  background-image: url("../images/cards/square-alien-2.png");
+  border-color: #bf9000;
+}
+.cards .card.victory.square-alien-3 {
+  background-image: url("../images/cards/square-alien-3.png");
+  border-color: #073763;
+}
+.cards .card.victory.wild {
+  background: linear-gradient(135deg, #fff8d6 0%, #f7e7a8 28%, #fff3c4 48%, #e8cf78 72%, #fff1b0 100%);
+  border-color: #b8953f;
+}
+.cards .card.victory.shade-alien-0 {
+  background-image: url("../images/cards/shade-alien-0.png");
+  border-color: #5b0f00;
+}
+.cards .card.victory.shade-alien-1 {
+  background-image: url("../images/cards/shade-alien-1.png");
+  border-color: #274e13;
+}
+.cards .card.victory.shade-alien-2 {
+  background-image: url("../images/cards/shade-alien-2.png");
+  border-color: #bf9000;
+}
+.cards .card.victory.shade-alien-3 {
+  background-image: url("../images/cards/shade-alien-3.png");
+  border-color: #073763;
+}
+.cards .card.victory.symbol.front .pseudo-image {
+  width: 70%;
+  height: 70%;
+}
+.cards .card.victory.front.surprise {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.cards .card.victory.front.surprise .text {
+  font-family: "Bebas Neue", sans-serif;
+  text-align: center;
+  margin: 8px;
+}
+.cards .card.victory.front.surprise .text .value {
+  font-size: 60px;
+  font-weight: bold;
+}
+.cards .card.victory.front.surprise .text .type {
+  font-size: 40px;
+}
+.cards .card.victory.front.surprise .text .extra {
+  font-size: 28px;
+  font-style: italic;
+}
+
+/*# sourceMappingURL=cards-victory.css.map */
