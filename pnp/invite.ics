@@ -1,0 +1,100 @@
+BEGIN:VCALENDAR
+METHOD:REQUEST
+PRODID:Microsoft Exchange Server 2010
+VERSION:2.0
+BEGIN:VTIMEZONE
+TZID:Pacific Standard Time
+BEGIN:STANDARD
+DTSTART:16010101T020000
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0800
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=1SU;BYMONTH=11
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:16010101T020000
+TZOFFSETFROM:-0800
+TZOFFSETTO:-0700
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=2SU;BYMONTH=3
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+ORGANIZER;CN=Luis Daniel Rocha:mailto:lrocha@cvwest.org
+ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=Doug Banks
+ :mailto:doug.banks@gmail.com
+DESCRIPTION;LANGUAGE=en-US:\n______________________________________________
+ __________________________________\nMicrosoft Teams meeting\nJoin: https:/
+ /teams.microsoft.com/meet/248913380743016?p=pIn1YxGy9B4DjHcxw8\nMeeting ID
+ : 248 913 380 743 016\nPasscode: Ai3PX2tR\n_______________________________
+ _\nNeed help?<https://aka.ms/JoinTeamsMeeting?omkt=en-US> | System referen
+ ce<https://teams.microsoft.com/l/meetup-join/19%3ameeting_NWUxNjk5YTQtYmQ0
+ OC00Y2EyLWJkNWUtMWJiYmFmM2ZhMjNi%40thread.v2/0?context=%7b%22Tid%22%3a%22c
+ 33f6d28-3425-42a7-8827-d21f10bb2e83%22%2c%22Oid%22%3a%22dd899dc1-b5c0-45ec
+ -88eb-b5940718a732%22%7d>\nDial in by phone\n+1 657-207-0015\,\,211470408#
+ <tel:+16572070015\,\,211470408#> United States\, Anaheim\nFind a local num
+ ber<https://dialin.teams.cloud.microsoft/a128d0b5-11a4-48c5-983c-933934fdf
+ 096?id=211470408>\nPhone conference ID: 211 470 408#\nFor organizers: Meet
+ ing options<https://teams.microsoft.com/meetingOptions/?organizerId=dd899d
+ c1-b5c0-45ec-88eb-b5940718a732&tenantId=c33f6d28-3425-42a7-8827-d21f10bb2e
+ 83&threadId=19_meeting_NWUxNjk5YTQtYmQ0OC00Y2EyLWJkNWUtMWJiYmFmM2ZhMjNi@th
+ read.v2&messageId=0&language=en-US> | Reset dial-in PIN<https://dialin.tea
+ ms.cloud.microsoft/usp/pstnconferencing>\n________________________________
+ ________________________________________________\nCONFIDENTIALITY NOTICE: 
+ The contents of this e-mail and any attachments are confidential and inten
+ ded solely for use by the intended recipient(s) and may contain confidenti
+ al and/or privileged information and may be legally protected from disclos
+ ure. If you are not the intended recipient(s)\, or if this message has bee
+ n addressed to you in error\, please contact the above-designated sender a
+ nd delete all copies and any attachments. If you are not the intended reci
+ pient(s)\, you are hereby notified that any review\, disclosing\, forwardi
+ ng\, copying\, distribution or storage is strictly prohibited.\n
+UID:040000008200E00074C5B7101A82E00800000000DBDF5B658C52DD01000000000000000
+ 010000000440F8D40E3705D40B4FC7EAB135888A9
+SUMMARY;LANGUAGE=en-US:Learn4Life Collaboration
+DTSTART;TZID=Pacific Standard Time:20261009T131500
+DTEND;TZID=Pacific Standard Time:20261009T134500
+CLASS:PUBLIC
+PRIORITY:5
+DTSTAMP:20261006T232014Z
+TRANSP:OPAQUE
+STATUS:CONFIRMED
+SEQUENCE:2
+LOCATION;LANGUAGE=en-US:Microsoft Teams Meeting
+X-MICROSOFT-CDO-APPT-SEQUENCE:2
+X-MICROSOFT-CDO-OWNERAPPTID:2125074715
+X-MICROSOFT-CDO-BUSYSTATUS:TENTATIVE
+X-MICROSOFT-CDO-INTENDEDSTATUS:BUSY
+X-MICROSOFT-CDO-ALLDAYEVENT:FALSE
+X-MICROSOFT-CDO-IMPORTANCE:1
+X-MICROSOFT-CDO-INSTTYPE:0
+X-MICROSOFT-ONLINEMEETINGINFORMATION:{"OnlineMeetingChannelId":null\,"Onlin
+ eMeetingProvider":3}
+X-MICROSOFT-ONLINEMEETINGTOLLNUMBER:+1 657-207-0015
+X-MICROSOFT-ONLINEMEETINGCONFERENCEID:211470408
+X-MICROSOFT-SKYPETEAMSMEETINGURL:https://teams.microsoft.com/l/meetup-join/
+ 19%3ameeting_NWUxNjk5YTQtYmQ0OC00Y2EyLWJkNWUtMWJiYmFmM2ZhMjNi%40thread.v2/
+ 0?context=%7b%22Tid%22%3a%22c33f6d28-3425-42a7-8827-d21f10bb2e83%22%2c%22O
+ id%22%3a%22dd899dc1-b5c0-45ec-88eb-b5940718a732%22%7d
+X-MICROSOFT-SCHEDULINGSERVICEUPDATEURL:https://api.scheduler.teams.microsof
+ t.com/teams/c33f6d28-3425-42a7-8827-d21f10bb2e83/dd899dc1-b5c0-45ec-88eb-b
+ 5940718a732/19_meeting_NWUxNjk5YTQtYmQ0OC00Y2EyLWJkNWUtMWJiYmFmM2ZhMjNi@th
+ read.v2/0
+X-MICROSOFT-SKYPETEAMSPROPERTIES:{"cid":"19:meeting_NWUxNjk5YTQtYmQ0OC00Y2E
+ yLWJkNWUtMWJiYmFmM2ZhMjNi@thread.v2"\,"rid":0\,"mid":0\,"uid":null\,"priva
+ te":true\,"type":0}
+X-MICROSOFT-DONOTFORWARDMEETING:FALSE
+X-MICROSOFT-DISALLOW-COUNTER:FALSE
+X-MICROSOFT-REQUESTEDATTENDANCEMODE:DEFAULT
+X-MICROSOFT-ISRESPONSEREQUESTED:TRUE
+X-MICROSOFT-LOCATIONDISPLAYNAME:Microsoft Teams Meeting
+X-MICROSOFT-LOCATIONSOURCE:None
+X-MICROSOFT-LOCATIONS:[{"DisplayName":"Microsoft Teams Meeting"\,"LocationA
+ nnotation":""\,"LocationUri":""\,"LocationStreet":""\,"LocationCity":""\,"
+ LocationState":""\,"LocationCountry":""\,"LocationPostalCode":""\,"Locatio
+ nFullAddress":""}]
+BEGIN:VALARM
+DESCRIPTION:REMINDER
+TRIGGER;RELATED=START:-PT15M
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+END:VCALENDAR
