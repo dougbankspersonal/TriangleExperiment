@@ -4,17 +4,17 @@
 .card.front.triangle .front-wrapper {
   z-index: 0;
 }
-.card.front.triangle .front-wrapper .sectors-row .sector.tri-alien-0 {
-  background-image: url("../images/cards/tri-alien-0.png");
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-texture-terrain-0 {
+  background-image: url("../images/cards/tri-texture-terrain-0.png");
 }
-.card.front.triangle .front-wrapper .sectors-row .sector.tri-alien-1 {
-  background-image: url("../images/cards/tri-alien-1.png");
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-texture-terrain-1 {
+  background-image: url("../images/cards/tri-texture-terrain-1.png");
 }
-.card.front.triangle .front-wrapper .sectors-row .sector.tri-alien-2 {
-  background-image: url("../images/cards/tri-alien-2.png");
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-texture-terrain-2 {
+  background-image: url("../images/cards/tri-texture-terrain-2.png");
 }
-.card.front.triangle .front-wrapper .sectors-row .sector.tri-alien-3 {
-  background-image: url("../images/cards/tri-alien-3.png");
+.card.front.triangle .front-wrapper .sectors-row .sector.tri-texture-terrain-3 {
+  background-image: url("../images/cards/tri-texture-terrain-3.png");
 }
 .card.front.triangle .front-wrapper .sectors-row .sector .pseudo-image.player {
   position: absolute;
@@ -43,7 +43,7 @@
 }
 
 .card.back.triangle .back-wrapper {
-  background-image: url("../images/cards/extra-tile-back.png");
+  background-image: url("../images/cards/tri-card-back.png");
 }
 
 /*# sourceMappingURL=cards-tiles.css.map */

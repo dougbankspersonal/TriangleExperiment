@@ -10,8 +10,8 @@ define(["dojo/domReady!"], function () {
   // Functions
   //
   //-----------------------------------
-  function terrainTypeToSectorClass(terrainType) {
-    return "tri-" + terrainType;
+  function terrainTypeToTextureSectorClass(terrainType) {
+    return "tri-texture-" + terrainType;
   }
 
   function terrrainTypeArrayToSectorDescriptors(terrainTypeArray) {
@@ -21,7 +21,9 @@ define(["dojo/domReady!"], function () {
       "terrainTypeArray.length !== 4",
     );
     for (var i = 0; i < terrainTypeArray.length; i++) {
-      var triangleTerrainType = terrainTypeToSectorClass(terrainTypeArray[i]);
+      var triangleTerrainType = terrainTypeToTextureSectorClass(
+        terrainTypeArray[i],
+      );
       var sectorDescriptor = { classes: [triangleTerrainType] };
       sectorDescriptors.push(sectorDescriptor);
     }
@@ -41,7 +43,7 @@ define(["dojo/domReady!"], function () {
 
   // This returned object becomes the defined value of this module
   return {
-    terrainTypeToSectorClass: terrainTypeToSectorClass,
+    terrainTypeToSectorClass: terrainTypeToTextureSectorClass,
     terrrainTypeArrayToSectorDescriptors: terrrainTypeArrayToSectorDescriptors,
     terrainTypeArrayToCardConfig: terrainTypeArrayToCardConfig,
   };

@@ -1,15 +1,3 @@
-.pseudo-image.flower-0 {
-  background-image: url("../images/cards/flower-0.png");
-}
-
-.pseudo-image.flower-1 {
-  background-image: url("../images/cards/flower-1.png");
-}
-
-.pseudo-image.flower-2 {
-  background-image: url("../images/cards/flower-2.png");
-}
-
 .pseudo-image.player-icon-0 {
   background-image: url("../images/cards/player-icon-0.png");
 }
@@ -26,36 +14,36 @@
   background-image: url("../images/cards/player-icon-3.png");
 }
 
-.pseudo-image.square-alien-0 {
-  background-image: url("../images/cards/square-alien-0.png");
+.pseudo-image.square-terrain-0 {
+  background-image: url("../images/cards/square-terrain-0.png");
 }
 
-.pseudo-image.square-alien-1 {
-  background-image: url("../images/cards/square-alien-1.png");
+.pseudo-image.square-terrain-1 {
+  background-image: url("../images/cards/square-terrain-1.png");
 }
 
-.pseudo-image.square-alien-2 {
-  background-image: url("../images/cards/square-alien-2.png");
+.pseudo-image.square-terrain-2 {
+  background-image: url("../images/cards/square-terrain-2.png");
 }
 
-.pseudo-image.square-alien-3 {
-  background-image: url("../images/cards/square-alien-3.png");
+.pseudo-image.square-terrain-3 {
+  background-image: url("../images/cards/square-terrain-3.png");
 }
 
-.pseudo-image.shade-alien-0 {
-  background-image: url("../images/cards/shade-alien-0.png");
+.pseudo-image.shade-terrain-0 {
+  background-image: url("../images/cards/shade-terrain-0.png");
 }
 
-.pseudo-image.shade-alien-1 {
-  background-image: url("../images/cards/shade-alien-1.png");
+.pseudo-image.shade-terrain-1 {
+  background-image: url("../images/cards/shade-terrain-1.png");
 }
 
-.pseudo-image.shade-alien-2 {
-  background-image: url("../images/cards/shade-alien-2.png");
+.pseudo-image.shade-terrain-2 {
+  background-image: url("../images/cards/shade-terrain-2.png");
 }
 
-.pseudo-image.shade-alien-3 {
-  background-image: url("../images/cards/shade-alien-3.png");
+.pseudo-image.shade-terrain-3 {
+  background-image: url("../images/cards/shade-terrain-3.png");
 }
 
 .pseudo-image.green-check {
@@ -64,10 +52,6 @@
 
 .pseudo-image.red-x {
   background-image: url("../images/cards/red-x.png");
-}
-
-.pseudo-image.vote {
-  background-image: url("../images/cards/vote.png");
 }
 
 .pseudo-image.trophy {

@@ -12,10 +12,10 @@ define([
   //-----------------------------------
   const gNumPlayers = 4;
 
-  const gTerrainTypeRed = "alien-0";
-  const gTerrainTypeGreen = "alien-1";
-  const gTerrainTypeYellow = "alien-2";
-  const gTerrainTypeBlue = "alien-3";
+  const gTerrainTypeRed = "terrain-0";
+  const gTerrainTypeGreen = "terrain-1";
+  const gTerrainTypeYellow = "terrain-2";
+  const gTerrainTypeBlue = "terrain-3";
 
   const gScoringTokenSymbol0 = "scoring-token-symbol-0";
   const gScoringTokenSymbol1 = "scoring-token-symbol-1";
