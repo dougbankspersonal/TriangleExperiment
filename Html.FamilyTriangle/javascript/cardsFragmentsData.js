@@ -14,52 +14,52 @@ define([
   //-----------------------------------
   var gCardConfigs = null;
 
-  function generateCardConfigsForNthTerrainType(index) {
+  function generateCardConfigsForNthScoringTerrainType(index) {
     var configs = [];
-    var terrainType = gameInfo.terrainTypesArray[index];
+    var tileTerrainType = gameInfo.scoringTerrainTypesArray[index];
     console.assert(
-      terrainType !== undefined,
+      tileTerrainType !== undefined,
       "Invalid terrain type for index " + index,
     );
     debugLog(
-      "generateCardConfigsForNthTerrainType",
+      "generateCardConfigsForNthScoringTerrainType",
       "terrainType = ",
-      terrainType,
+      tileTerrainType,
     );
 
     // Three dots of this type.
     configs.push({
-      dots: [terrainType, terrainType, terrainType],
-      terrainType: terrainType,
+      dots: [tileTerrainType, tileTerrainType, tileTerrainType],
+      terrainType: tileTerrainType,
     });
 
     // Two this type one of each other.
     for (var i = 0; i < gameInfo.terrainTypesArray.length; i++) {
-      if (i === index) continue;
-      var otherTerrainType = gameInfo.terrainTypesArray[i];
+      var dotTerrainType = gameInfo.terrainTypesArray[i];
+      if (dotTerrainType === tileTerrainType) continue;
       configs.push({
-        dots: [terrainType, terrainType, otherTerrainType],
-        terrainType: terrainType,
+        dots: [tileTerrainType, tileTerrainType, dotTerrainType],
+        terrainType: tileTerrainType,
       });
     }
 
-    // One of this type two of the others.
-    for (var i = 0; i < gameInfo.terrainTypesArray.length; i++) {
-      if (i === index) continue;
-      for (var j = 1; j < gameInfo.terrainTypesArray.length; j++) {
-        var k = (j + i) % gameInfo.terrainTypesArray.length;
-        if (k === index) continue;
-        var otherTerrainType1 = gameInfo.terrainTypesArray[i];
-        var otherTerrainType2 = gameInfo.terrainTypesArray[k];
+    // One of this type, two of the others, not the same, and ordered.
+    for (var i = 0; i < gameInfo.terrainTypesArray.length - 1; i++) {
+      for (var j = i + 1; j < gameInfo.terrainTypesArray.length; j++) {
+        var firstDotTerrainType = gameInfo.terrainTypesArray[i];
+        var secondDotTerrainType = gameInfo.terrainTypesArray[j];
+        // If either of these is same as tileTerrainType, skip.
+        if (firstDotTerrainType === tileTerrainType) continue;
+        if (secondDotTerrainType === tileTerrainType) continue;
         configs.push({
-          dots: [terrainType, otherTerrainType1, otherTerrainType2],
-          terrainType: terrainType,
+          dots: [tileTerrainType, firstDotTerrainType, secondDotTerrainType],
+          terrainType: tileTerrainType,
         });
       }
     }
 
     debugLog(
-      "generateCardConfigsForNthTerrainType",
+      "generateCardConfigsForNthScoringTerrainType",
       "configs = ",
       JSON.stringify(configs),
     );
@@ -73,8 +73,8 @@ define([
     }
     gCardConfigs = [];
 
-    for (var i = 0; i < gameInfo.terrainTypesArray.length; i++) {
-      var configs = generateCardConfigsForNthTerrainType(i);
+    for (var i = 0; i < gameInfo.scoringTerrainTypesArray.length; i++) {
+      var configs = generateCardConfigsForNthScoringTerrainType(i);
       gCardConfigs = gCardConfigs.concat(configs);
     }
 
@@ -86,7 +86,7 @@ define([
 
     console.assert(
       gCardConfigs,
-      "getNumCards called before generateCardConfigs",
+      "getCardConfigs called before generateCardConfigs",
     );
     debugLog("getCardConfigs: gCardConfigs.length = ", gCardConfigs.length);
     return gCardConfigs;
@@ -103,22 +103,6 @@ define([
 
   function getBackConfigs() {
     var backConfigs = [];
-    for (let i = 0; i < gameInfo.terrainTypesArray.length; i++) {
-      let terrainType = gameInfo.terrainTypesArray[i];
-      var backConfig = {
-        callback: function (parentNode, cardIndex) {
-          return triangleCards.addTriangleCardBack(
-            parentNode,
-            cardIndex,
-            ["cards-score-tiles", terrainType],
-            function (parentNode) {
-              htmlUtils.addImage(parentNode, ["trophy"], "trophy");
-            },
-          );
-        },
-      };
-      backConfigs.push(backConfig);
-    }
     return backConfigs;
   }
 

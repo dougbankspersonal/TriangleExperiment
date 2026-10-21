@@ -1,4 +1,4 @@
-.card.cards-score-tiles.back {
+.card.cards-fragments.back {
   .back-wrapper {
     position: relative;
     background-size: contain;
@@ -20,31 +20,31 @@
   }
 }
 
-.card.cards-score-tiles.back.terrain-0 {
+.card.cards-fragments.back.terrain-0 {
   .back-wrapper {
     background-image: url("../images/cards/tri-texture-terrain-0.png");
   }
 }
 
-.card.cards-score-tiles.back.terrain-1 {
+.card.cards-fragments.back.terrain-1 {
   .back-wrapper {
     background-image: url("../images/cards/tri-texture-terrain-1.png");
   }
 }
 
-.card.cards-score-tiles.back.terrain-2 {
+.card.cards-fragments.back.terrain-2 {
   .back-wrapper {
     background-image: url("../images/cards/tri-texture-terrain-2.png");
   }
 }
 
-.card.cards-score-tiles.back.terrain-3 {
+.card.cards-fragments.back.terrain-3 {
   .back-wrapper {
     background-image: url("../images/cards/tri-texture-terrain-3.png");
   }
 }
 
-.card.cards-score-tiles.front {
+.card.cards-fragments.front {
   .front-wrapper {
     position: relative;
     width: 100%;
@@ -60,39 +60,43 @@
       height: 60px;
       border-radius: 50%;
       border: 8px solid;
+      box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.6);
+
     }
 
+    // Keep these in sync with colors used in tri/shades.
     .dot.terrain-0 {
-      background-color: #f09292;
-      border-color: #4e1818;
+      background-color: #ea9999;
+      border-color: #5b0f00;
     }
 
     .dot.terrain-1 {
-      background-color: #b9e9b9;
-      border-color: #335f33;
+      background-color: #93c47d;
+      border-color: #274e13;
     }
 
     .dot.terrain-2 {
-      background-color: #e4e0a2;
-      border-color: #625e30;
+      background-color: #fff2cc;
+      border-color: #bf9000;
     }
 
     .dot.terrain-3 {
-      background-color: #88abe8;
-      border-color: rgb(32, 34, 67);
+      background-color: #9fc5e8;
+      border-color: #073763;
     }
 
+    // Important: item 1 is the one in the center.
     .dot.position-0 {
       // Center it.
-      left: 50%;
-      top: 100%;
+      left: 25%;
+      top: 50%;
       transform: translate(-50%, -50%);
     }
 
     .dot.position-1 {
       // Center it.
-      left: 25%;
-      top: 50%;
+      left: 50%;
+      top: 100%;
       transform: translate(-50%, -50%);
     }
 
@@ -105,25 +109,25 @@
   }
 }
 
-.card.cards-score-tiles.front.terrain-0 {
+.card.cards-fragments.front.terrain-0 {
   .front-wrapper {
     background-image: url("../images/cards/tri-shade-terrain-0.png");
   }
 }
 
-.card.cards-score-tiles.front.terrain-1 {
+.card.cards-fragments.front.terrain-1 {
   .front-wrapper {
     background-image: url("../images/cards/tri-shade-terrain-1.png");
   }
 }
 
-.card.cards-score-tiles.front.terrain-2 {
+.card.cards-fragments.front.terrain-2 {
   .front-wrapper {
     background-image: url("../images/cards/tri-shade-terrain-2.png");
   }
 }
 
-.card.cards-score-tiles.front.terrain-3 {
+.card.cards-fragments.front.terrain-3 {
   .front-wrapper {
     background-image: url("../images/cards/tri-shade-terrain-3.png");
   }

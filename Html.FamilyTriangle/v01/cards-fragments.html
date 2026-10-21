@@ -1,8 +1,8 @@
 <html>
   <head>
     <base href="../" />
-    <title>Cards: Score Tiles</title>
-    <link rel="stylesheet" href="css/cards-score-tiles.css" />
+    <title>Cards: Fragments</title>
+    <link rel="stylesheet" href="css/cards-fragments.css" />
     <link rel="stylesheet" href="css/images.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/cards.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/main.css" />
@@ -47,8 +47,8 @@
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
         "sharedJavascript/triangleCards",
-        "javascript/cardsScoreTiles",
-        "javascript/cardsScoreTilesData",
+        "javascript/cardsFragments",
+        "javascript/cardsFragmentsData",
         "javascript/gameInfo",
       ], function (
         cards,
@@ -57,8 +57,8 @@
         htmlUtils,
         systemConfigs,
         triangleCards,
-        cardsScoreTiles,
-        cardsScoreTilesData,
+        cardsFragments,
+        cardsFragmentsData,
         gameInfo,
       ) {
         var debugLog = debugLogModule.debugLog;
@@ -78,14 +78,15 @@
           genericMeasurements.triangleCardScreentopActualHeightPx,
         );
 
-        var numCards = cardsScoreTilesData.getNumCards();
+        var numCards = cardsFragmentsData.getNumCards();
 
-        var backConfigs = cardsScoreTilesData.getBackConfigs();
+        var backConfigs = cardsFragmentsData.getBackConfigs();
 
+        cards.addCards(numCards, cardsFragments.addCardFront, backConfigs);
         cards.addCards(
           numCards,
           function (parentNode, index) {
-            return cardsScoreTiles.addCardFront(parentNode, index);
+            return cardsFragments.addCardFront(parentNode, index, true);
           },
           backConfigs,
         );
