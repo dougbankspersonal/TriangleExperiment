@@ -44,6 +44,7 @@
         "sharedJavascript/cards",
         "sharedJavascript/debugLog",
         "sharedJavascript/genericMeasurements",
+        "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
         "sharedJavascript/triangleCards",
@@ -54,6 +55,7 @@
         cards,
         debugLogModule,
         genericMeasurements,
+        genericUtils,
         htmlUtils,
         systemConfigs,
         triangleCards,
@@ -61,16 +63,39 @@
         cardsFragmentsData,
         gameInfo,
       ) {
+        const screentopScale = 0.5;
+
         var debugLog = debugLogModule.debugLog;
         var cardHeightPx =
           genericMeasurements.triangleCardScreentopActualHeightPx;
 
-        var sc = systemConfigs.getCardSystemConfigs({
-          cardHeightPx: cardHeightPx,
-          itemsPerRow: 10,
-        });
+        var sc;
+        var queryParams = genericUtils.getCommonQueryParams();
 
+        debugLog("html", "queryParams = ", JSON.stringify(queryParams));
+
+        if (queryParams.isScreentop) {
+          sc = systemConfigs.getCardSystemConfigs({
+            cardHeightPx: cardHeightPx,
+            itemsPerRow: 10,
+          });
+        } else {
+          var cardWidthPx =
+            genericMeasurements.standardCardWidthPx * screentopScale;
+          cardHeightPx = cardHeightPx * screentopScale;
+          debugLog("html", "cardWidthPx = ", cardWidthPx);
+          debugLog("html", "cardHeightPx = ", cardHeightPx);
+          sc = systemConfigs.getCardSystemConfigs({
+            cardHeightPx: cardHeightPx,
+            cardWidthPx: cardWidthPx,
+            itemsPerRow: 10,
+          });
+        }
+        debugLog("html", "sc before setting = ", JSON.stringify(sc));
         systemConfigs.setSystemConfigs(sc);
+
+        var sc = systemConfigs.getSystemConfigs();
+        debugLog("html", "systemConfigs = ", JSON.stringify(sc));
 
         debugLog(
           "html",
@@ -80,16 +105,19 @@
 
         var numCards = cardsFragmentsData.getNumCards();
 
-        var backConfigs = cardsFragmentsData.getBackConfigs();
+        var backConfigs = [];
+        for (let i = 0; i < numCards; i++) {
+          var backConfig = {
+            callback: function (parentNode) {
+              debugLog("html", "adding back card for index = ", i);
+              return cardsFragments.addCardFront(parentNode, i, true);
+            },
+          };
+          backConfigs.push(backConfig);
+        }
+        debugLog("html", "backConfigs = ", JSON.stringify(backConfigs));
 
         cards.addCards(numCards, cardsFragments.addCardFront, backConfigs);
-        cards.addCards(
-          numCards,
-          function (parentNode, index) {
-            return cardsFragments.addCardFront(parentNode, index, true);
-          },
-          backConfigs,
-        );
       });
     </script>
   </body>

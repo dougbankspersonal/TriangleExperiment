@@ -8,6 +8,9 @@ define([
   var debugLog = debugLogModule.debugLog;
 
   function addCardFront(parent, index, opt_flipped) {
+    debugLog("addCardFront", "index = ", index);
+    debugLog("addCardFront", "opt_flipped = ", opt_flipped);
+
     var flipped = opt_flipped || false;
 
     var cardConfigs = cardsFragmentsData.getCardConfigs();

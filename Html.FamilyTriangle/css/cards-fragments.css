@@ -44,8 +44,8 @@
 }
 .card.cards-fragments.front .front-wrapper .dot {
   position: absolute;
-  width: 60px;
-  height: 60px;
+  width: 25%;
+  aspect-ratio: 1/1;
   border-radius: 50%;
   border: 8px solid;
   box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.6);
