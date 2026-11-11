@@ -44,6 +44,7 @@
         "sharedJavascript/cards",
         "sharedJavascript/debugLog",
         "sharedJavascript/genericMeasurements",
+        "sharedJavascript/genericUtils",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
         "sharedJavascript/triangleCards",
@@ -53,6 +54,7 @@
         cards,
         debugLogModule,
         genericMeasurements,
+        genericUtils,
         htmlUtils,
         systemConfigs,
         triangleCards,
@@ -63,8 +65,11 @@
         var cardHeightPx =
           genericMeasurements.triangleCardScreentopActualHeightPx;
 
+        var isScreentop = genericUtils.getCommonQueryParams().isScreentop;
+
         var sc = systemConfigs.getCardSystemConfigs({
           cardHeightPx: cardHeightPx,
+          extraRowPadding: genericMeasurements.standardCardWidthPx / 2,
           itemsPerRow: 10,
         });
 
@@ -77,18 +82,37 @@
         );
 
         var numCards = cardsTilesPlayerData.getNumCards();
-
         var cardConfigs = cardsTilesPlayerData.getCardConfigs();
-
         var backConfigs = cardsTilesPlayerData.getBackConfigs();
 
-        cards.addCards(
-          numCards,
-          function (parentNode, index) {
-            return triangleCards.addCardFront(parentNode, cardConfigs, index);
-          },
-          backConfigs,
-        );
+        debugLog("html", "backConfigs = ", JSON.stringify(backConfigs));
+
+        if (isScreentop) {
+          cards.addCards(
+            numCards,
+            function (parentNode, index) {
+              return triangleCards.addTriangleCardFront(
+                parentNode,
+                cardConfigs,
+                index,
+              );
+            },
+            backConfigs,
+          );
+        } else {
+          cards.addCards(
+            numCards,
+            function (parentNode, index) {
+              return triangleCards.addTriangleCardFront(
+                parentNode,
+                cardConfigs,
+                index,
+                backConfigs,
+              );
+            },
+            [],
+          );
+        }
       });
     </script>
   </body>

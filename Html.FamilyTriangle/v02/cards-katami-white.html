@@ -100,7 +100,11 @@
         cards.addCards(
           numCards,
           function (parentNode, index) {
-            return triangleCards.addCardFront(parentNode, cardConfigs, index);
+            return triangleCards.addTriangleCardFront(
+              parentNode,
+              cardConfigs,
+              index,
+            );
           },
           backConfigs,
         );

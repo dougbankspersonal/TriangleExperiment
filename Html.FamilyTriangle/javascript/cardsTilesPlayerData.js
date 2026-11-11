@@ -19,6 +19,7 @@ define([
   //
   //-----------------------------------
   var gCardConfigs = null;
+  var gBackConfigs = null;
   var gCardsPerPlayerDeck = 0;
 
   //-----------------------------------
@@ -228,8 +229,13 @@ define([
     return cards.getNumCardsFromConfigs(gCardConfigs);
   }
 
-  function getBackConfigs() {
-    var backConfigs = [];
+  function generateBackConfigs() {
+    if (gBackConfigs !== null) {
+      return;
+    }
+
+    debugLog("getBackConfigs", "gameInfo.numPlayers = ", gameInfo.numPlayers);
+    gBackConfigs = [];
     for (
       let playerIndex = 0;
       playerIndex < gameInfo.numPlayers;
@@ -252,9 +258,20 @@ define([
           );
         },
       };
-      backConfigs.push(backConfig);
+      debugLog(
+        "getBackConfigs",
+        "Object.keys(backConfig) = ",
+        JSON.stringify(Object.keys(backConfig)),
+      );
+      gBackConfigs.push(backConfig);
     }
-    return backConfigs;
+  }
+
+  function getBackConfigs() {
+    generateBackConfigs();
+    if (gBackConfigs) {
+      return gBackConfigs;
+    }
   }
 
   // This returned object becomes the defined value of this module
