@@ -62,57 +62,8 @@
         gameInfo,
       ) {
         var debugLog = debugLogModule.debugLog;
-        var cardHeightPx =
-          genericMeasurements.triangleCardScreentopActualHeightPx;
 
-        var isScreentop = genericUtils.getCommonQueryParams().isScreentop;
-
-        var sc = systemConfigs.getCardSystemConfigs({
-          cardHeightPx: cardHeightPx,
-          extraRowPadding: genericMeasurements.standardCardWidthPx / 2,
-          itemsPerRow: 10,
-        });
-
-        systemConfigs.setSystemConfigs(sc);
-
-        debugLog(
-          "html",
-          "genericMeasurements.triangleCardScreentopActualHeightPx = ",
-          genericMeasurements.triangleCardScreentopActualHeightPx,
-        );
-
-        var numCards = cardsTilesPlayerData.getNumCards();
-        var cardConfigs = cardsTilesPlayerData.getCardConfigs();
-        var backConfigs = cardsTilesPlayerData.getBackConfigs();
-
-        debugLog("html", "backConfigs = ", JSON.stringify(backConfigs));
-
-        if (isScreentop) {
-          cards.addCards(
-            numCards,
-            function (parentNode, index) {
-              return triangleCards.addTriangleCardFront(
-                parentNode,
-                cardConfigs,
-                index,
-              );
-            },
-            backConfigs,
-          );
-        } else {
-          cards.addCards(
-            numCards,
-            function (parentNode, index) {
-              return triangleCards.addTriangleCardFront(
-                parentNode,
-                cardConfigs,
-                index,
-                backConfigs,
-              );
-            },
-            [],
-          );
-        }
+        triangleCards.generateTriangleCards(cardsTilesPlayerData);
       });
     </script>
   </body>

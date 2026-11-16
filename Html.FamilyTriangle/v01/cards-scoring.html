@@ -2,7 +2,7 @@
 <html>
   <head>
     <base href="../" />
-    <title>Cards: Scoring Abstract</title>
+    <title>Cards: Scoring</title>
     <link rel="stylesheet" href="css/cards-scoring.css" />
     <link rel="stylesheet" href="css/images.css" />
     <link rel="stylesheet" href="SharedWebBoardGame/css/cards.css" />
@@ -50,7 +50,7 @@
         "sharedJavascript/genericMeasurements",
         "sharedJavascript/htmlUtils",
         "sharedJavascript/systemConfigs",
-        "javascript/cardsScoringAbstractData",
+        "javascript/cardsScoringData",
         "javascript/cardsScoring",
         "javascript/gameInfo",
       ], function (
@@ -59,7 +59,7 @@
         genericMeasurements,
         htmlUtils,
         systemConfigs,
-        cardsScoringAbstractData,
+        cardsScoringData,
         cardsScoring,
         gameInfo,
       ) {
@@ -73,9 +73,9 @@
         var sc = systemConfigs.getCardSystemConfigs(overrides);
         systemConfigs.setSystemConfigs(sc);
 
-        var numCards = cardsScoringAbstractData.getNumCards();
+        var numCards = cardsScoringData.getNumCards();
 
-        var cardConfigs = cardsScoringAbstractData.getCardConfigs();
+        var cardConfigs = cardsScoringData.getCardConfigs();
 
         var backConfigs = [];
         var backConfig = {

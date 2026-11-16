@@ -33,10 +33,40 @@
 }
 
 .card.scoring.front {
+  position: relative;
+
+  .pseudo-image.left-arrow {
+    width: 30px;
+    height: 30px;
+    filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.5));
+    position: absolute;
+    z-index: 5;
+  }
+
+  .pseudo-image.left-arrow.index-0 {
+    right: 5px;
+  }
+
+  .pseudo-image.left-arrow.index-1 {
+    bottom: 5px;
+    transform: rotate(90deg);
+  }
+
+  .pseudo-image.left-arrow.index-2 {
+    left: 5px;
+    transform: rotate(180deg);
+  }
+
+  .pseudo-image.left-arrow.index-3 {
+    top: 5px;
+    transform: rotate(270deg);
+  }
+
   .text {
-    padding: 10px;
+    padding: 15px;
     font-family: "Lora", serif;
-    font-size: 24px;
+    font-size: 32px;
+    position: relative;
 
     .bonus::before {
       content: "\A\A";

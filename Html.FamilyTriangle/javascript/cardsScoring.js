@@ -5,7 +5,7 @@ define([
   "sharedJavascript/htmlUtils",
   "sharedJavascript/screentop/seatColors",
   "javascript/gameInfo",
-  "javascript/cardsScoringAbstractData",
+  "javascript/cardsScoringData",
   "dojo/domReady!",
 ], function (
   domStyle,
@@ -14,12 +14,12 @@ define([
   htmlUtils,
   seatColors,
   gameInfo,
-  cardsScoringAbstractData,
+  cardsScoringData,
 ) {
   var debugLog = debugLogModule.debugLog;
 
   function addCardFront(parent, index) {
-    var cardConfigs = cardsScoringAbstractData.getCardConfigs();
+    var cardConfigs = cardsScoringData.getCardConfigs();
     var cardConfig = cards.getCardConfigAtIndex(cardConfigs, index);
     var cardFrontNode = cards.addCardFront(
       parent,
