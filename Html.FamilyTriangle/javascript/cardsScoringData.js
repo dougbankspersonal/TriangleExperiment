@@ -31,19 +31,28 @@ define([
       text: "Score any 4 regions of 2 or fewer sectors.",
     });
     gCardConfigs.push({
-      text: "Score up to 3 regions where more than one player is dominant.",
+      text: "Score up to 3 regions where more than one player is Leading.",
     });
     gCardConfigs.push({
       text: "Score all regions of 3 sectors.",
     });
     gCardConfigs.push({
-      text: "Score the 3 largest regions: (in case of ties, score all tied regions).",
+      text: "Score the 2 largest regions: (in case of ties, active player selects which to score).",
     });
     gCardConfigs.push({
       text: "Score any 3 non-adjacent regions.",
     });
     gCardConfigs.push({
       text: "Score any 3 adjacent regions.",
+    });
+    gCardConfigs.push({
+      text: "Select any non-Ocean region. Score all adjacent regions.",
+    });
+    gCardConfigs.push({
+      text: "Score any 3 regions where a player is Leading by exactly one symbol.",
+    });
+    gCardConfigs.push({
+      text: "Score any 2 regions with exactly one adjacent neighboring region (may be a different neighbor).",
     });
 
     return gCardConfigs;
@@ -66,6 +75,8 @@ define([
       gCardConfigs,
       "getNumCards called before generateCardConfigs",
     );
+
+    debugLog("getNumCards: gCardConfigs.length = ", gCardConfigs.length);
     return cards.getNumCardsFromConfigs(gCardConfigs);
   }
 

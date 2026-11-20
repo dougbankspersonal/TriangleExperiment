@@ -31,7 +31,6 @@
 
 .card.scoring.front {
   position: relative;
-  background-image: url("../images/cards/parchment-yellow.png");
 }
 .card.scoring.front .pseudo-image.left-arrow {
   width: 30px;
@@ -58,7 +57,7 @@
 .card.scoring.front .text {
   padding: 15px;
   font-family: "Lora", serif;
-  font-size: 32px;
+  font-size: 27px;
   position: relative;
 }
 .card.scoring.front .text .bonus::before {
